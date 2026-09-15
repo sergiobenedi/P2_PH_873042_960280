@@ -31,3 +31,7 @@
 # Debug files
 *.dSYM/
 *.su
+
+# Salida de compilación de Eclipse (se regenera, contiene rutas absolutas)
+Debug/
+Release/
