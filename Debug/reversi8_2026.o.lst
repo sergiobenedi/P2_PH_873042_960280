@@ -1,0 +1,2338 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"reversi8_2026.c"
+  21              	.Ltext0:
+  22              		.file 1 "../reversi8_2026.c"
+ 976              	CASILLA_VACIA:
+ 977 0000 00       		.space	1
+ 978              		.global	FICHA_BLANCA
+ 981              	FICHA_BLANCA:
+ 982 0001 01       		.byte	1
+ 983              		.global	FICHA_NEGRA
+ 986              	FICHA_NEGRA:
+ 987 0002 02       		.byte	2
+ 988              		.global	NO
+ 991              	NO:
+ 992 0003 00       		.space	1
+ 993              		.global	SI
+ 996              	SI:
+ 997 0004 01       		.byte	1
+ 998              		.global	CASILLA_OCUPADA
+ 1001              	CASILLA_OCUPADA:
+ 1002 0005 02       		.byte	2
+ 1003 0006 0000     		.align	3
+ 1006              	tabla_valor:
+ 1007 0008 08       		.byte	8
+ 1008 0009 02       		.byte	2
+ 1009 000a 07       		.byte	7
+ 1010 000b 03       		.byte	3
+ 1011 000c 03       		.byte	3
+ 1012 000d 07       		.byte	7
+ 1013 000e 02       		.byte	2
+ 1014 000f 08       		.byte	8
+ 1015 0010 02       		.byte	2
+ 1016 0011 01       		.byte	1
+ 1017 0012 04       		.byte	4
+ 1018 0013 04       		.byte	4
+ 1019 0014 04       		.byte	4
+ 1020 0015 04       		.byte	4
+ 1021 0016 01       		.byte	1
+ 1022 0017 02       		.byte	2
+ 1023 0018 07       		.byte	7
+ 1024 0019 04       		.byte	4
+ 1025 001a 06       		.byte	6
+ 1026 001b 05       		.byte	5
+ 1027 001c 05       		.byte	5
+ 1028 001d 06       		.byte	6
+ 1029 001e 04       		.byte	4
+ 1030 001f 07       		.byte	7
+ 1031 0020 03       		.byte	3
+ 1032 0021 04       		.byte	4
+ 1033 0022 05       		.byte	5
+ 1034 0023 00       		.byte	0
+ 1035 0024 00       		.byte	0
+ 1036 0025 05       		.byte	5
+ 1037 0026 04       		.byte	4
+ 1038 0027 03       		.byte	3
+ 1039 0028 03       		.byte	3
+ 1040 0029 04       		.byte	4
+ 1041 002a 05       		.byte	5
+ 1042 002b 00       		.byte	0
+ 1043 002c 00       		.byte	0
+ 1044 002d 05       		.byte	5
+ 1045 002e 04       		.byte	4
+ 1046 002f 03       		.byte	3
+ 1047 0030 07       		.byte	7
+ 1048 0031 04       		.byte	4
+ 1049 0032 06       		.byte	6
+ 1050 0033 05       		.byte	5
+ 1051 0034 05       		.byte	5
+ 1052 0035 06       		.byte	6
+ 1053 0036 04       		.byte	4
+ 1054 0037 07       		.byte	7
+ 1055 0038 02       		.byte	2
+ 1056 0039 01       		.byte	1
+ 1057 003a 04       		.byte	4
+ 1058 003b 04       		.byte	4
+ 1059 003c 04       		.byte	4
+ 1060 003d 04       		.byte	4
+ 1061 003e 01       		.byte	1
+ 1062 003f 02       		.byte	2
+ 1063 0040 08       		.byte	8
+ 1064 0041 02       		.byte	2
+ 1065 0042 07       		.byte	7
+ 1066 0043 03       		.byte	3
+ 1067 0044 03       		.byte	3
+ 1068 0045 07       		.byte	7
+ 1069 0046 02       		.byte	2
+ 1070 0047 08       		.byte	8
+ 1071              		.global	vSF
+ 1072              		.align	2
+ 1075              	vSF:
+ 1076 0048 FF       		.byte	-1
+ 1077 0049 FF       		.byte	-1
+ 1078 004a 00       		.byte	0
+ 1079 004b 01       		.byte	1
+ 1080 004c 01       		.byte	1
+ 1081 004d 01       		.byte	1
+ 1082 004e 00       		.byte	0
+ 1083 004f FF       		.byte	-1
+ 1084              		.global	vSC
+ 1085              		.align	2
+ 1088              	vSC:
+ 1089 0050 00       		.byte	0
+ 1090 0051 01       		.byte	1
+ 1091 0052 01       		.byte	1
+ 1092 0053 01       		.byte	1
+ 1093 0054 00       		.byte	0
+ 1094 0055 FF       		.byte	-1
+ 1095 0056 FF       		.byte	-1
+ 1096 0057 FF       		.byte	-1
+ 1097              		.bss
+ 1098              		.align	3
+ 1099              	tablero:
+ 1100 0000 00000000 		.space	64
+ 1100      00000000 
+ 1100      00000000 
+ 1100      00000000 
+ 1100      00000000 
+ 1101              		.global	fila
+ 1104              	fila:
+ 1105 0040 00       		.space	1
+ 1106              		.global	columna
+ 1109              	columna:
+ 1110 0041 00       		.space	1
+ 1111              		.global	ready
+ 1114              	ready:
+ 1115 0042 00       		.space	1
+ 1116 0043 00000000 		.text
+ 1116      00
+ 1117              		.align	2
+ 1119              	init_table:
+ 1120              	.LFB0:
+   1:../reversi8_2026.c **** #include "reversi8_2026.h"
+   2:../reversi8_2026.c **** 
+   3:../reversi8_2026.c **** // Tamaï¿½o del tablero
+   4:../reversi8_2026.c **** enum { DIM=8 };
+   5:../reversi8_2026.c **** 
+   6:../reversi8_2026.c **** // Valores que puede devolver la funciï¿½n patron_volteo())
+   7:../reversi8_2026.c **** enum {
+   8:../reversi8_2026.c **** 	NO_HAY_MODELO = 0,
+   9:../reversi8_2026.c ****   	MODELO_ENCONTRADO = 1
+  10:../reversi8_2026.c **** };
+  11:../reversi8_2026.c **** 
+  12:../reversi8_2026.c **** // Estados de las casillas del tablero
+  13:../reversi8_2026.c **** // deberï¿½a ser enum, lo dejamos como const para usar char...
+  14:../reversi8_2026.c **** const char CASILLA_VACIA = 0;
+  15:../reversi8_2026.c **** const char FICHA_BLANCA  = 1;
+  16:../reversi8_2026.c **** const char FICHA_NEGRA   = 2;
+  17:../reversi8_2026.c **** 
+  18:../reversi8_2026.c **** // candidatas: indica las posiciones a explorar
+  19:../reversi8_2026.c **** // Se usa para no explorar todo el tablero innecesariamente
+  20:../reversi8_2026.c **** // Sus posibles valores son NO, SI, CASILLA_OCUPADA
+  21:../reversi8_2026.c **** const char  NO              = 0;
+  22:../reversi8_2026.c **** const char  SI              = 1;
+  23:../reversi8_2026.c **** const char  CASILLA_OCUPADA = 2;
+  24:../reversi8_2026.c **** 
+  25:../reversi8_2026.c **** /////////////////////////////////////////////////////////////////////////////
+  26:../reversi8_2026.c **** // TABLAS AUXILIARES
+  27:../reversi8_2026.c **** // declaramos las siguientes tablas como globales para que sean mï¿½s fï¿½ciles visualizarlas en el
+  28:../reversi8_2026.c **** // __attribute__ ((aligned (8))): specifies a minimum alignment for the variable or structure field
+  29:../reversi8_2026.c **** 
+  30:../reversi8_2026.c **** static const char __attribute__ ((aligned (8))) tabla_valor[DIM][DIM] =
+  31:../reversi8_2026.c **** {
+  32:../reversi8_2026.c ****     {8,2,7,3,3,7,2,8},
+  33:../reversi8_2026.c ****     {2,1,4,4,4,4,1,2},
+  34:../reversi8_2026.c ****     {7,4,6,5,5,6,4,7},
+  35:../reversi8_2026.c ****     {3,4,5,0,0,5,4,3},
+  36:../reversi8_2026.c ****     {3,4,5,0,0,5,4,3},
+  37:../reversi8_2026.c ****     {7,4,6,5,5,6,4,7},
+  38:../reversi8_2026.c ****     {2,1,4,4,4,4,1,2},
+  39:../reversi8_2026.c ****     {8,2,7,3,3,7,2,8}
+  40:../reversi8_2026.c **** };
+  41:../reversi8_2026.c **** 
+  42:../reversi8_2026.c **** 
+  43:../reversi8_2026.c **** // Tabla de direcciones. Contiene los desplazamientos de las 8 direcciones posibles
+  44:../reversi8_2026.c **** const char vSF[DIM] = {-1,-1, 0, 1, 1, 1, 0,-1};
+  45:../reversi8_2026.c **** const char vSC[DIM] = { 0, 1, 1, 1, 0,-1,-1,-1};
+  46:../reversi8_2026.c **** 
+  47:../reversi8_2026.c **** //////////////////////////////////////////////////////////////////////////////////////
+  48:../reversi8_2026.c **** // Variables globales que no deberï¿½an serlo
+  49:../reversi8_2026.c **** // tablero, fila, columna y ready son variables que se deberï¿½an definir como locales dentro de re
+  50:../reversi8_2026.c **** // Sin embargo, las hemos definido como globales para que sea mï¿½s fï¿½cil visualizar el tablero y
+  51:../reversi8_2026.c **** //////////////////////////////////////////////////////////////////////////////////////
+  52:../reversi8_2026.c **** 
+  53:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////
+  54:../reversi8_2026.c **** // Tablero sin inicializar
+  55:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////
+  56:../reversi8_2026.c **** // En C un "const char" no es constante de compilacion; init_table() lo pone a CASILLA_VACIA
+  57:../reversi8_2026.c **** static char __attribute__ ((aligned (8))) tablero[DIM][DIM];
+  58:../reversi8_2026.c **** 
+  59:../reversi8_2026.c ****   ////////////////////////////////////////////////////////////////////
+  60:../reversi8_2026.c ****      // VARIABLES PARA INTERACCIONAR CON LA ENTRADA SALIDA
+  61:../reversi8_2026.c ****      // Pregunta: ï¿½hay que hacer algo con ellas para que esto funcione bien?
+  62:../reversi8_2026.c ****      // (por ejemplo aï¿½adir alguna palabra clave para garantizar que la sincronizaciï¿½n a travï¿
+  63:../reversi8_2026.c **** 	    char fila=0,
+  64:../reversi8_2026.c **** 	    columna=0,
+  65:../reversi8_2026.c **** 	    ready = 0;
+  66:../reversi8_2026.c **** 
+  67:../reversi8_2026.c **** 
+  68:../reversi8_2026.c **** // extern int patron_volteo(char tablero[][8], int *longitud,char f, char c, char SF, char SC, char
+  69:../reversi8_2026.c **** 
+  70:../reversi8_2026.c **** ///////////////////////////////////////////////////////////////////////////////////////////////////
+  71:../reversi8_2026.c **** // 0 indica CASILLA_VACIA, 1 indica FICHA_BLANCA y 2 indica FICHA_NEGRA
+  72:../reversi8_2026.c **** // pone el tablero a cero y luego coloca las fichas centrales.
+  73:../reversi8_2026.c **** 
+  74:../reversi8_2026.c **** static void init_table(char tablero[][DIM], char candidatas[][DIM])
+  75:../reversi8_2026.c **** {
+ 1121              		.loc 1 75 0
+ 1122              		.cfi_startproc
+ 1123              		@ Function supports interworking.
+ 1124              		@ args = 0, pretend = 0, frame = 16
+ 1125              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1126 0000 0DC0A0E1 		mov	ip, sp
+ 1127              	.LCFI0:
+ 1128              		.cfi_def_cfa_register 12
+ 1129 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1130 0008 04B04CE2 		sub	fp, ip, #4
+ 1131              		.cfi_offset 14, -8
+ 1132              		.cfi_offset 13, -12
+ 1133              		.cfi_offset 11, -16
+ 1134              	.LCFI1:
+ 1135              		.cfi_def_cfa 11, 4
+ 1136 000c 10D04DE2 		sub	sp, sp, #16
+ 1137 0010 18000BE5 		str	r0, [fp, #-24]
+ 1138 0014 1C100BE5 		str	r1, [fp, #-28]
+  76:../reversi8_2026.c ****     int i, j;
+  77:../reversi8_2026.c **** 
+  78:../reversi8_2026.c ****     for (i = 0; i < DIM; i++)
+ 1139              		.loc 1 78 0
+ 1140 0018 0030A0E3 		mov	r3, #0
+ 1141 001c 10300BE5 		str	r3, [fp, #-16]
+ 1142 0020 140000EA 		b	.L2
+ 1143              	.L5:
+  79:../reversi8_2026.c ****     {
+  80:../reversi8_2026.c ****         for (j = 0; j < DIM; j++)
+ 1144              		.loc 1 80 0
+ 1145 0024 0030A0E3 		mov	r3, #0
+ 1146 0028 14300BE5 		str	r3, [fp, #-20]
+ 1147 002c 0B0000EA 		b	.L3
+ 1148              	.L4:
+  81:../reversi8_2026.c ****             tablero[i][j] = CASILLA_VACIA;
+ 1149              		.loc 1 81 0 discriminator 2
+ 1150 0030 10301BE5 		ldr	r3, [fp, #-16]
+ 1151 0034 8331A0E1 		mov	r3, r3, asl #3
+ 1152 0038 18201BE5 		ldr	r2, [fp, #-24]
+ 1153 003c 031082E0 		add	r1, r2, r3
+ 1154 0040 D8319FE5 		ldr	r3, .L6
+ 1155 0044 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 1156 0048 14301BE5 		ldr	r3, [fp, #-20]
+ 1157 004c 033081E0 		add	r3, r1, r3
+ 1158 0050 0020C3E5 		strb	r2, [r3, #0]
+  80:../reversi8_2026.c ****         for (j = 0; j < DIM; j++)
+ 1159              		.loc 1 80 0 discriminator 2
+ 1160 0054 14301BE5 		ldr	r3, [fp, #-20]
+ 1161 0058 013083E2 		add	r3, r3, #1
+ 1162 005c 14300BE5 		str	r3, [fp, #-20]
+ 1163              	.L3:
+  80:../reversi8_2026.c ****         for (j = 0; j < DIM; j++)
+ 1164              		.loc 1 80 0 is_stmt 0 discriminator 1
+ 1165 0060 14301BE5 		ldr	r3, [fp, #-20]
+ 1166 0064 070053E3 		cmp	r3, #7
+ 1167 0068 F0FFFFDA 		ble	.L4
+  78:../reversi8_2026.c ****     for (i = 0; i < DIM; i++)
+ 1168              		.loc 1 78 0 is_stmt 1
+ 1169 006c 10301BE5 		ldr	r3, [fp, #-16]
+ 1170 0070 013083E2 		add	r3, r3, #1
+ 1171 0074 10300BE5 		str	r3, [fp, #-16]
+ 1172              	.L2:
+  78:../reversi8_2026.c ****     for (i = 0; i < DIM; i++)
+ 1173              		.loc 1 78 0 is_stmt 0 discriminator 1
+ 1174 0078 10301BE5 		ldr	r3, [fp, #-16]
+ 1175 007c 070053E3 		cmp	r3, #7
+ 1176 0080 E7FFFFDA 		ble	.L5
+  82:../reversi8_2026.c ****     }
+  83:../reversi8_2026.c **** #if 0
+  84:../reversi8_2026.c ****     for (i = 3; i < 5; ++i) {
+  85:../reversi8_2026.c **** 	for(j = 3; j < 5; ++j) {
+  86:../reversi8_2026.c **** 	    tablero[i][j] = i == j ? FICHA_BLANCA : FICHA_NEGRA;
+  87:../reversi8_2026.c **** 	}
+  88:../reversi8_2026.c ****     }
+  89:../reversi8_2026.c **** 
+  90:../reversi8_2026.c ****     for (i = 2; i < 6; ++i) {
+  91:../reversi8_2026.c **** 	for (j = 2; j < 6; ++j) {
+  92:../reversi8_2026.c **** 	    if((i>=3) && (i < 5) && (j>=3) && (j<5)) {
+  93:../reversi8_2026.c **** 		candidatas[i][j] = CASILLA_OCUPADA;
+  94:../reversi8_2026.c **** 	    } else {
+  95:../reversi8_2026.c **** 		candidatas[i][j] = SI; //CASILLA_LIBRE;
+  96:../reversi8_2026.c **** 	    }
+  97:../reversi8_2026.c **** 	}
+  98:../reversi8_2026.c ****     }
+  99:../reversi8_2026.c **** #endif
+ 100:../reversi8_2026.c ****     // arriba hay versiï¿½n alternativa
+ 101:../reversi8_2026.c ****     tablero[3][3] = FICHA_BLANCA;
+ 1177              		.loc 1 101 0 is_stmt 1
+ 1178 0084 18301BE5 		ldr	r3, [fp, #-24]
+ 1179 0088 183083E2 		add	r3, r3, #24
+ 1180 008c 90219FE5 		ldr	r2, .L6+4
+ 1181 0090 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1182 0094 0320C3E5 		strb	r2, [r3, #3]
+ 102:../reversi8_2026.c ****     tablero[4][4] = FICHA_BLANCA;
+ 1183              		.loc 1 102 0
+ 1184 0098 18301BE5 		ldr	r3, [fp, #-24]
+ 1185 009c 203083E2 		add	r3, r3, #32
+ 1186 00a0 7C219FE5 		ldr	r2, .L6+4
+ 1187 00a4 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1188 00a8 0420C3E5 		strb	r2, [r3, #4]
+ 103:../reversi8_2026.c ****     tablero[3][4] = FICHA_NEGRA;
+ 1189              		.loc 1 103 0
+ 1190 00ac 18301BE5 		ldr	r3, [fp, #-24]
+ 1191 00b0 183083E2 		add	r3, r3, #24
+ 1192 00b4 6C219FE5 		ldr	r2, .L6+8
+ 1193 00b8 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1194 00bc 0420C3E5 		strb	r2, [r3, #4]
+ 104:../reversi8_2026.c ****     tablero[4][3] = FICHA_NEGRA;
+ 1195              		.loc 1 104 0
+ 1196 00c0 18301BE5 		ldr	r3, [fp, #-24]
+ 1197 00c4 203083E2 		add	r3, r3, #32
+ 1198 00c8 58219FE5 		ldr	r2, .L6+8
+ 1199 00cc 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1200 00d0 0320C3E5 		strb	r2, [r3, #3]
+ 105:../reversi8_2026.c **** 
+ 106:../reversi8_2026.c ****     candidatas[3][3] = CASILLA_OCUPADA;
+ 1201              		.loc 1 106 0
+ 1202 00d4 1C301BE5 		ldr	r3, [fp, #-28]
+ 1203 00d8 183083E2 		add	r3, r3, #24
+ 1204 00dc 48219FE5 		ldr	r2, .L6+12
+ 1205 00e0 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1206 00e4 0320C3E5 		strb	r2, [r3, #3]
+ 107:../reversi8_2026.c ****     candidatas[4][4] = CASILLA_OCUPADA;
+ 1207              		.loc 1 107 0
+ 1208 00e8 1C301BE5 		ldr	r3, [fp, #-28]
+ 1209 00ec 203083E2 		add	r3, r3, #32
+ 1210 00f0 34219FE5 		ldr	r2, .L6+12
+ 1211 00f4 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1212 00f8 0420C3E5 		strb	r2, [r3, #4]
+ 108:../reversi8_2026.c ****     candidatas[3][4] = CASILLA_OCUPADA;
+ 1213              		.loc 1 108 0
+ 1214 00fc 1C301BE5 		ldr	r3, [fp, #-28]
+ 1215 0100 183083E2 		add	r3, r3, #24
+ 1216 0104 20219FE5 		ldr	r2, .L6+12
+ 1217 0108 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1218 010c 0420C3E5 		strb	r2, [r3, #4]
+ 109:../reversi8_2026.c ****     candidatas[4][3] = CASILLA_OCUPADA;
+ 1219              		.loc 1 109 0
+ 1220 0110 1C301BE5 		ldr	r3, [fp, #-28]
+ 1221 0114 203083E2 		add	r3, r3, #32
+ 1222 0118 0C219FE5 		ldr	r2, .L6+12
+ 1223 011c 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1224 0120 0320C3E5 		strb	r2, [r3, #3]
+ 110:../reversi8_2026.c **** 
+ 111:../reversi8_2026.c ****     // casillas a explorar:
+ 112:../reversi8_2026.c ****     candidatas[2][2] = SI;
+ 1225              		.loc 1 112 0
+ 1226 0124 1C301BE5 		ldr	r3, [fp, #-28]
+ 1227 0128 103083E2 		add	r3, r3, #16
+ 1228 012c FC209FE5 		ldr	r2, .L6+16
+ 1229 0130 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1230 0134 0220C3E5 		strb	r2, [r3, #2]
+ 113:../reversi8_2026.c ****     candidatas[2][3] = SI;
+ 1231              		.loc 1 113 0
+ 1232 0138 1C301BE5 		ldr	r3, [fp, #-28]
+ 1233 013c 103083E2 		add	r3, r3, #16
+ 1234 0140 E8209FE5 		ldr	r2, .L6+16
+ 1235 0144 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1236 0148 0320C3E5 		strb	r2, [r3, #3]
+ 114:../reversi8_2026.c ****     candidatas[2][4] = SI;
+ 1237              		.loc 1 114 0
+ 1238 014c 1C301BE5 		ldr	r3, [fp, #-28]
+ 1239 0150 103083E2 		add	r3, r3, #16
+ 1240 0154 D4209FE5 		ldr	r2, .L6+16
+ 1241 0158 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1242 015c 0420C3E5 		strb	r2, [r3, #4]
+ 115:../reversi8_2026.c ****     candidatas[2][5] = SI;
+ 1243              		.loc 1 115 0
+ 1244 0160 1C301BE5 		ldr	r3, [fp, #-28]
+ 1245 0164 103083E2 		add	r3, r3, #16
+ 1246 0168 C0209FE5 		ldr	r2, .L6+16
+ 1247 016c 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1248 0170 0520C3E5 		strb	r2, [r3, #5]
+ 116:../reversi8_2026.c ****     candidatas[3][2] = SI;
+ 1249              		.loc 1 116 0
+ 1250 0174 1C301BE5 		ldr	r3, [fp, #-28]
+ 1251 0178 183083E2 		add	r3, r3, #24
+ 1252 017c AC209FE5 		ldr	r2, .L6+16
+ 1253 0180 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1254 0184 0220C3E5 		strb	r2, [r3, #2]
+ 117:../reversi8_2026.c ****     candidatas[3][5] = SI;
+ 1255              		.loc 1 117 0
+ 1256 0188 1C301BE5 		ldr	r3, [fp, #-28]
+ 1257 018c 183083E2 		add	r3, r3, #24
+ 1258 0190 98209FE5 		ldr	r2, .L6+16
+ 1259 0194 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1260 0198 0520C3E5 		strb	r2, [r3, #5]
+ 118:../reversi8_2026.c ****     candidatas[4][2] = SI;
+ 1261              		.loc 1 118 0
+ 1262 019c 1C301BE5 		ldr	r3, [fp, #-28]
+ 1263 01a0 203083E2 		add	r3, r3, #32
+ 1264 01a4 84209FE5 		ldr	r2, .L6+16
+ 1265 01a8 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1266 01ac 0220C3E5 		strb	r2, [r3, #2]
+ 119:../reversi8_2026.c ****     candidatas[4][5] = SI;
+ 1267              		.loc 1 119 0
+ 1268 01b0 1C301BE5 		ldr	r3, [fp, #-28]
+ 1269 01b4 203083E2 		add	r3, r3, #32
+ 1270 01b8 70209FE5 		ldr	r2, .L6+16
+ 1271 01bc 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1272 01c0 0520C3E5 		strb	r2, [r3, #5]
+ 120:../reversi8_2026.c ****     candidatas[5][2] = SI;
+ 1273              		.loc 1 120 0
+ 1274 01c4 1C301BE5 		ldr	r3, [fp, #-28]
+ 1275 01c8 283083E2 		add	r3, r3, #40
+ 1276 01cc 5C209FE5 		ldr	r2, .L6+16
+ 1277 01d0 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1278 01d4 0220C3E5 		strb	r2, [r3, #2]
+ 121:../reversi8_2026.c ****     candidatas[5][3] = SI;
+ 1279              		.loc 1 121 0
+ 1280 01d8 1C301BE5 		ldr	r3, [fp, #-28]
+ 1281 01dc 283083E2 		add	r3, r3, #40
+ 1282 01e0 48209FE5 		ldr	r2, .L6+16
+ 1283 01e4 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1284 01e8 0320C3E5 		strb	r2, [r3, #3]
+ 122:../reversi8_2026.c ****     candidatas[5][4] = SI;
+ 1285              		.loc 1 122 0
+ 1286 01ec 1C301BE5 		ldr	r3, [fp, #-28]
+ 1287 01f0 283083E2 		add	r3, r3, #40
+ 1288 01f4 34209FE5 		ldr	r2, .L6+16
+ 1289 01f8 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1290 01fc 0420C3E5 		strb	r2, [r3, #4]
+ 123:../reversi8_2026.c ****     candidatas[5][5] = SI;
+ 1291              		.loc 1 123 0
+ 1292 0200 1C301BE5 		ldr	r3, [fp, #-28]
+ 1293 0204 283083E2 		add	r3, r3, #40
+ 1294 0208 20209FE5 		ldr	r2, .L6+16
+ 1295 020c 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 1296 0210 0520C3E5 		strb	r2, [r3, #5]
+ 124:../reversi8_2026.c **** }
+ 1297              		.loc 1 124 0
+ 1298 0214 0CD04BE2 		sub	sp, fp, #12
+ 1299 0218 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1300 021c 1EFF2FE1 		bx	lr
+ 1301              	.L7:
+ 1302              		.align	2
+ 1303              	.L6:
+ 1304 0220 00000000 		.word	CASILLA_VACIA
+ 1305 0224 00000000 		.word	FICHA_BLANCA
+ 1306 0228 00000000 		.word	FICHA_NEGRA
+ 1307 022c 00000000 		.word	CASILLA_OCUPADA
+ 1308 0230 00000000 		.word	SI
+ 1309              		.cfi_endproc
+ 1310              	.LFE0:
+ 1312              		.align	2
+ 1314              	esperar_mov:
+ 1315              	.LFB1:
+ 125:../reversi8_2026.c **** 
+ 126:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
+ 127:../reversi8_2026.c **** // Espera a que ready valga 1.
+ 128:../reversi8_2026.c **** // CUIDADO: si el compilador coloca esta variable en un registro, no funcionarï¿½.
+ 129:../reversi8_2026.c **** // Hay que definirla como "volatile" para forzar a que antes de cada uso la cargue de memoria
+ 130:../reversi8_2026.c **** 
+ 131:../reversi8_2026.c **** static void esperar_mov(char *ready)
+ 132:../reversi8_2026.c **** {
+ 1316              		.loc 1 132 0
+ 1317              		.cfi_startproc
+ 1318              		@ Function supports interworking.
+ 1319              		@ args = 0, pretend = 0, frame = 8
+ 1320              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1321 0234 0DC0A0E1 		mov	ip, sp
+ 1322              	.LCFI2:
+ 1323              		.cfi_def_cfa_register 12
+ 1324 0238 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1325 023c 04B04CE2 		sub	fp, ip, #4
+ 1326              		.cfi_offset 14, -8
+ 1327              		.cfi_offset 13, -12
+ 1328              		.cfi_offset 11, -16
+ 1329              	.LCFI3:
+ 1330              		.cfi_def_cfa 11, 4
+ 1331 0240 08D04DE2 		sub	sp, sp, #8
+ 1332 0244 10000BE5 		str	r0, [fp, #-16]
+ 133:../reversi8_2026.c ****     while (*ready == 0) {};  // bucle de espera de respuestas hasta que el se modifique el valor de
+ 1333              		.loc 1 133 0
+ 1334 0248 0000A0E1 		mov	r0, r0	@ nop
+ 1335              	.L9:
+ 1336              		.loc 1 133 0 is_stmt 0 discriminator 1
+ 1337 024c 10301BE5 		ldr	r3, [fp, #-16]
+ 1338 0250 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1339 0254 000053E3 		cmp	r3, #0
+ 1340 0258 FBFFFF0A 		beq	.L9
+ 134:../reversi8_2026.c **** 
+ 135:../reversi8_2026.c ****     *ready = 0;  //una vez que pasemos el bucle volvemos a fijar ready a 0;
+ 1341              		.loc 1 135 0 is_stmt 1
+ 1342 025c 10301BE5 		ldr	r3, [fp, #-16]
+ 1343 0260 0020A0E3 		mov	r2, #0
+ 1344 0264 0020C3E5 		strb	r2, [r3, #0]
+ 136:../reversi8_2026.c **** }
+ 1345              		.loc 1 136 0
+ 1346 0268 0CD04BE2 		sub	sp, fp, #12
+ 1347 026c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1348 0270 1EFF2FE1 		bx	lr
+ 1349              		.cfi_endproc
+ 1350              	.LFE1:
+ 1352              		.align	2
+ 1354              	color_ficha:
+ 1355              	.LFB2:
+ 137:../reversi8_2026.c **** 
+ 138:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
+ 139:../reversi8_2026.c **** //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 140:../reversi8_2026.c **** // IMPORTANTE: AL SUSTITUIR color_ficha() Y patron_volteo()
+ 141:../reversi8_2026.c **** // POR RUTINAS EN ENSAMBLADOR HAY QUE RESPETAR LA MODULARIDAD.
+ 142:../reversi8_2026.c **** // DEBEN SEGUIR SIENDO LLAMADAS A FUNCIONES Y DEBEN CUMPLIR CON EL ATPCS
+ 143:../reversi8_2026.c **** // (VER TRANSPARENCIAS Y MATERIAL DE PRACTICAS):
+ 144:../reversi8_2026.c **** //  - DEBEN PASAR LOS PARAMETROS POR LOS REGISTROS CORRESPONDIENTES
+ 145:../reversi8_2026.c **** //  - GUARDAR EN PILA SOLO LOS REGISTROS QUE TOCAN
+ 146:../reversi8_2026.c **** //  - CREAR UN MARCO DE PILA TAL Y COMO MUESTRAN LAS TRANSPARENCIAS
+ 147:../reversi8_2026.c **** //    DE LA ASIGNATURA (CON EL PC, FP, LR,....)
+ 148:../reversi8_2026.c **** //  - EN EL CASO DE LAS VARIABLES LOCALES, SOLO HAY QUE APILARLAS
+ 149:../reversi8_2026.c **** //    SI NO SE PUEDEN COLOCAR EN UN REGISTRO.
+ 150:../reversi8_2026.c **** //    SI SE COLOCAN EN UN REGISTRO NO HACE FALTA
+ 151:../reversi8_2026.c **** //    NI GUARDARLAS EN PILA NI RESERVAR UN ESPACIO EN LA PILA PARA ELLAS
+ 152:../reversi8_2026.c **** //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 153:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
+ 154:../reversi8_2026.c **** // Devuelve el contenido de la posiciï¿½n indicadas por la fila y columna actual.
+ 155:../reversi8_2026.c **** // Ademï¿½s informa si la posiciï¿½n es vï¿½lida y contiene alguna ficha.
+ 156:../reversi8_2026.c **** // Esto lo hace por referencia (en *es_posicion_correcta)
+ 157:../reversi8_2026.c **** // Si devuelve un 0 no es vï¿½lida o estï¿½ vacï¿½a.
+ 158:../reversi8_2026.c **** 
+ 159:../reversi8_2026.c **** static char color_ficha(char tablero[][DIM], char f, char c, int *es_posicion_correcta)
+ 160:../reversi8_2026.c **** {
+ 1356              		.loc 1 160 0
+ 1357              		.cfi_startproc
+ 1358              		@ Function supports interworking.
+ 1359              		@ args = 0, pretend = 0, frame = 24
+ 1360              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1361 0274 0DC0A0E1 		mov	ip, sp
+ 1362              	.LCFI4:
+ 1363              		.cfi_def_cfa_register 12
+ 1364 0278 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1365 027c 04B04CE2 		sub	fp, ip, #4
+ 1366              		.cfi_offset 14, -8
+ 1367              		.cfi_offset 13, -12
+ 1368              		.cfi_offset 11, -16
+ 1369              	.LCFI5:
+ 1370              		.cfi_def_cfa 11, 4
+ 1371 0280 18D04DE2 		sub	sp, sp, #24
+ 1372 0284 18000BE5 		str	r0, [fp, #-24]
+ 1373 0288 20300BE5 		str	r3, [fp, #-32]
+ 1374 028c 0130A0E1 		mov	r3, r1
+ 1375 0290 19304BE5 		strb	r3, [fp, #-25]
+ 1376 0294 0230A0E1 		mov	r3, r2
+ 1377 0298 1A304BE5 		strb	r3, [fp, #-26]
+ 161:../reversi8_2026.c ****     char ficha;
+ 162:../reversi8_2026.c **** 
+ 163:../reversi8_2026.c ****     // ficha = tablero[f][c];
+ 164:../reversi8_2026.c ****     // no puede accederse a tablero[f][c]
+ 165:../reversi8_2026.c ****     // ya que algï¿½n ï¿½ndice puede ser negativo
+ 166:../reversi8_2026.c **** 
+ 167:../reversi8_2026.c ****     if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ 1378              		.loc 1 167 0
+ 1379 029c 19305BE5 		ldrb	r3, [fp, #-25]	@ zero_extendqisi2
+ 1380 02a0 070053E3 		cmp	r3, #7
+ 1381 02a4 1700008A 		bhi	.L11
+ 1382              		.loc 1 167 0 is_stmt 0 discriminator 1
+ 1383 02a8 1A305BE5 		ldrb	r3, [fp, #-26]	@ zero_extendqisi2
+ 1384 02ac 070053E3 		cmp	r3, #7
+ 1385 02b0 1400008A 		bhi	.L11
+ 1386 02b4 19305BE5 		ldrb	r3, [fp, #-25]	@ zero_extendqisi2
+ 1387 02b8 8331A0E1 		mov	r3, r3, asl #3
+ 1388 02bc 18201BE5 		ldr	r2, [fp, #-24]
+ 1389 02c0 032082E0 		add	r2, r2, r3
+ 1390 02c4 1A305BE5 		ldrb	r3, [fp, #-26]	@ zero_extendqisi2
+ 1391 02c8 0320D2E7 		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 1392 02cc 60309FE5 		ldr	r3, .L13
+ 1393 02d0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1394 02d4 030052E1 		cmp	r2, r3
+ 1395 02d8 0A00000A 		beq	.L11
+ 168:../reversi8_2026.c ****     {
+ 169:../reversi8_2026.c ****         *es_posicion_correcta = 1;
+ 1396              		.loc 1 169 0 is_stmt 1
+ 1397 02dc 20301BE5 		ldr	r3, [fp, #-32]
+ 1398 02e0 0120A0E3 		mov	r2, #1
+ 1399 02e4 002083E5 		str	r2, [r3, #0]
+ 170:../reversi8_2026.c ****         ficha = tablero[f][c];
+ 1400              		.loc 1 170 0
+ 1401 02e8 19305BE5 		ldrb	r3, [fp, #-25]	@ zero_extendqisi2
+ 1402 02ec 8331A0E1 		mov	r3, r3, asl #3
+ 1403 02f0 18201BE5 		ldr	r2, [fp, #-24]
+ 1404 02f4 032082E0 		add	r2, r2, r3
+ 1405 02f8 1A305BE5 		ldrb	r3, [fp, #-26]	@ zero_extendqisi2
+ 1406 02fc 0330D2E7 		ldrb	r3, [r2, r3]
+ 1407 0300 0D304BE5 		strb	r3, [fp, #-13]
+ 1408 0304 050000EA 		b	.L12
+ 1409              	.L11:
+ 171:../reversi8_2026.c ****     }
+ 172:../reversi8_2026.c ****     else
+ 173:../reversi8_2026.c ****     {
+ 174:../reversi8_2026.c ****         *es_posicion_correcta = 0;
+ 1410              		.loc 1 174 0
+ 1411 0308 20301BE5 		ldr	r3, [fp, #-32]
+ 1412 030c 0020A0E3 		mov	r2, #0
+ 1413 0310 002083E5 		str	r2, [r3, #0]
+ 175:../reversi8_2026.c ****         ficha = CASILLA_VACIA;
+ 1414              		.loc 1 175 0
+ 1415 0314 18309FE5 		ldr	r3, .L13
+ 1416 0318 0030D3E5 		ldrb	r3, [r3, #0]
+ 1417 031c 0D304BE5 		strb	r3, [fp, #-13]
+ 1418              	.L12:
+ 176:../reversi8_2026.c ****     }
+ 177:../reversi8_2026.c ****     return ficha;
+ 1419              		.loc 1 177 0
+ 1420 0320 0D305BE5 		ldrb	r3, [fp, #-13]	@ zero_extendqisi2
+ 178:../reversi8_2026.c **** }
+ 1421              		.loc 1 178 0
+ 1422 0324 0300A0E1 		mov	r0, r3
+ 1423 0328 0CD04BE2 		sub	sp, fp, #12
+ 1424 032c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1425 0330 1EFF2FE1 		bx	lr
+ 1426              	.L14:
+ 1427              		.align	2
+ 1428              	.L13:
+ 1429 0334 00000000 		.word	CASILLA_VACIA
+ 1430              		.cfi_endproc
+ 1431              	.LFE2:
+ 1433              		.align	2
+ 1435              	patron_volteo:
+ 1436              	.LFB3:
+ 179:../reversi8_2026.c **** 
+ 180:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
+ 181:../reversi8_2026.c **** // La funciï¿½n patron_volteo comprueba si hay que actualizar una determinada direcciï¿½n,
+ 182:../reversi8_2026.c **** // busca el patrï¿½n de volteo (n fichas del rival seguidas de una ficha del jugador actual)
+ 183:../reversi8_2026.c **** // en una direcciï¿½n determinada
+ 184:../reversi8_2026.c **** // SF y SC son las cantidades a sumar para movernos en la direcciï¿½n que toque
+ 185:../reversi8_2026.c **** // color indica el color de la pieza que se acaba de colocar
+ 186:../reversi8_2026.c **** // la funciï¿½n devuelve MODELO_ENCONTRADO (1) si encuentra patrï¿½n y NO_HAY_MODELO (0) en caso co
+ 187:../reversi8_2026.c **** // FA y CA son la fila y columna a analizar
+ 188:../reversi8_2026.c **** // longitud es un parï¿½metro por referencia. Sirve para saber la longitud del patrï¿½n que se estï
+ 189:../reversi8_2026.c **** //          Se usa para saber cuantas fichas habrï¿½a que voltear
+ 190:../reversi8_2026.c **** 
+ 191:../reversi8_2026.c **** static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, ch
+ 192:../reversi8_2026.c **** {
+ 1437              		.loc 1 192 0
+ 1438              		.cfi_startproc
+ 1439              		@ Function supports interworking.
+ 1440              		@ args = 12, pretend = 0, frame = 24
+ 1441              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1442 0338 0DC0A0E1 		mov	ip, sp
+ 1443              	.LCFI6:
+ 1444              		.cfi_def_cfa_register 12
+ 1445 033c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1446 0340 04B04CE2 		sub	fp, ip, #4
+ 1447              		.cfi_offset 14, -8
+ 1448              		.cfi_offset 13, -12
+ 1449              		.cfi_offset 11, -16
+ 1450              	.LCFI7:
+ 1451              		.cfi_def_cfa 11, 4
+ 1452 0344 18D04DE2 		sub	sp, sp, #24
+ 1453 0348 18000BE5 		str	r0, [fp, #-24]
+ 1454 034c 1C100BE5 		str	r1, [fp, #-28]
+ 1455 0350 1D204BE5 		strb	r2, [fp, #-29]
+ 1456 0354 1E304BE5 		strb	r3, [fp, #-30]
+ 193:../reversi8_2026.c **** 	int es_posicion_correcta; // indica si la posiciï¿½n es correcta y contiene una ficha de algï¿½n j
+ 194:../reversi8_2026.c **** 	char casilla;   // casilla es la casilla que se lee del tablero
+ 195:../reversi8_2026.c **** 
+ 196:../reversi8_2026.c **** 	FA = FA + SF;
+ 1457              		.loc 1 196 0
+ 1458 0358 1D205BE5 		ldrb	r2, [fp, #-29]
+ 1459 035c 0430DBE5 		ldrb	r3, [fp, #4]
+ 1460 0360 033082E0 		add	r3, r2, r3
+ 1461 0364 1D304BE5 		strb	r3, [fp, #-29]
+ 197:../reversi8_2026.c **** 	CA = CA + SC;
+ 1462              		.loc 1 197 0
+ 1463 0368 1E205BE5 		ldrb	r2, [fp, #-30]
+ 1464 036c 0830DBE5 		ldrb	r3, [fp, #8]
+ 1465 0370 033082E0 		add	r3, r2, r3
+ 1466 0374 1E304BE5 		strb	r3, [fp, #-30]
+ 198:../reversi8_2026.c **** 	casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+ 1467              		.loc 1 198 0
+ 1468 0378 1D105BE5 		ldrb	r1, [fp, #-29]	@ zero_extendqisi2
+ 1469 037c 1E205BE5 		ldrb	r2, [fp, #-30]	@ zero_extendqisi2
+ 1470 0380 14304BE2 		sub	r3, fp, #20
+ 1471 0384 18001BE5 		ldr	r0, [fp, #-24]
+ 1472 0388 B9FFFFEB 		bl	color_ficha
+ 1473 038c 0030A0E1 		mov	r3, r0
+ 1474 0390 0D304BE5 		strb	r3, [fp, #-13]
+ 199:../reversi8_2026.c **** 	while ((es_posicion_correcta == 1) && (casilla != color))
+ 1475              		.loc 1 199 0
+ 1476 0394 130000EA 		b	.L16
+ 1477              	.L18:
+ 200:../reversi8_2026.c **** 	// mientras la casilla estï¿½ en el tablero, no estï¿½ vacï¿½ï¿½a,
+ 201:../reversi8_2026.c **** 	// y es del color rival seguimos buscando el modelo de volteo
+ 202:../reversi8_2026.c **** 	{
+ 203:../reversi8_2026.c **** 		FA = FA + SF;
+ 1478              		.loc 1 203 0
+ 1479 0398 1D205BE5 		ldrb	r2, [fp, #-29]
+ 1480 039c 0430DBE5 		ldrb	r3, [fp, #4]
+ 1481 03a0 033082E0 		add	r3, r2, r3
+ 1482 03a4 1D304BE5 		strb	r3, [fp, #-29]
+ 204:../reversi8_2026.c **** 		CA = CA + SC;
+ 1483              		.loc 1 204 0
+ 1484 03a8 1E205BE5 		ldrb	r2, [fp, #-30]
+ 1485 03ac 0830DBE5 		ldrb	r3, [fp, #8]
+ 1486 03b0 033082E0 		add	r3, r2, r3
+ 1487 03b4 1E304BE5 		strb	r3, [fp, #-30]
+ 205:../reversi8_2026.c **** 		*longitud = *longitud + 1;
+ 1488              		.loc 1 205 0
+ 1489 03b8 1C301BE5 		ldr	r3, [fp, #-28]
+ 1490 03bc 003093E5 		ldr	r3, [r3, #0]
+ 1491 03c0 012083E2 		add	r2, r3, #1
+ 1492 03c4 1C301BE5 		ldr	r3, [fp, #-28]
+ 1493 03c8 002083E5 		str	r2, [r3, #0]
+ 206:../reversi8_2026.c **** 		casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+ 1494              		.loc 1 206 0
+ 1495 03cc 1D105BE5 		ldrb	r1, [fp, #-29]	@ zero_extendqisi2
+ 1496 03d0 1E205BE5 		ldrb	r2, [fp, #-30]	@ zero_extendqisi2
+ 1497 03d4 14304BE2 		sub	r3, fp, #20
+ 1498 03d8 18001BE5 		ldr	r0, [fp, #-24]
+ 1499 03dc A4FFFFEB 		bl	color_ficha
+ 1500 03e0 0030A0E1 		mov	r3, r0
+ 1501 03e4 0D304BE5 		strb	r3, [fp, #-13]
+ 1502              	.L16:
+ 199:../reversi8_2026.c **** 	while ((es_posicion_correcta == 1) && (casilla != color))
+ 1503              		.loc 1 199 0 discriminator 1
+ 1504 03e8 14301BE5 		ldr	r3, [fp, #-20]
+ 1505 03ec 010053E3 		cmp	r3, #1
+ 1506 03f0 0300001A 		bne	.L17
+ 199:../reversi8_2026.c **** 	while ((es_posicion_correcta == 1) && (casilla != color))
+ 1507              		.loc 1 199 0 is_stmt 0 discriminator 2
+ 1508 03f4 0D205BE5 		ldrb	r2, [fp, #-13]	@ zero_extendqisi2
+ 1509 03f8 0C30DBE5 		ldrb	r3, [fp, #12]	@ zero_extendqisi2
+ 1510 03fc 030052E1 		cmp	r2, r3
+ 1511 0400 E4FFFF1A 		bne	.L18
+ 1512              	.L17:
+ 207:../reversi8_2026.c **** 	}
+ 208:../reversi8_2026.c ****     // si la ultima posiciï¿½n era vï¿½lida y la ficha es del jugador actual,
+ 209:../reversi8_2026.c ****     // entonces hemos encontrado el patrï¿½n
+ 210:../reversi8_2026.c **** 	if ((es_posicion_correcta == 1) && (casilla == color))
+ 1513              		.loc 1 210 0 is_stmt 1
+ 1514 0404 14301BE5 		ldr	r3, [fp, #-20]
+ 1515 0408 010053E3 		cmp	r3, #1
+ 1516 040c 0500001A 		bne	.L19
+ 1517              		.loc 1 210 0 is_stmt 0 discriminator 1
+ 1518 0410 0D205BE5 		ldrb	r2, [fp, #-13]	@ zero_extendqisi2
+ 1519 0414 0C30DBE5 		ldrb	r3, [fp, #12]	@ zero_extendqisi2
+ 1520 0418 030052E1 		cmp	r2, r3
+ 1521 041c 0100001A 		bne	.L19
+ 211:../reversi8_2026.c **** 		return MODELO_ENCONTRADO; // si hay que voltear una ficha o mï¿½s hemos encontrado el patrï¿½n
+ 1522              		.loc 1 211 0 is_stmt 1
+ 1523 0420 0130A0E3 		mov	r3, #1
+ 1524 0424 000000EA 		b	.L20
+ 1525              	.L19:
+ 212:../reversi8_2026.c **** 	else
+ 213:../reversi8_2026.c **** 		return NO_HAY_MODELO; // si no hay que voltear no hay patrï¿½n
+ 1526              		.loc 1 213 0
+ 1527 0428 0030A0E3 		mov	r3, #0
+ 1528              	.L20:
+ 214:../reversi8_2026.c **** }
+ 1529              		.loc 1 214 0
+ 1530 042c 0300A0E1 		mov	r0, r3
+ 1531 0430 0CD04BE2 		sub	sp, fp, #12
+ 1532 0434 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1533 0438 1EFF2FE1 		bx	lr
+ 1534              		.cfi_endproc
+ 1535              	.LFE3:
+ 1537              		.align	2
+ 1539              	voltear:
+ 1540              	.LFB4:
+ 215:../reversi8_2026.c **** 
+ 216:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
+ 217:../reversi8_2026.c **** // voltea n fichas en la direcciï¿½n que toque
+ 218:../reversi8_2026.c **** // SF y SC son las cantidades a sumar para movernos en la direcciï¿½n que toque
+ 219:../reversi8_2026.c **** // color indica el color de la pieza que se acaba de colocar
+ 220:../reversi8_2026.c **** // FA y CA son la fila y columna a analizar
+ 221:../reversi8_2026.c **** 
+ 222:../reversi8_2026.c **** static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+ 223:../reversi8_2026.c **** {
+ 1541              		.loc 1 223 0
+ 1542              		.cfi_startproc
+ 1543              		@ Function supports interworking.
+ 1544              		@ args = 12, pretend = 0, frame = 16
+ 1545              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1546 043c 0DC0A0E1 		mov	ip, sp
+ 1547              	.LCFI8:
+ 1548              		.cfi_def_cfa_register 12
+ 1549 0440 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1550 0444 04B04CE2 		sub	fp, ip, #4
+ 1551              		.cfi_offset 14, -8
+ 1552              		.cfi_offset 13, -12
+ 1553              		.cfi_offset 11, -16
+ 1554              	.LCFI9:
+ 1555              		.cfi_def_cfa 11, 4
+ 1556 0448 10D04DE2 		sub	sp, sp, #16
+ 1557 044c 18000BE5 		str	r0, [fp, #-24]
+ 1558 0450 19104BE5 		strb	r1, [fp, #-25]
+ 1559 0454 1A204BE5 		strb	r2, [fp, #-26]
+ 1560 0458 1B304BE5 		strb	r3, [fp, #-27]
+ 224:../reversi8_2026.c ****     int i;
+ 225:../reversi8_2026.c **** 
+ 226:../reversi8_2026.c ****     for (i = 0; i < n; i++)
+ 1561              		.loc 1 226 0
+ 1562 045c 0030A0E3 		mov	r3, #0
+ 1563 0460 10300BE5 		str	r3, [fp, #-16]
+ 1564 0464 110000EA 		b	.L22
+ 1565              	.L23:
+ 227:../reversi8_2026.c ****     {
+ 228:../reversi8_2026.c ****         FA = FA + SF;
+ 1566              		.loc 1 228 0 discriminator 2
+ 1567 0468 19205BE5 		ldrb	r2, [fp, #-25]
+ 1568 046c 1B305BE5 		ldrb	r3, [fp, #-27]
+ 1569 0470 033082E0 		add	r3, r2, r3
+ 1570 0474 19304BE5 		strb	r3, [fp, #-25]
+ 229:../reversi8_2026.c ****         CA = CA + SC;
+ 1571              		.loc 1 229 0 discriminator 2
+ 1572 0478 1A205BE5 		ldrb	r2, [fp, #-26]
+ 1573 047c 0430DBE5 		ldrb	r3, [fp, #4]
+ 1574 0480 033082E0 		add	r3, r2, r3
+ 1575 0484 1A304BE5 		strb	r3, [fp, #-26]
+ 230:../reversi8_2026.c ****         tablero[FA][CA] = color;
+ 1576              		.loc 1 230 0 discriminator 2
+ 1577 0488 19305BE5 		ldrb	r3, [fp, #-25]	@ zero_extendqisi2
+ 1578 048c 8331A0E1 		mov	r3, r3, asl #3
+ 1579 0490 18201BE5 		ldr	r2, [fp, #-24]
+ 1580 0494 032082E0 		add	r2, r2, r3
+ 1581 0498 1A305BE5 		ldrb	r3, [fp, #-26]	@ zero_extendqisi2
+ 1582 049c 0C10DBE5 		ldrb	r1, [fp, #12]
+ 1583 04a0 0310C2E7 		strb	r1, [r2, r3]
+ 226:../reversi8_2026.c ****     for (i = 0; i < n; i++)
+ 1584              		.loc 1 226 0 discriminator 2
+ 1585 04a4 10301BE5 		ldr	r3, [fp, #-16]
+ 1586 04a8 013083E2 		add	r3, r3, #1
+ 1587 04ac 10300BE5 		str	r3, [fp, #-16]
+ 1588              	.L22:
+ 226:../reversi8_2026.c ****     for (i = 0; i < n; i++)
+ 1589              		.loc 1 226 0 is_stmt 0 discriminator 1
+ 1590 04b0 10201BE5 		ldr	r2, [fp, #-16]
+ 1591 04b4 08309BE5 		ldr	r3, [fp, #8]
+ 1592 04b8 030052E1 		cmp	r2, r3
+ 1593 04bc E9FFFFBA 		blt	.L23
+ 231:../reversi8_2026.c ****     }
+ 232:../reversi8_2026.c **** }
+ 1594              		.loc 1 232 0 is_stmt 1
+ 1595 04c0 0CD04BE2 		sub	sp, fp, #12
+ 1596 04c4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1597 04c8 1EFF2FE1 		bx	lr
+ 1598              		.cfi_endproc
+ 1599              	.LFE4:
+ 1601              		.align	2
+ 1603              	actualizar_tablero:
+ 1604              	.LFB5:
+ 233:../reversi8_2026.c **** 
+ 234:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
+ 235:../reversi8_2026.c **** // comprueba si hay que actualizar alguna ficha
+ 236:../reversi8_2026.c **** // no comprueba que el movimiento realizado sea vï¿½lido
+ 237:../reversi8_2026.c **** // f y c son la fila y columna a analizar
+ 238:../reversi8_2026.c **** // char vSF[DIM] = {-1,-1, 0, 1, 1, 1, 0,-1};
+ 239:../reversi8_2026.c **** // char vSC[DIM] = { 0, 1, 1, 1, 0,-1,-1,-1};
+ 240:../reversi8_2026.c **** 
+ 241:../reversi8_2026.c **** static int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
+ 242:../reversi8_2026.c **** {
+ 1605              		.loc 1 242 0
+ 1606              		.cfi_startproc
+ 1607              		@ Function supports interworking.
+ 1608              		@ args = 0, pretend = 0, frame = 24
+ 1609              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1610 04cc 0DC0A0E1 		mov	ip, sp
+ 1611              	.LCFI10:
+ 1612              		.cfi_def_cfa_register 12
+ 1613 04d0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1614 04d4 04B04CE2 		sub	fp, ip, #4
+ 1615              		.cfi_offset 14, -8
+ 1616              		.cfi_offset 13, -12
+ 1617              		.cfi_offset 11, -16
+ 1618              	.LCFI11:
+ 1619              		.cfi_def_cfa 11, 4
+ 1620 04d8 28D04DE2 		sub	sp, sp, #40
+ 1621 04dc 20000BE5 		str	r0, [fp, #-32]
+ 1622 04e0 21104BE5 		strb	r1, [fp, #-33]
+ 1623 04e4 22204BE5 		strb	r2, [fp, #-34]
+ 1624 04e8 23304BE5 		strb	r3, [fp, #-35]
+ 243:../reversi8_2026.c ****     char SF, SC; // cantidades a sumar para movernos en la direcciï¿½n que toque
+ 244:../reversi8_2026.c ****     int i, flip, modelo;
+ 245:../reversi8_2026.c **** 
+ 246:../reversi8_2026.c ****     for (i = 0; i < DIM; i++) // 0 es Norte, 1 NE, 2 E ...
+ 1625              		.loc 1 246 0
+ 1626 04ec 0030A0E3 		mov	r3, #0
+ 1627 04f0 10300BE5 		str	r3, [fp, #-16]
+ 1628 04f4 280000EA 		b	.L25
+ 1629              	.L27:
+ 247:../reversi8_2026.c ****     {
+ 248:../reversi8_2026.c ****         SF = vSF[i];
+ 1630              		.loc 1 248 0
+ 1631 04f8 BC209FE5 		ldr	r2, .L28
+ 1632 04fc 10301BE5 		ldr	r3, [fp, #-16]
+ 1633 0500 033082E0 		add	r3, r2, r3
+ 1634 0504 0030D3E5 		ldrb	r3, [r3, #0]
+ 1635 0508 11304BE5 		strb	r3, [fp, #-17]
+ 249:../reversi8_2026.c ****         SC = vSC[i];
+ 1636              		.loc 1 249 0
+ 1637 050c AC209FE5 		ldr	r2, .L28+4
+ 1638 0510 10301BE5 		ldr	r3, [fp, #-16]
+ 1639 0514 033082E0 		add	r3, r2, r3
+ 1640 0518 0030D3E5 		ldrb	r3, [r3, #0]
+ 1641 051c 12304BE5 		strb	r3, [fp, #-18]
+ 250:../reversi8_2026.c ****         // flip: numero de fichas a voltear
+ 251:../reversi8_2026.c ****         flip = 0;
+ 1642              		.loc 1 251 0
+ 1643 0520 0030A0E3 		mov	r3, #0
+ 1644 0524 1C300BE5 		str	r3, [fp, #-28]
+ 252:../reversi8_2026.c ****         modelo = patron_volteo(tablero, &flip, f, c, SF, SC, color);
+ 1645              		.loc 1 252 0
+ 1646 0528 1C104BE2 		sub	r1, fp, #28
+ 1647 052c 21205BE5 		ldrb	r2, [fp, #-33]	@ zero_extendqisi2
+ 1648 0530 22305BE5 		ldrb	r3, [fp, #-34]	@ zero_extendqisi2
+ 1649 0534 11005BE5 		ldrb	r0, [fp, #-17]	@ zero_extendqisi2
+ 1650 0538 00008DE5 		str	r0, [sp, #0]
+ 1651 053c 12005BE5 		ldrb	r0, [fp, #-18]	@ zero_extendqisi2
+ 1652 0540 04008DE5 		str	r0, [sp, #4]
+ 1653 0544 23005BE5 		ldrb	r0, [fp, #-35]	@ zero_extendqisi2
+ 1654 0548 08008DE5 		str	r0, [sp, #8]
+ 1655 054c 20001BE5 		ldr	r0, [fp, #-32]
+ 1656 0550 78FFFFEB 		bl	patron_volteo
+ 1657 0554 18000BE5 		str	r0, [fp, #-24]
+ 253:../reversi8_2026.c ****         //printf("Flip: %d \n", flip);
+ 254:../reversi8_2026.c ****         if (modelo == MODELO_ENCONTRADO )
+ 1658              		.loc 1 254 0
+ 1659 0558 18301BE5 		ldr	r3, [fp, #-24]
+ 1660 055c 010053E3 		cmp	r3, #1
+ 1661 0560 0A00001A 		bne	.L26
+ 255:../reversi8_2026.c ****         {
+ 256:../reversi8_2026.c ****             voltear(tablero, f, c, SF, SC, flip, color);
+ 1662              		.loc 1 256 0
+ 1663 0564 1C001BE5 		ldr	r0, [fp, #-28]
+ 1664 0568 21105BE5 		ldrb	r1, [fp, #-33]	@ zero_extendqisi2
+ 1665 056c 22205BE5 		ldrb	r2, [fp, #-34]	@ zero_extendqisi2
+ 1666 0570 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 1667 0574 12C05BE5 		ldrb	ip, [fp, #-18]	@ zero_extendqisi2
+ 1668 0578 00C08DE5 		str	ip, [sp, #0]
+ 1669 057c 04008DE5 		str	r0, [sp, #4]
+ 1670 0580 23005BE5 		ldrb	r0, [fp, #-35]	@ zero_extendqisi2
+ 1671 0584 08008DE5 		str	r0, [sp, #8]
+ 1672 0588 20001BE5 		ldr	r0, [fp, #-32]
+ 1673 058c AAFFFFEB 		bl	voltear
+ 1674              	.L26:
+ 246:../reversi8_2026.c ****     for (i = 0; i < DIM; i++) // 0 es Norte, 1 NE, 2 E ...
+ 1675              		.loc 1 246 0
+ 1676 0590 10301BE5 		ldr	r3, [fp, #-16]
+ 1677 0594 013083E2 		add	r3, r3, #1
+ 1678 0598 10300BE5 		str	r3, [fp, #-16]
+ 1679              	.L25:
+ 246:../reversi8_2026.c ****     for (i = 0; i < DIM; i++) // 0 es Norte, 1 NE, 2 E ...
+ 1680              		.loc 1 246 0 is_stmt 0 discriminator 1
+ 1681 059c 10301BE5 		ldr	r3, [fp, #-16]
+ 1682 05a0 070053E3 		cmp	r3, #7
+ 1683 05a4 D3FFFFDA 		ble	.L27
+ 257:../reversi8_2026.c ****         }
+ 258:../reversi8_2026.c ****     }
+ 259:../reversi8_2026.c ****     return 0;
+ 1684              		.loc 1 259 0 is_stmt 1
+ 1685 05a8 0030A0E3 		mov	r3, #0
+ 260:../reversi8_2026.c **** }
+ 1686              		.loc 1 260 0
+ 1687 05ac 0300A0E1 		mov	r0, r3
+ 1688 05b0 0CD04BE2 		sub	sp, fp, #12
+ 1689 05b4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1690 05b8 1EFF2FE1 		bx	lr
+ 1691              	.L29:
+ 1692              		.align	2
+ 1693              	.L28:
+ 1694 05bc 00000000 		.word	vSF
+ 1695 05c0 00000000 		.word	vSC
+ 1696              		.cfi_endproc
+ 1697              	.LFE5:
+ 1699              		.align	2
+ 1701              	elegir_mov:
+ 1702              	.LFB6:
+ 261:../reversi8_2026.c **** 
+ 262:../reversi8_2026.c **** /////////////////////////////////////////////////////////////////////////////////
+ 263:../reversi8_2026.c **** // Recorre todo el tablero comprobando en cada posiciï¿½n si se puede mover
+ 264:../reversi8_2026.c **** // En caso afirmativo, consulta la puntuaciï¿½n de la posiciï¿½n y si es la mejor
+ 265:../reversi8_2026.c **** // que se ha encontrado la guarda
+ 266:../reversi8_2026.c **** // Al acabar escribe el movimiento seleccionado en f y c
+ 267:../reversi8_2026.c **** 
+ 268:../reversi8_2026.c **** // Candidatas
+ 269:../reversi8_2026.c **** // NO    0
+ 270:../reversi8_2026.c **** // SI    1
+ 271:../reversi8_2026.c **** // CASILLA_OCUPADA 2
+ 272:../reversi8_2026.c **** 
+ 273:../reversi8_2026.c **** static int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char *c)
+ 274:../reversi8_2026.c **** {
+ 1703              		.loc 1 274 0
+ 1704              		.cfi_startproc
+ 1705              		@ Function supports interworking.
+ 1706              		@ args = 0, pretend = 0, frame = 56
+ 1707              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1708 05c4 0DC0A0E1 		mov	ip, sp
+ 1709              	.LCFI12:
+ 1710              		.cfi_def_cfa_register 12
+ 1711 05c8 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1712 05cc 04B04CE2 		sub	fp, ip, #4
+ 1713              		.cfi_offset 14, -8
+ 1714              		.cfi_offset 13, -12
+ 1715              		.cfi_offset 11, -16
+ 1716              	.LCFI13:
+ 1717              		.cfi_def_cfa 11, 4
+ 1718 05d0 48D04DE2 		sub	sp, sp, #72
+ 1719 05d4 38000BE5 		str	r0, [fp, #-56]
+ 1720 05d8 3C100BE5 		str	r1, [fp, #-60]
+ 1721 05dc 40200BE5 		str	r2, [fp, #-64]
+ 1722 05e0 44300BE5 		str	r3, [fp, #-68]
+ 275:../reversi8_2026.c ****     int i, j, k, found;
+ 276:../reversi8_2026.c ****     int mf = -1; // almacena la fila del mejor movimiento encontrado
+ 1723              		.loc 1 276 0
+ 1724 05e4 0030E0E3 		mvn	r3, #0
+ 1725 05e8 20300BE5 		str	r3, [fp, #-32]
+ 277:../reversi8_2026.c ****     int mc;      // almacena la columna del mejor movimiento encontrado
+ 278:../reversi8_2026.c ****     char mejor = 0; // almacena el mejor valor encontrado
+ 1726              		.loc 1 278 0
+ 1727 05ec 0030A0E3 		mov	r3, #0
+ 1728 05f0 25304BE5 		strb	r3, [fp, #-37]
+ 279:../reversi8_2026.c ****     int modelo, longitud;
+ 280:../reversi8_2026.c ****     char SF, SC; // cantidades a sumar para movernos en la direcciï¿½n que toque
+ 281:../reversi8_2026.c **** 
+ 282:../reversi8_2026.c ****     // Recorremos todo el tablero comprobando dï¿½nde podemos mover
+ 283:../reversi8_2026.c ****     // Comparamos la puntuaciï¿½n de los movimientos encontrados y nos quedamos con el mejor
+ 284:../reversi8_2026.c ****     for (i=0; i<DIM; i++)
+ 1729              		.loc 1 284 0
+ 1730 05f4 0030A0E3 		mov	r3, #0
+ 1731 05f8 10300BE5 		str	r3, [fp, #-16]
+ 1732 05fc 650000EA 		b	.L31
+ 1733              	.L38:
+ 285:../reversi8_2026.c ****     {
+ 286:../reversi8_2026.c ****         for (j=0; j<DIM; j++)
+ 1734              		.loc 1 286 0
+ 1735 0600 0030A0E3 		mov	r3, #0
+ 1736 0604 14300BE5 		str	r3, [fp, #-20]
+ 1737 0608 5C0000EA 		b	.L32
+ 1738              	.L37:
+ 287:../reversi8_2026.c ****         {   // indica en quï¿½ casillas quizï¿½ se pueda mover
+ 288:../reversi8_2026.c ****             if (candidatas[i][j] == SI)
+ 1739              		.loc 1 288 0
+ 1740 060c 10301BE5 		ldr	r3, [fp, #-16]
+ 1741 0610 8331A0E1 		mov	r3, r3, asl #3
+ 1742 0614 38201BE5 		ldr	r2, [fp, #-56]
+ 1743 0618 032082E0 		add	r2, r2, r3
+ 1744 061c 14301BE5 		ldr	r3, [fp, #-20]
+ 1745 0620 033082E0 		add	r3, r2, r3
+ 1746 0624 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 1747 0628 A8319FE5 		ldr	r3, .L39
+ 1748 062c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1749 0630 030052E1 		cmp	r2, r3
+ 1750 0634 4E00001A 		bne	.L33
+ 289:../reversi8_2026.c ****             {
+ 290:../reversi8_2026.c ****                 if (tablero[i][j] == CASILLA_VACIA)
+ 1751              		.loc 1 290 0
+ 1752 0638 10301BE5 		ldr	r3, [fp, #-16]
+ 1753 063c 8331A0E1 		mov	r3, r3, asl #3
+ 1754 0640 3C201BE5 		ldr	r2, [fp, #-60]
+ 1755 0644 032082E0 		add	r2, r2, r3
+ 1756 0648 14301BE5 		ldr	r3, [fp, #-20]
+ 1757 064c 033082E0 		add	r3, r2, r3
+ 1758 0650 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 1759 0654 80319FE5 		ldr	r3, .L39+4
+ 1760 0658 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1761 065c 030052E1 		cmp	r2, r3
+ 1762 0660 4300001A 		bne	.L33
+ 291:../reversi8_2026.c ****                 {
+ 292:../reversi8_2026.c ****                     found = 0;
+ 1763              		.loc 1 292 0
+ 1764 0664 0030A0E3 		mov	r3, #0
+ 1765 0668 1C300BE5 		str	r3, [fp, #-28]
+ 293:../reversi8_2026.c ****                     k = 0;
+ 1766              		.loc 1 293 0
+ 1767 066c 0030A0E3 		mov	r3, #0
+ 1768 0670 18300BE5 		str	r3, [fp, #-24]
+ 294:../reversi8_2026.c **** 
+ 295:../reversi8_2026.c ****                     // en este bucle comprobamos si es un movimiento vï¿½lido
+ 296:../reversi8_2026.c ****                     // (es decir si implica voltear en alguna direcciï¿½n)
+ 297:../reversi8_2026.c ****                     while ((found == 0) && (k < DIM))
+ 1769              		.loc 1 297 0
+ 1770 0674 380000EA 		b	.L34
+ 1771              	.L36:
+ 298:../reversi8_2026.c ****                     {
+ 299:../reversi8_2026.c ****                         SF = vSF[k];    // k representa la direcciï¿½n que miramos
+ 1772              		.loc 1 299 0
+ 1773 0678 60219FE5 		ldr	r2, .L39+8
+ 1774 067c 18301BE5 		ldr	r3, [fp, #-24]
+ 1775 0680 033082E0 		add	r3, r2, r3
+ 1776 0684 0030D3E5 		ldrb	r3, [r3, #0]
+ 1777 0688 26304BE5 		strb	r3, [fp, #-38]
+ 300:../reversi8_2026.c ****                         SC = vSC[k];    // 1 es norte, 2 NE, 3 E ...
+ 1778              		.loc 1 300 0
+ 1779 068c 50219FE5 		ldr	r2, .L39+12
+ 1780 0690 18301BE5 		ldr	r3, [fp, #-24]
+ 1781 0694 033082E0 		add	r3, r2, r3
+ 1782 0698 0030D3E5 		ldrb	r3, [r3, #0]
+ 1783 069c 27304BE5 		strb	r3, [fp, #-39]
+ 301:../reversi8_2026.c **** 
+ 302:../reversi8_2026.c ****                         // nos dice quï¿½ hay que voltear en cada direcciï¿½n
+ 303:../reversi8_2026.c ****                         longitud = 0;
+ 1784              		.loc 1 303 0
+ 1785 06a0 0030A0E3 		mov	r3, #0
+ 1786 06a4 30300BE5 		str	r3, [fp, #-48]
+ 304:../reversi8_2026.c ****                         modelo = patron_volteo(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
+ 1787              		.loc 1 304 0
+ 1788 06a8 10301BE5 		ldr	r3, [fp, #-16]
+ 1789 06ac FF2003E2 		and	r2, r3, #255
+ 1790 06b0 14301BE5 		ldr	r3, [fp, #-20]
+ 1791 06b4 FF3003E2 		and	r3, r3, #255
+ 1792 06b8 28119FE5 		ldr	r1, .L39+16
+ 1793 06bc 0000D1E5 		ldrb	r0, [r1, #0]	@ zero_extendqisi2
+ 1794 06c0 30104BE2 		sub	r1, fp, #48
+ 1795 06c4 26C05BE5 		ldrb	ip, [fp, #-38]	@ zero_extendqisi2
+ 1796 06c8 00C08DE5 		str	ip, [sp, #0]
+ 1797 06cc 27C05BE5 		ldrb	ip, [fp, #-39]	@ zero_extendqisi2
+ 1798 06d0 04C08DE5 		str	ip, [sp, #4]
+ 1799 06d4 08008DE5 		str	r0, [sp, #8]
+ 1800 06d8 3C001BE5 		ldr	r0, [fp, #-60]
+ 1801 06dc 15FFFFEB 		bl	patron_volteo
+ 1802 06e0 2C000BE5 		str	r0, [fp, #-44]
+ 305:../reversi8_2026.c ****                         //  //printf("%d ", modelo);
+ 306:../reversi8_2026.c ****                         if (modelo == MODELO_ENCONTRADO)
+ 1803              		.loc 1 306 0
+ 1804 06e4 2C301BE5 		ldr	r3, [fp, #-44]
+ 1805 06e8 010053E3 		cmp	r3, #1
+ 1806 06ec 1700001A 		bne	.L35
+ 307:../reversi8_2026.c ****                         {
+ 308:../reversi8_2026.c ****                             found = 1;
+ 1807              		.loc 1 308 0
+ 1808 06f0 0130A0E3 		mov	r3, #1
+ 1809 06f4 1C300BE5 		str	r3, [fp, #-28]
+ 309:../reversi8_2026.c ****                             if (tabla_valor[i][j] > mejor)
+ 1810              		.loc 1 309 0
+ 1811 06f8 EC209FE5 		ldr	r2, .L39+20
+ 1812 06fc 10301BE5 		ldr	r3, [fp, #-16]
+ 1813 0700 8311A0E1 		mov	r1, r3, asl #3
+ 1814 0704 14301BE5 		ldr	r3, [fp, #-20]
+ 1815 0708 033081E0 		add	r3, r1, r3
+ 1816 070c 033082E0 		add	r3, r2, r3
+ 1817 0710 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1818 0714 25205BE5 		ldrb	r2, [fp, #-37]	@ zero_extendqisi2
+ 1819 0718 030052E1 		cmp	r2, r3
+ 1820 071c 0B00002A 		bcs	.L35
+ 310:../reversi8_2026.c ****                             {
+ 311:../reversi8_2026.c ****                                 mf = i;
+ 1821              		.loc 1 311 0
+ 1822 0720 10301BE5 		ldr	r3, [fp, #-16]
+ 1823 0724 20300BE5 		str	r3, [fp, #-32]
+ 312:../reversi8_2026.c ****                                 mc = j;
+ 1824              		.loc 1 312 0
+ 1825 0728 14301BE5 		ldr	r3, [fp, #-20]
+ 1826 072c 24300BE5 		str	r3, [fp, #-36]
+ 313:../reversi8_2026.c ****                                 mejor = tabla_valor[i][j];
+ 1827              		.loc 1 313 0
+ 1828 0730 B4209FE5 		ldr	r2, .L39+20
+ 1829 0734 10301BE5 		ldr	r3, [fp, #-16]
+ 1830 0738 8311A0E1 		mov	r1, r3, asl #3
+ 1831 073c 14301BE5 		ldr	r3, [fp, #-20]
+ 1832 0740 033081E0 		add	r3, r1, r3
+ 1833 0744 033082E0 		add	r3, r2, r3
+ 1834 0748 0030D3E5 		ldrb	r3, [r3, #0]
+ 1835 074c 25304BE5 		strb	r3, [fp, #-37]
+ 1836              	.L35:
+ 314:../reversi8_2026.c ****                             }
+ 315:../reversi8_2026.c ****                         }
+ 316:../reversi8_2026.c ****                         k++;
+ 1837              		.loc 1 316 0
+ 1838 0750 18301BE5 		ldr	r3, [fp, #-24]
+ 1839 0754 013083E2 		add	r3, r3, #1
+ 1840 0758 18300BE5 		str	r3, [fp, #-24]
+ 1841              	.L34:
+ 297:../reversi8_2026.c ****                     while ((found == 0) && (k < DIM))
+ 1842              		.loc 1 297 0 discriminator 1
+ 1843 075c 1C301BE5 		ldr	r3, [fp, #-28]
+ 1844 0760 000053E3 		cmp	r3, #0
+ 1845 0764 0200001A 		bne	.L33
+ 297:../reversi8_2026.c ****                     while ((found == 0) && (k < DIM))
+ 1846              		.loc 1 297 0 is_stmt 0 discriminator 2
+ 1847 0768 18301BE5 		ldr	r3, [fp, #-24]
+ 1848 076c 070053E3 		cmp	r3, #7
+ 1849 0770 C0FFFFDA 		ble	.L36
+ 1850              	.L33:
+ 286:../reversi8_2026.c ****         for (j=0; j<DIM; j++)
+ 1851              		.loc 1 286 0 is_stmt 1
+ 1852 0774 14301BE5 		ldr	r3, [fp, #-20]
+ 1853 0778 013083E2 		add	r3, r3, #1
+ 1854 077c 14300BE5 		str	r3, [fp, #-20]
+ 1855              	.L32:
+ 286:../reversi8_2026.c ****         for (j=0; j<DIM; j++)
+ 1856              		.loc 1 286 0 is_stmt 0 discriminator 1
+ 1857 0780 14301BE5 		ldr	r3, [fp, #-20]
+ 1858 0784 070053E3 		cmp	r3, #7
+ 1859 0788 9FFFFFDA 		ble	.L37
+ 284:../reversi8_2026.c ****     for (i=0; i<DIM; i++)
+ 1860              		.loc 1 284 0 is_stmt 1
+ 1861 078c 10301BE5 		ldr	r3, [fp, #-16]
+ 1862 0790 013083E2 		add	r3, r3, #1
+ 1863 0794 10300BE5 		str	r3, [fp, #-16]
+ 1864              	.L31:
+ 284:../reversi8_2026.c ****     for (i=0; i<DIM; i++)
+ 1865              		.loc 1 284 0 is_stmt 0 discriminator 1
+ 1866 0798 10301BE5 		ldr	r3, [fp, #-16]
+ 1867 079c 070053E3 		cmp	r3, #7
+ 1868 07a0 96FFFFDA 		ble	.L38
+ 317:../reversi8_2026.c ****                         // si no hemos encontrado nada probamos con la siguiente direcciï¿½n
+ 318:../reversi8_2026.c ****                     }
+ 319:../reversi8_2026.c ****                 }
+ 320:../reversi8_2026.c ****             }
+ 321:../reversi8_2026.c ****         }
+ 322:../reversi8_2026.c ****     }
+ 323:../reversi8_2026.c ****     *f = (char) mf;
+ 1869              		.loc 1 323 0 is_stmt 1
+ 1870 07a4 20301BE5 		ldr	r3, [fp, #-32]
+ 1871 07a8 FF2003E2 		and	r2, r3, #255
+ 1872 07ac 40301BE5 		ldr	r3, [fp, #-64]
+ 1873 07b0 0020C3E5 		strb	r2, [r3, #0]
+ 324:../reversi8_2026.c ****     *c = (char) mc;
+ 1874              		.loc 1 324 0
+ 1875 07b4 24301BE5 		ldr	r3, [fp, #-36]
+ 1876 07b8 FF2003E2 		and	r2, r3, #255
+ 1877 07bc 44301BE5 		ldr	r3, [fp, #-68]
+ 1878 07c0 0020C3E5 		strb	r2, [r3, #0]
+ 325:../reversi8_2026.c ****     // si no se ha encontrado una posiciï¿½n vï¿½lida devuelve -1
+ 326:../reversi8_2026.c ****     return mf;
+ 1879              		.loc 1 326 0
+ 1880 07c4 20301BE5 		ldr	r3, [fp, #-32]
+ 327:../reversi8_2026.c **** }
+ 1881              		.loc 1 327 0
+ 1882 07c8 0300A0E1 		mov	r0, r3
+ 1883 07cc 0CD04BE2 		sub	sp, fp, #12
+ 1884 07d0 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1885 07d4 1EFF2FE1 		bx	lr
+ 1886              	.L40:
+ 1887              		.align	2
+ 1888              	.L39:
+ 1889 07d8 00000000 		.word	SI
+ 1890 07dc 00000000 		.word	CASILLA_VACIA
+ 1891 07e0 00000000 		.word	vSF
+ 1892 07e4 00000000 		.word	vSC
+ 1893 07e8 00000000 		.word	FICHA_BLANCA
+ 1894 07ec 08000000 		.word	tabla_valor
+ 1895              		.cfi_endproc
+ 1896              	.LFE6:
+ 1898              		.align	2
+ 1900              	contar:
+ 1901              	.LFB7:
+ 328:../reversi8_2026.c **** 
+ 329:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
+ 330:../reversi8_2026.c **** // Cuenta el nï¿½mero de fichas de cada color.
+ 331:../reversi8_2026.c **** // Los guarda en la direcciï¿½n b (blancas) y n (negras)
+ 332:../reversi8_2026.c **** 
+ 333:../reversi8_2026.c **** static void contar(char tablero[][DIM], int *b, int *n)
+ 334:../reversi8_2026.c **** {
+ 1902              		.loc 1 334 0
+ 1903              		.cfi_startproc
+ 1904              		@ Function supports interworking.
+ 1905              		@ args = 0, pretend = 0, frame = 24
+ 1906              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1907 07f0 0DC0A0E1 		mov	ip, sp
+ 1908              	.LCFI14:
+ 1909              		.cfi_def_cfa_register 12
+ 1910 07f4 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1911 07f8 04B04CE2 		sub	fp, ip, #4
+ 1912              		.cfi_offset 14, -8
+ 1913              		.cfi_offset 13, -12
+ 1914              		.cfi_offset 11, -16
+ 1915              	.LCFI15:
+ 1916              		.cfi_def_cfa 11, 4
+ 1917 07fc 18D04DE2 		sub	sp, sp, #24
+ 1918 0800 18000BE5 		str	r0, [fp, #-24]
+ 1919 0804 1C100BE5 		str	r1, [fp, #-28]
+ 1920 0808 20200BE5 		str	r2, [fp, #-32]
+ 335:../reversi8_2026.c ****     int i,j;
+ 336:../reversi8_2026.c **** 
+ 337:../reversi8_2026.c ****     *b = 0;
+ 1921              		.loc 1 337 0
+ 1922 080c 1C301BE5 		ldr	r3, [fp, #-28]
+ 1923 0810 0020A0E3 		mov	r2, #0
+ 1924 0814 002083E5 		str	r2, [r3, #0]
+ 338:../reversi8_2026.c ****     *n = 0;
+ 1925              		.loc 1 338 0
+ 1926 0818 20301BE5 		ldr	r3, [fp, #-32]
+ 1927 081c 0020A0E3 		mov	r2, #0
+ 1928 0820 002083E5 		str	r2, [r3, #0]
+ 339:../reversi8_2026.c **** 
+ 340:../reversi8_2026.c ****     // recorremos todo el tablero contando las fichas de cada color
+ 341:../reversi8_2026.c ****     for (i=0; i<DIM; i++)
+ 1929              		.loc 1 341 0
+ 1930 0824 0030A0E3 		mov	r3, #0
+ 1931 0828 10300BE5 		str	r3, [fp, #-16]
+ 1932 082c 2C0000EA 		b	.L42
+ 1933              	.L47:
+ 342:../reversi8_2026.c ****     {
+ 343:../reversi8_2026.c ****         for (j=0; j<DIM; j++)
+ 1934              		.loc 1 343 0
+ 1935 0830 0030A0E3 		mov	r3, #0
+ 1936 0834 14300BE5 		str	r3, [fp, #-20]
+ 1937 0838 230000EA 		b	.L43
+ 1938              	.L46:
+ 344:../reversi8_2026.c ****         {
+ 345:../reversi8_2026.c ****             if (tablero[i][j] == FICHA_BLANCA)
+ 1939              		.loc 1 345 0
+ 1940 083c 10301BE5 		ldr	r3, [fp, #-16]
+ 1941 0840 8331A0E1 		mov	r3, r3, asl #3
+ 1942 0844 18201BE5 		ldr	r2, [fp, #-24]
+ 1943 0848 032082E0 		add	r2, r2, r3
+ 1944 084c 14301BE5 		ldr	r3, [fp, #-20]
+ 1945 0850 033082E0 		add	r3, r2, r3
+ 1946 0854 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 1947 0858 9C309FE5 		ldr	r3, .L48
+ 1948 085c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1949 0860 030052E1 		cmp	r2, r3
+ 1950 0864 0500001A 		bne	.L44
+ 346:../reversi8_2026.c ****             {
+ 347:../reversi8_2026.c ****                 (*b)++;
+ 1951              		.loc 1 347 0
+ 1952 0868 1C301BE5 		ldr	r3, [fp, #-28]
+ 1953 086c 003093E5 		ldr	r3, [r3, #0]
+ 1954 0870 012083E2 		add	r2, r3, #1
+ 1955 0874 1C301BE5 		ldr	r3, [fp, #-28]
+ 1956 0878 002083E5 		str	r2, [r3, #0]
+ 1957 087c 0F0000EA 		b	.L45
+ 1958              	.L44:
+ 348:../reversi8_2026.c ****             }
+ 349:../reversi8_2026.c ****             else if (tablero[i][j] == FICHA_NEGRA)
+ 1959              		.loc 1 349 0
+ 1960 0880 10301BE5 		ldr	r3, [fp, #-16]
+ 1961 0884 8331A0E1 		mov	r3, r3, asl #3
+ 1962 0888 18201BE5 		ldr	r2, [fp, #-24]
+ 1963 088c 032082E0 		add	r2, r2, r3
+ 1964 0890 14301BE5 		ldr	r3, [fp, #-20]
+ 1965 0894 033082E0 		add	r3, r2, r3
+ 1966 0898 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 1967 089c 5C309FE5 		ldr	r3, .L48+4
+ 1968 08a0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 1969 08a4 030052E1 		cmp	r2, r3
+ 1970 08a8 0400001A 		bne	.L45
+ 350:../reversi8_2026.c ****             {
+ 351:../reversi8_2026.c ****                 (*n)++;
+ 1971              		.loc 1 351 0
+ 1972 08ac 20301BE5 		ldr	r3, [fp, #-32]
+ 1973 08b0 003093E5 		ldr	r3, [r3, #0]
+ 1974 08b4 012083E2 		add	r2, r3, #1
+ 1975 08b8 20301BE5 		ldr	r3, [fp, #-32]
+ 1976 08bc 002083E5 		str	r2, [r3, #0]
+ 1977              	.L45:
+ 343:../reversi8_2026.c ****         for (j=0; j<DIM; j++)
+ 1978              		.loc 1 343 0
+ 1979 08c0 14301BE5 		ldr	r3, [fp, #-20]
+ 1980 08c4 013083E2 		add	r3, r3, #1
+ 1981 08c8 14300BE5 		str	r3, [fp, #-20]
+ 1982              	.L43:
+ 343:../reversi8_2026.c ****         for (j=0; j<DIM; j++)
+ 1983              		.loc 1 343 0 is_stmt 0 discriminator 1
+ 1984 08cc 14301BE5 		ldr	r3, [fp, #-20]
+ 1985 08d0 070053E3 		cmp	r3, #7
+ 1986 08d4 D8FFFFDA 		ble	.L46
+ 341:../reversi8_2026.c ****     for (i=0; i<DIM; i++)
+ 1987              		.loc 1 341 0 is_stmt 1
+ 1988 08d8 10301BE5 		ldr	r3, [fp, #-16]
+ 1989 08dc 013083E2 		add	r3, r3, #1
+ 1990 08e0 10300BE5 		str	r3, [fp, #-16]
+ 1991              	.L42:
+ 341:../reversi8_2026.c ****     for (i=0; i<DIM; i++)
+ 1992              		.loc 1 341 0 is_stmt 0 discriminator 1
+ 1993 08e4 10301BE5 		ldr	r3, [fp, #-16]
+ 1994 08e8 070053E3 		cmp	r3, #7
+ 1995 08ec CFFFFFDA 		ble	.L47
+ 352:../reversi8_2026.c ****             }
+ 353:../reversi8_2026.c ****         }
+ 354:../reversi8_2026.c ****     }
+ 355:../reversi8_2026.c **** }
+ 1996              		.loc 1 355 0 is_stmt 1
+ 1997 08f0 0CD04BE2 		sub	sp, fp, #12
+ 1998 08f4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1999 08f8 1EFF2FE1 		bx	lr
+ 2000              	.L49:
+ 2001              		.align	2
+ 2002              	.L48:
+ 2003 08fc 00000000 		.word	FICHA_BLANCA
+ 2004 0900 00000000 		.word	FICHA_NEGRA
+ 2005              		.cfi_endproc
+ 2006              	.LFE7:
+ 2008              		.align	2
+ 2010              	actualizar_candidatas:
+ 2011              	.LFB8:
+ 356:../reversi8_2026.c **** 
+ 357:../reversi8_2026.c **** static void actualizar_candidatas(char candidatas[][DIM], char f, char c)
+ 358:../reversi8_2026.c **** {
+ 2012              		.loc 1 358 0
+ 2013              		.cfi_startproc
+ 2014              		@ Function supports interworking.
+ 2015              		@ args = 0, pretend = 0, frame = 8
+ 2016              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2017 0904 0DC0A0E1 		mov	ip, sp
+ 2018              	.LCFI16:
+ 2019              		.cfi_def_cfa_register 12
+ 2020 0908 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2021 090c 04B04CE2 		sub	fp, ip, #4
+ 2022              		.cfi_offset 14, -8
+ 2023              		.cfi_offset 13, -12
+ 2024              		.cfi_offset 11, -16
+ 2025              	.LCFI17:
+ 2026              		.cfi_def_cfa 11, 4
+ 2027 0910 08D04DE2 		sub	sp, sp, #8
+ 2028 0914 10000BE5 		str	r0, [fp, #-16]
+ 2029 0918 0230A0E1 		mov	r3, r2
+ 2030 091c 0120A0E1 		mov	r2, r1
+ 2031 0920 11204BE5 		strb	r2, [fp, #-17]
+ 2032 0924 12304BE5 		strb	r3, [fp, #-18]
+ 359:../reversi8_2026.c ****     // donde ya se ha colocado no se puede volver a colocar
+ 360:../reversi8_2026.c ****     // En las posiciones alrededor sï¿½
+ 361:../reversi8_2026.c ****     candidatas[f][c] = CASILLA_OCUPADA;
+ 2033              		.loc 1 361 0
+ 2034 0928 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2035 092c 8331A0E1 		mov	r3, r3, asl #3
+ 2036 0930 10201BE5 		ldr	r2, [fp, #-16]
+ 2037 0934 032082E0 		add	r2, r2, r3
+ 2038 0938 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2039 093c 10139FE5 		ldr	r1, .L59
+ 2040 0940 0010D1E5 		ldrb	r1, [r1, #0]	@ zero_extendqisi2
+ 2041 0944 0310C2E7 		strb	r1, [r2, r3]
+ 362:../reversi8_2026.c ****     if (f > 0)
+ 2042              		.loc 1 362 0
+ 2043 0948 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2044 094c 000053E3 		cmp	r3, #0
+ 2045 0950 4500000A 		beq	.L51
+ 363:../reversi8_2026.c ****     {
+ 364:../reversi8_2026.c ****         if (candidatas[f-1][c] != CASILLA_OCUPADA)
+ 2046              		.loc 1 364 0
+ 2047 0954 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2048 0958 013043E2 		sub	r3, r3, #1
+ 2049 095c 8331A0E1 		mov	r3, r3, asl #3
+ 2050 0960 10201BE5 		ldr	r2, [fp, #-16]
+ 2051 0964 032082E0 		add	r2, r2, r3
+ 2052 0968 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2053 096c 0320D2E7 		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 2054 0970 DC329FE5 		ldr	r3, .L59
+ 2055 0974 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2056 0978 030052E1 		cmp	r2, r3
+ 2057 097c 0800000A 		beq	.L52
+ 365:../reversi8_2026.c ****             candidatas[f-1][c] = SI;
+ 2058              		.loc 1 365 0
+ 2059 0980 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2060 0984 013043E2 		sub	r3, r3, #1
+ 2061 0988 8331A0E1 		mov	r3, r3, asl #3
+ 2062 098c 10201BE5 		ldr	r2, [fp, #-16]
+ 2063 0990 032082E0 		add	r2, r2, r3
+ 2064 0994 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2065 0998 B8129FE5 		ldr	r1, .L59+4
+ 2066 099c 0010D1E5 		ldrb	r1, [r1, #0]	@ zero_extendqisi2
+ 2067 09a0 0310C2E7 		strb	r1, [r2, r3]
+ 2068              	.L52:
+ 366:../reversi8_2026.c **** 
+ 367:../reversi8_2026.c ****         if ((c > 0) && (candidatas[f-1][c-1] != CASILLA_OCUPADA))
+ 2069              		.loc 1 367 0
+ 2070 09a4 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2071 09a8 000053E3 		cmp	r3, #0
+ 2072 09ac 1500000A 		beq	.L53
+ 2073              		.loc 1 367 0 is_stmt 0 discriminator 1
+ 2074 09b0 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2075 09b4 013043E2 		sub	r3, r3, #1
+ 2076 09b8 8331A0E1 		mov	r3, r3, asl #3
+ 2077 09bc 10201BE5 		ldr	r2, [fp, #-16]
+ 2078 09c0 032082E0 		add	r2, r2, r3
+ 2079 09c4 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2080 09c8 013043E2 		sub	r3, r3, #1
+ 2081 09cc 0320D2E7 		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 2082 09d0 7C329FE5 		ldr	r3, .L59
+ 2083 09d4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2084 09d8 030052E1 		cmp	r2, r3
+ 2085 09dc 0900000A 		beq	.L53
+ 368:../reversi8_2026.c ****             candidatas[f-1][c-1] = SI;
+ 2086              		.loc 1 368 0 is_stmt 1
+ 2087 09e0 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2088 09e4 013043E2 		sub	r3, r3, #1
+ 2089 09e8 8331A0E1 		mov	r3, r3, asl #3
+ 2090 09ec 10201BE5 		ldr	r2, [fp, #-16]
+ 2091 09f0 032082E0 		add	r2, r2, r3
+ 2092 09f4 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2093 09f8 013043E2 		sub	r3, r3, #1
+ 2094 09fc 54129FE5 		ldr	r1, .L59+4
+ 2095 0a00 0010D1E5 		ldrb	r1, [r1, #0]	@ zero_extendqisi2
+ 2096 0a04 0310C2E7 		strb	r1, [r2, r3]
+ 2097              	.L53:
+ 369:../reversi8_2026.c **** 
+ 370:../reversi8_2026.c ****         if ((c < 7) && (candidatas[f-1][c+1] != CASILLA_OCUPADA))
+ 2098              		.loc 1 370 0
+ 2099 0a08 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2100 0a0c 060053E3 		cmp	r3, #6
+ 2101 0a10 1500008A 		bhi	.L51
+ 2102              		.loc 1 370 0 is_stmt 0 discriminator 1
+ 2103 0a14 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2104 0a18 013043E2 		sub	r3, r3, #1
+ 2105 0a1c 8331A0E1 		mov	r3, r3, asl #3
+ 2106 0a20 10201BE5 		ldr	r2, [fp, #-16]
+ 2107 0a24 032082E0 		add	r2, r2, r3
+ 2108 0a28 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2109 0a2c 013083E2 		add	r3, r3, #1
+ 2110 0a30 0320D2E7 		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 2111 0a34 18329FE5 		ldr	r3, .L59
+ 2112 0a38 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2113 0a3c 030052E1 		cmp	r2, r3
+ 2114 0a40 0900000A 		beq	.L51
+ 371:../reversi8_2026.c ****             candidatas[f-1][c+1] = SI;
+ 2115              		.loc 1 371 0 is_stmt 1
+ 2116 0a44 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2117 0a48 013043E2 		sub	r3, r3, #1
+ 2118 0a4c 8331A0E1 		mov	r3, r3, asl #3
+ 2119 0a50 10201BE5 		ldr	r2, [fp, #-16]
+ 2120 0a54 032082E0 		add	r2, r2, r3
+ 2121 0a58 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2122 0a5c 013083E2 		add	r3, r3, #1
+ 2123 0a60 F0119FE5 		ldr	r1, .L59+4
+ 2124 0a64 0010D1E5 		ldrb	r1, [r1, #0]	@ zero_extendqisi2
+ 2125 0a68 0310C2E7 		strb	r1, [r2, r3]
+ 2126              	.L51:
+ 372:../reversi8_2026.c ****     }
+ 373:../reversi8_2026.c ****     if (f < 7)
+ 2127              		.loc 1 373 0
+ 2128 0a6c 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2129 0a70 060053E3 		cmp	r3, #6
+ 2130 0a74 4500008A 		bhi	.L54
+ 374:../reversi8_2026.c ****     {
+ 375:../reversi8_2026.c ****         if (candidatas[f+1][c] != CASILLA_OCUPADA)
+ 2131              		.loc 1 375 0
+ 2132 0a78 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2133 0a7c 013083E2 		add	r3, r3, #1
+ 2134 0a80 8331A0E1 		mov	r3, r3, asl #3
+ 2135 0a84 10201BE5 		ldr	r2, [fp, #-16]
+ 2136 0a88 032082E0 		add	r2, r2, r3
+ 2137 0a8c 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2138 0a90 0320D2E7 		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 2139 0a94 B8319FE5 		ldr	r3, .L59
+ 2140 0a98 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2141 0a9c 030052E1 		cmp	r2, r3
+ 2142 0aa0 0800000A 		beq	.L55
+ 376:../reversi8_2026.c ****             candidatas[f+1][c] = SI;
+ 2143              		.loc 1 376 0
+ 2144 0aa4 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2145 0aa8 013083E2 		add	r3, r3, #1
+ 2146 0aac 8331A0E1 		mov	r3, r3, asl #3
+ 2147 0ab0 10201BE5 		ldr	r2, [fp, #-16]
+ 2148 0ab4 032082E0 		add	r2, r2, r3
+ 2149 0ab8 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2150 0abc 94119FE5 		ldr	r1, .L59+4
+ 2151 0ac0 0010D1E5 		ldrb	r1, [r1, #0]	@ zero_extendqisi2
+ 2152 0ac4 0310C2E7 		strb	r1, [r2, r3]
+ 2153              	.L55:
+ 377:../reversi8_2026.c **** 
+ 378:../reversi8_2026.c ****         if ((c > 0) && (candidatas[f+1][c-1] != CASILLA_OCUPADA))
+ 2154              		.loc 1 378 0
+ 2155 0ac8 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2156 0acc 000053E3 		cmp	r3, #0
+ 2157 0ad0 1500000A 		beq	.L56
+ 2158              		.loc 1 378 0 is_stmt 0 discriminator 1
+ 2159 0ad4 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2160 0ad8 013083E2 		add	r3, r3, #1
+ 2161 0adc 8331A0E1 		mov	r3, r3, asl #3
+ 2162 0ae0 10201BE5 		ldr	r2, [fp, #-16]
+ 2163 0ae4 032082E0 		add	r2, r2, r3
+ 2164 0ae8 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2165 0aec 013043E2 		sub	r3, r3, #1
+ 2166 0af0 0320D2E7 		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 2167 0af4 58319FE5 		ldr	r3, .L59
+ 2168 0af8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2169 0afc 030052E1 		cmp	r2, r3
+ 2170 0b00 0900000A 		beq	.L56
+ 379:../reversi8_2026.c ****             candidatas[f+1][c-1] = SI;
+ 2171              		.loc 1 379 0 is_stmt 1
+ 2172 0b04 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2173 0b08 013083E2 		add	r3, r3, #1
+ 2174 0b0c 8331A0E1 		mov	r3, r3, asl #3
+ 2175 0b10 10201BE5 		ldr	r2, [fp, #-16]
+ 2176 0b14 032082E0 		add	r2, r2, r3
+ 2177 0b18 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2178 0b1c 013043E2 		sub	r3, r3, #1
+ 2179 0b20 30119FE5 		ldr	r1, .L59+4
+ 2180 0b24 0010D1E5 		ldrb	r1, [r1, #0]	@ zero_extendqisi2
+ 2181 0b28 0310C2E7 		strb	r1, [r2, r3]
+ 2182              	.L56:
+ 380:../reversi8_2026.c **** 
+ 381:../reversi8_2026.c ****         if ((c < 7) && (candidatas[f+1][c+1] != CASILLA_OCUPADA))
+ 2183              		.loc 1 381 0
+ 2184 0b2c 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2185 0b30 060053E3 		cmp	r3, #6
+ 2186 0b34 1500008A 		bhi	.L54
+ 2187              		.loc 1 381 0 is_stmt 0 discriminator 1
+ 2188 0b38 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2189 0b3c 013083E2 		add	r3, r3, #1
+ 2190 0b40 8331A0E1 		mov	r3, r3, asl #3
+ 2191 0b44 10201BE5 		ldr	r2, [fp, #-16]
+ 2192 0b48 032082E0 		add	r2, r2, r3
+ 2193 0b4c 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2194 0b50 013083E2 		add	r3, r3, #1
+ 2195 0b54 0320D2E7 		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 2196 0b58 F4309FE5 		ldr	r3, .L59
+ 2197 0b5c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2198 0b60 030052E1 		cmp	r2, r3
+ 2199 0b64 0900000A 		beq	.L54
+ 382:../reversi8_2026.c ****             candidatas[f+1][c+1] = SI;
+ 2200              		.loc 1 382 0 is_stmt 1
+ 2201 0b68 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2202 0b6c 013083E2 		add	r3, r3, #1
+ 2203 0b70 8331A0E1 		mov	r3, r3, asl #3
+ 2204 0b74 10201BE5 		ldr	r2, [fp, #-16]
+ 2205 0b78 032082E0 		add	r2, r2, r3
+ 2206 0b7c 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2207 0b80 013083E2 		add	r3, r3, #1
+ 2208 0b84 CC109FE5 		ldr	r1, .L59+4
+ 2209 0b88 0010D1E5 		ldrb	r1, [r1, #0]	@ zero_extendqisi2
+ 2210 0b8c 0310C2E7 		strb	r1, [r2, r3]
+ 2211              	.L54:
+ 383:../reversi8_2026.c ****     }
+ 384:../reversi8_2026.c ****     if ((c > 0) && (candidatas[f][c-1] != CASILLA_OCUPADA))
+ 2212              		.loc 1 384 0
+ 2213 0b90 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2214 0b94 000053E3 		cmp	r3, #0
+ 2215 0b98 1300000A 		beq	.L57
+ 2216              		.loc 1 384 0 is_stmt 0 discriminator 1
+ 2217 0b9c 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2218 0ba0 8331A0E1 		mov	r3, r3, asl #3
+ 2219 0ba4 10201BE5 		ldr	r2, [fp, #-16]
+ 2220 0ba8 032082E0 		add	r2, r2, r3
+ 2221 0bac 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2222 0bb0 013043E2 		sub	r3, r3, #1
+ 2223 0bb4 0320D2E7 		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 2224 0bb8 94309FE5 		ldr	r3, .L59
+ 2225 0bbc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2226 0bc0 030052E1 		cmp	r2, r3
+ 2227 0bc4 0800000A 		beq	.L57
+ 385:../reversi8_2026.c ****         candidatas[f][c-1] = SI;
+ 2228              		.loc 1 385 0 is_stmt 1
+ 2229 0bc8 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2230 0bcc 8331A0E1 		mov	r3, r3, asl #3
+ 2231 0bd0 10201BE5 		ldr	r2, [fp, #-16]
+ 2232 0bd4 032082E0 		add	r2, r2, r3
+ 2233 0bd8 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2234 0bdc 013043E2 		sub	r3, r3, #1
+ 2235 0be0 70109FE5 		ldr	r1, .L59+4
+ 2236 0be4 0010D1E5 		ldrb	r1, [r1, #0]	@ zero_extendqisi2
+ 2237 0be8 0310C2E7 		strb	r1, [r2, r3]
+ 2238              	.L57:
+ 386:../reversi8_2026.c **** 
+ 387:../reversi8_2026.c ****     if ((c < 7) && (candidatas[f][c+1] != CASILLA_OCUPADA))
+ 2239              		.loc 1 387 0
+ 2240 0bec 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2241 0bf0 060053E3 		cmp	r3, #6
+ 2242 0bf4 1300008A 		bhi	.L50
+ 2243              		.loc 1 387 0 is_stmt 0 discriminator 1
+ 2244 0bf8 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2245 0bfc 8331A0E1 		mov	r3, r3, asl #3
+ 2246 0c00 10201BE5 		ldr	r2, [fp, #-16]
+ 2247 0c04 032082E0 		add	r2, r2, r3
+ 2248 0c08 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2249 0c0c 013083E2 		add	r3, r3, #1
+ 2250 0c10 0320D2E7 		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 2251 0c14 38309FE5 		ldr	r3, .L59
+ 2252 0c18 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2253 0c1c 030052E1 		cmp	r2, r3
+ 2254 0c20 0800000A 		beq	.L50
+ 388:../reversi8_2026.c ****         candidatas[f][c+1] = SI;
+ 2255              		.loc 1 388 0 is_stmt 1
+ 2256 0c24 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2257 0c28 8331A0E1 		mov	r3, r3, asl #3
+ 2258 0c2c 10201BE5 		ldr	r2, [fp, #-16]
+ 2259 0c30 032082E0 		add	r2, r2, r3
+ 2260 0c34 12305BE5 		ldrb	r3, [fp, #-18]	@ zero_extendqisi2
+ 2261 0c38 013083E2 		add	r3, r3, #1
+ 2262 0c3c 14109FE5 		ldr	r1, .L59+4
+ 2263 0c40 0010D1E5 		ldrb	r1, [r1, #0]	@ zero_extendqisi2
+ 2264 0c44 0310C2E7 		strb	r1, [r2, r3]
+ 2265              	.L50:
+ 389:../reversi8_2026.c **** }
+ 2266              		.loc 1 389 0
+ 2267 0c48 0CD04BE2 		sub	sp, fp, #12
+ 2268 0c4c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2269 0c50 1EFF2FE1 		bx	lr
+ 2270              	.L60:
+ 2271              		.align	2
+ 2272              	.L59:
+ 2273 0c54 00000000 		.word	CASILLA_OCUPADA
+ 2274 0c58 00000000 		.word	SI
+ 2275              		.cfi_endproc
+ 2276              	.LFE8:
+ 2278              		.align	2
+ 2279              		.global	reversi8
+ 2281              	reversi8:
+ 2282              	.LFB9:
+ 390:../reversi8_2026.c **** 
+ 391:../reversi8_2026.c **** 
+ 392:../reversi8_2026.c **** 
+ 393:../reversi8_2026.c **** 
+ 394:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
+ 395:../reversi8_2026.c **** // Proceso principal del juego
+ 396:../reversi8_2026.c **** // Utiliza el tablero,
+ 397:../reversi8_2026.c **** // y las direcciones en las que indica el jugador la fila y la columna
+ 398:../reversi8_2026.c **** // y la seï¿½al de ready que indica que se han actualizado fila y columna
+ 399:../reversi8_2026.c **** // tablero, fila, columna y ready son variables globales aunque deberï¿½an ser locales de reversi8,
+ 400:../reversi8_2026.c **** // la razï¿½n es que al meterlas en la pila no las pone juntas, y asï¿½ jugar es mï¿½s complicado.
+ 401:../reversi8_2026.c **** // en esta versiï¿½n el humano lleva negras y la mï¿½quina blancas
+ 402:../reversi8_2026.c **** // no se comprueba que el humano mueva correctamente.
+ 403:../reversi8_2026.c **** // Sï¿½lo que la mï¿½quina realice un movimiento correcto.
+ 404:../reversi8_2026.c **** 
+ 405:../reversi8_2026.c **** void reversi8()
+ 406:../reversi8_2026.c **** {
+ 2283              		.loc 1 406 0
+ 2284              		.cfi_startproc
+ 2285              		@ Function supports interworking.
+ 2286              		@ args = 0, pretend = 0, frame = 304
+ 2287              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2288 0c5c 0DC0A0E1 		mov	ip, sp
+ 2289              	.LCFI18:
+ 2290              		.cfi_def_cfa_register 12
+ 2291 0c60 F0DF2DE9 		stmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
+ 2292 0c64 04B04CE2 		sub	fp, ip, #4
+ 2293              		.cfi_offset 14, -8
+ 2294              		.cfi_offset 13, -12
+ 2295              		.cfi_offset 11, -16
+ 2296              		.cfi_offset 10, -20
+ 2297              		.cfi_offset 9, -24
+ 2298              		.cfi_offset 8, -28
+ 2299              		.cfi_offset 7, -32
+ 2300              		.cfi_offset 6, -36
+ 2301              		.cfi_offset 5, -40
+ 2302              		.cfi_offset 4, -44
+ 2303              	.LCFI19:
+ 2304              		.cfi_def_cfa 11, 4
+ 2305 0c68 4DDF4DE2 		sub	sp, sp, #308
+ 407:../reversi8_2026.c **** 
+ 408:../reversi8_2026.c **** 	 ////////////////////////////////////////////////////////////////////
+ 409:../reversi8_2026.c **** 	 // Tablero candidatas: se usa para no explorar todas las posiciones del tablero
+ 410:../reversi8_2026.c **** 	// sï¿½lo se exploran las que estï¿½n alrededor de las fichas colocadas
+ 411:../reversi8_2026.c **** 	 ////////////////////////////////////////////////////////////////////
+ 412:../reversi8_2026.c **** 	char __attribute__ ((aligned (8))) candidatas[DIM][DIM] =
+ 2306              		.loc 1 412 0
+ 2307 0c6c 34379FE5 		ldr	r3, .L66
+ 2308 0c70 0010D3E5 		ldrb	r1, [r3, #0]	@ zero_extendqisi2
+ 2309 0c74 2C379FE5 		ldr	r3, .L66
+ 2310 0c78 00C0D3E5 		ldrb	ip, [r3, #0]	@ zero_extendqisi2
+ 2311 0c7c 24379FE5 		ldr	r3, .L66
+ 2312 0c80 0040D3E5 		ldrb	r4, [r3, #0]	@ zero_extendqisi2
+ 2313 0c84 1C379FE5 		ldr	r3, .L66
+ 2314 0c88 0060D3E5 		ldrb	r6, [r3, #0]	@ zero_extendqisi2
+ 2315 0c8c 14379FE5 		ldr	r3, .L66
+ 2316 0c90 0080D3E5 		ldrb	r8, [r3, #0]	@ zero_extendqisi2
+ 2317 0c94 0C379FE5 		ldr	r3, .L66
+ 2318 0c98 0090D3E5 		ldrb	r9, [r3, #0]	@ zero_extendqisi2
+ 2319 0c9c 04379FE5 		ldr	r3, .L66
+ 2320 0ca0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2321 0ca4 90300BE5 		str	r3, [fp, #-144]
+ 2322 0ca8 F8369FE5 		ldr	r3, .L66
+ 2323 0cac 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2324 0cb0 94300BE5 		str	r3, [fp, #-148]
+ 2325 0cb4 EC369FE5 		ldr	r3, .L66
+ 2326 0cb8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2327 0cbc 98300BE5 		str	r3, [fp, #-152]
+ 2328 0cc0 E0369FE5 		ldr	r3, .L66
+ 2329 0cc4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2330 0cc8 9C300BE5 		str	r3, [fp, #-156]
+ 2331 0ccc D4369FE5 		ldr	r3, .L66
+ 2332 0cd0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2333 0cd4 A0300BE5 		str	r3, [fp, #-160]
+ 2334 0cd8 C8369FE5 		ldr	r3, .L66
+ 2335 0cdc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2336 0ce0 A4300BE5 		str	r3, [fp, #-164]
+ 2337 0ce4 BC369FE5 		ldr	r3, .L66
+ 2338 0ce8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2339 0cec A8300BE5 		str	r3, [fp, #-168]
+ 2340 0cf0 B0369FE5 		ldr	r3, .L66
+ 2341 0cf4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2342 0cf8 AC300BE5 		str	r3, [fp, #-172]
+ 2343 0cfc A4369FE5 		ldr	r3, .L66
+ 2344 0d00 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2345 0d04 B0300BE5 		str	r3, [fp, #-176]
+ 2346 0d08 98369FE5 		ldr	r3, .L66
+ 2347 0d0c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2348 0d10 B4300BE5 		str	r3, [fp, #-180]
+ 2349 0d14 8C369FE5 		ldr	r3, .L66
+ 2350 0d18 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2351 0d1c B8300BE5 		str	r3, [fp, #-184]
+ 2352 0d20 80369FE5 		ldr	r3, .L66
+ 2353 0d24 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2354 0d28 BC300BE5 		str	r3, [fp, #-188]
+ 2355 0d2c 74369FE5 		ldr	r3, .L66
+ 2356 0d30 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2357 0d34 C0300BE5 		str	r3, [fp, #-192]
+ 2358 0d38 68369FE5 		ldr	r3, .L66
+ 2359 0d3c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2360 0d40 C4300BE5 		str	r3, [fp, #-196]
+ 2361 0d44 5C369FE5 		ldr	r3, .L66
+ 2362 0d48 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2363 0d4c C8300BE5 		str	r3, [fp, #-200]
+ 2364 0d50 50369FE5 		ldr	r3, .L66
+ 2365 0d54 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2366 0d58 CC300BE5 		str	r3, [fp, #-204]
+ 2367 0d5c 44369FE5 		ldr	r3, .L66
+ 2368 0d60 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2369 0d64 D0300BE5 		str	r3, [fp, #-208]
+ 2370 0d68 38369FE5 		ldr	r3, .L66
+ 2371 0d6c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2372 0d70 D4300BE5 		str	r3, [fp, #-212]
+ 2373 0d74 2C369FE5 		ldr	r3, .L66
+ 2374 0d78 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2375 0d7c D8300BE5 		str	r3, [fp, #-216]
+ 2376 0d80 20369FE5 		ldr	r3, .L66
+ 2377 0d84 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2378 0d88 DC300BE5 		str	r3, [fp, #-220]
+ 2379 0d8c 14369FE5 		ldr	r3, .L66
+ 2380 0d90 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2381 0d94 E0300BE5 		str	r3, [fp, #-224]
+ 2382 0d98 08369FE5 		ldr	r3, .L66
+ 2383 0d9c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2384 0da0 E4300BE5 		str	r3, [fp, #-228]
+ 2385 0da4 FC359FE5 		ldr	r3, .L66
+ 2386 0da8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2387 0dac E8300BE5 		str	r3, [fp, #-232]
+ 2388 0db0 F0359FE5 		ldr	r3, .L66
+ 2389 0db4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2390 0db8 EC300BE5 		str	r3, [fp, #-236]
+ 2391 0dbc E4359FE5 		ldr	r3, .L66
+ 2392 0dc0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2393 0dc4 F0300BE5 		str	r3, [fp, #-240]
+ 2394 0dc8 D8359FE5 		ldr	r3, .L66
+ 2395 0dcc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2396 0dd0 F4300BE5 		str	r3, [fp, #-244]
+ 2397 0dd4 CC359FE5 		ldr	r3, .L66
+ 2398 0dd8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2399 0ddc F8300BE5 		str	r3, [fp, #-248]
+ 2400 0de0 C0359FE5 		ldr	r3, .L66
+ 2401 0de4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2402 0de8 FC300BE5 		str	r3, [fp, #-252]
+ 2403 0dec B4359FE5 		ldr	r3, .L66
+ 2404 0df0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2405 0df4 00310BE5 		str	r3, [fp, #-256]
+ 2406 0df8 A8359FE5 		ldr	r3, .L66
+ 2407 0dfc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2408 0e00 04310BE5 		str	r3, [fp, #-260]
+ 2409 0e04 9C359FE5 		ldr	r3, .L66
+ 2410 0e08 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2411 0e0c 08310BE5 		str	r3, [fp, #-264]
+ 2412 0e10 90359FE5 		ldr	r3, .L66
+ 2413 0e14 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2414 0e18 0C310BE5 		str	r3, [fp, #-268]
+ 2415 0e1c 84359FE5 		ldr	r3, .L66
+ 2416 0e20 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2417 0e24 10310BE5 		str	r3, [fp, #-272]
+ 2418 0e28 78359FE5 		ldr	r3, .L66
+ 2419 0e2c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2420 0e30 14310BE5 		str	r3, [fp, #-276]
+ 2421 0e34 6C359FE5 		ldr	r3, .L66
+ 2422 0e38 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2423 0e3c 18310BE5 		str	r3, [fp, #-280]
+ 2424 0e40 60359FE5 		ldr	r3, .L66
+ 2425 0e44 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2426 0e48 1C310BE5 		str	r3, [fp, #-284]
+ 2427 0e4c 54359FE5 		ldr	r3, .L66
+ 2428 0e50 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2429 0e54 20310BE5 		str	r3, [fp, #-288]
+ 2430 0e58 48359FE5 		ldr	r3, .L66
+ 2431 0e5c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2432 0e60 24310BE5 		str	r3, [fp, #-292]
+ 2433 0e64 3C359FE5 		ldr	r3, .L66
+ 2434 0e68 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2435 0e6c 28310BE5 		str	r3, [fp, #-296]
+ 2436 0e70 30359FE5 		ldr	r3, .L66
+ 2437 0e74 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2438 0e78 2C310BE5 		str	r3, [fp, #-300]
+ 2439 0e7c 24359FE5 		ldr	r3, .L66
+ 2440 0e80 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2441 0e84 30310BE5 		str	r3, [fp, #-304]
+ 2442 0e88 18359FE5 		ldr	r3, .L66
+ 2443 0e8c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2444 0e90 34310BE5 		str	r3, [fp, #-308]
+ 2445 0e94 0C359FE5 		ldr	r3, .L66
+ 2446 0e98 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2447 0e9c 38310BE5 		str	r3, [fp, #-312]
+ 2448 0ea0 00359FE5 		ldr	r3, .L66
+ 2449 0ea4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2450 0ea8 3C310BE5 		str	r3, [fp, #-316]
+ 2451 0eac F4349FE5 		ldr	r3, .L66
+ 2452 0eb0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2453 0eb4 40310BE5 		str	r3, [fp, #-320]
+ 2454 0eb8 E8349FE5 		ldr	r3, .L66
+ 2455 0ebc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2456 0ec0 44310BE5 		str	r3, [fp, #-324]
+ 2457 0ec4 DC349FE5 		ldr	r3, .L66
+ 2458 0ec8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2459 0ecc 48310BE5 		str	r3, [fp, #-328]
+ 2460 0ed0 D0349FE5 		ldr	r3, .L66
+ 2461 0ed4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2462 0ed8 4C310BE5 		str	r3, [fp, #-332]
+ 2463 0edc C4349FE5 		ldr	r3, .L66
+ 2464 0ee0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2465 0ee4 50310BE5 		str	r3, [fp, #-336]
+ 2466 0ee8 B8349FE5 		ldr	r3, .L66
+ 2467 0eec 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2468 0ef0 54310BE5 		str	r3, [fp, #-340]
+ 2469 0ef4 AC349FE5 		ldr	r3, .L66
+ 2470 0ef8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2471 0efc 58310BE5 		str	r3, [fp, #-344]
+ 2472 0f00 A0349FE5 		ldr	r3, .L66
+ 2473 0f04 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2474 0f08 5C310BE5 		str	r3, [fp, #-348]
+ 2475 0f0c 94349FE5 		ldr	r3, .L66
+ 2476 0f10 00A0D3E5 		ldrb	sl, [r3, #0]	@ zero_extendqisi2
+ 2477 0f14 8C349FE5 		ldr	r3, .L66
+ 2478 0f18 0070D3E5 		ldrb	r7, [r3, #0]	@ zero_extendqisi2
+ 2479 0f1c 84349FE5 		ldr	r3, .L66
+ 2480 0f20 0050D3E5 		ldrb	r5, [r3, #0]	@ zero_extendqisi2
+ 2481 0f24 7C349FE5 		ldr	r3, .L66
+ 2482 0f28 00E0D3E5 		ldrb	lr, [r3, #0]	@ zero_extendqisi2
+ 2483 0f2c 74349FE5 		ldr	r3, .L66
+ 2484 0f30 0000D3E5 		ldrb	r0, [r3, #0]	@ zero_extendqisi2
+ 2485 0f34 6C349FE5 		ldr	r3, .L66
+ 2486 0f38 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 2487 0f3c 0130A0E1 		mov	r3, r1
+ 2488 0f40 7C304BE5 		strb	r3, [fp, #-124]
+ 2489 0f44 0C30A0E1 		mov	r3, ip
+ 2490 0f48 7B304BE5 		strb	r3, [fp, #-123]
+ 2491 0f4c 0430A0E1 		mov	r3, r4
+ 2492 0f50 7A304BE5 		strb	r3, [fp, #-122]
+ 2493 0f54 0630A0E1 		mov	r3, r6
+ 2494 0f58 79304BE5 		strb	r3, [fp, #-121]
+ 2495 0f5c 0830A0E1 		mov	r3, r8
+ 2496 0f60 78304BE5 		strb	r3, [fp, #-120]
+ 2497 0f64 0930A0E1 		mov	r3, r9
+ 2498 0f68 77304BE5 		strb	r3, [fp, #-119]
+ 2499 0f6c 90101BE5 		ldr	r1, [fp, #-144]
+ 2500 0f70 0130A0E1 		mov	r3, r1
+ 2501 0f74 76304BE5 		strb	r3, [fp, #-118]
+ 2502 0f78 94101BE5 		ldr	r1, [fp, #-148]
+ 2503 0f7c 0130A0E1 		mov	r3, r1
+ 2504 0f80 75304BE5 		strb	r3, [fp, #-117]
+ 2505 0f84 98101BE5 		ldr	r1, [fp, #-152]
+ 2506 0f88 0130A0E1 		mov	r3, r1
+ 2507 0f8c 74304BE5 		strb	r3, [fp, #-116]
+ 2508 0f90 9C101BE5 		ldr	r1, [fp, #-156]
+ 2509 0f94 0130A0E1 		mov	r3, r1
+ 2510 0f98 73304BE5 		strb	r3, [fp, #-115]
+ 2511 0f9c A0101BE5 		ldr	r1, [fp, #-160]
+ 2512 0fa0 0130A0E1 		mov	r3, r1
+ 2513 0fa4 72304BE5 		strb	r3, [fp, #-114]
+ 2514 0fa8 A4101BE5 		ldr	r1, [fp, #-164]
+ 2515 0fac 0130A0E1 		mov	r3, r1
+ 2516 0fb0 71304BE5 		strb	r3, [fp, #-113]
+ 2517 0fb4 A8101BE5 		ldr	r1, [fp, #-168]
+ 2518 0fb8 0130A0E1 		mov	r3, r1
+ 2519 0fbc 70304BE5 		strb	r3, [fp, #-112]
+ 2520 0fc0 AC101BE5 		ldr	r1, [fp, #-172]
+ 2521 0fc4 0130A0E1 		mov	r3, r1
+ 2522 0fc8 6F304BE5 		strb	r3, [fp, #-111]
+ 2523 0fcc B0101BE5 		ldr	r1, [fp, #-176]
+ 2524 0fd0 0130A0E1 		mov	r3, r1
+ 2525 0fd4 6E304BE5 		strb	r3, [fp, #-110]
+ 2526 0fd8 B4101BE5 		ldr	r1, [fp, #-180]
+ 2527 0fdc 0130A0E1 		mov	r3, r1
+ 2528 0fe0 6D304BE5 		strb	r3, [fp, #-109]
+ 2529 0fe4 B8101BE5 		ldr	r1, [fp, #-184]
+ 2530 0fe8 0130A0E1 		mov	r3, r1
+ 2531 0fec 6C304BE5 		strb	r3, [fp, #-108]
+ 2532 0ff0 BC101BE5 		ldr	r1, [fp, #-188]
+ 2533 0ff4 0130A0E1 		mov	r3, r1
+ 2534 0ff8 6B304BE5 		strb	r3, [fp, #-107]
+ 2535 0ffc C0101BE5 		ldr	r1, [fp, #-192]
+ 2536 1000 0130A0E1 		mov	r3, r1
+ 2537 1004 6A304BE5 		strb	r3, [fp, #-106]
+ 2538 1008 C4101BE5 		ldr	r1, [fp, #-196]
+ 2539 100c 0130A0E1 		mov	r3, r1
+ 2540 1010 69304BE5 		strb	r3, [fp, #-105]
+ 2541 1014 C8101BE5 		ldr	r1, [fp, #-200]
+ 2542 1018 0130A0E1 		mov	r3, r1
+ 2543 101c 68304BE5 		strb	r3, [fp, #-104]
+ 2544 1020 CC101BE5 		ldr	r1, [fp, #-204]
+ 2545 1024 0130A0E1 		mov	r3, r1
+ 2546 1028 67304BE5 		strb	r3, [fp, #-103]
+ 2547 102c D0101BE5 		ldr	r1, [fp, #-208]
+ 2548 1030 0130A0E1 		mov	r3, r1
+ 2549 1034 66304BE5 		strb	r3, [fp, #-102]
+ 2550 1038 D4101BE5 		ldr	r1, [fp, #-212]
+ 2551 103c 0130A0E1 		mov	r3, r1
+ 2552 1040 65304BE5 		strb	r3, [fp, #-101]
+ 2553 1044 D8101BE5 		ldr	r1, [fp, #-216]
+ 2554 1048 0130A0E1 		mov	r3, r1
+ 2555 104c 64304BE5 		strb	r3, [fp, #-100]
+ 2556 1050 DC101BE5 		ldr	r1, [fp, #-220]
+ 2557 1054 0130A0E1 		mov	r3, r1
+ 2558 1058 63304BE5 		strb	r3, [fp, #-99]
+ 2559 105c E0101BE5 		ldr	r1, [fp, #-224]
+ 2560 1060 0130A0E1 		mov	r3, r1
+ 2561 1064 62304BE5 		strb	r3, [fp, #-98]
+ 2562 1068 E4101BE5 		ldr	r1, [fp, #-228]
+ 2563 106c 0130A0E1 		mov	r3, r1
+ 2564 1070 61304BE5 		strb	r3, [fp, #-97]
+ 2565 1074 E8101BE5 		ldr	r1, [fp, #-232]
+ 2566 1078 0130A0E1 		mov	r3, r1
+ 2567 107c 60304BE5 		strb	r3, [fp, #-96]
+ 2568 1080 EC101BE5 		ldr	r1, [fp, #-236]
+ 2569 1084 0130A0E1 		mov	r3, r1
+ 2570 1088 5F304BE5 		strb	r3, [fp, #-95]
+ 2571 108c F0101BE5 		ldr	r1, [fp, #-240]
+ 2572 1090 0130A0E1 		mov	r3, r1
+ 2573 1094 5E304BE5 		strb	r3, [fp, #-94]
+ 2574 1098 F4101BE5 		ldr	r1, [fp, #-244]
+ 2575 109c 0130A0E1 		mov	r3, r1
+ 2576 10a0 5D304BE5 		strb	r3, [fp, #-93]
+ 2577 10a4 F8101BE5 		ldr	r1, [fp, #-248]
+ 2578 10a8 0130A0E1 		mov	r3, r1
+ 2579 10ac 5C304BE5 		strb	r3, [fp, #-92]
+ 2580 10b0 FC101BE5 		ldr	r1, [fp, #-252]
+ 2581 10b4 0130A0E1 		mov	r3, r1
+ 2582 10b8 5B304BE5 		strb	r3, [fp, #-91]
+ 2583 10bc 00111BE5 		ldr	r1, [fp, #-256]
+ 2584 10c0 0130A0E1 		mov	r3, r1
+ 2585 10c4 5A304BE5 		strb	r3, [fp, #-90]
+ 2586 10c8 04111BE5 		ldr	r1, [fp, #-260]
+ 2587 10cc 0130A0E1 		mov	r3, r1
+ 2588 10d0 59304BE5 		strb	r3, [fp, #-89]
+ 2589 10d4 08111BE5 		ldr	r1, [fp, #-264]
+ 2590 10d8 0130A0E1 		mov	r3, r1
+ 2591 10dc 58304BE5 		strb	r3, [fp, #-88]
+ 2592 10e0 0C111BE5 		ldr	r1, [fp, #-268]
+ 2593 10e4 0130A0E1 		mov	r3, r1
+ 2594 10e8 57304BE5 		strb	r3, [fp, #-87]
+ 2595 10ec 10111BE5 		ldr	r1, [fp, #-272]
+ 2596 10f0 0130A0E1 		mov	r3, r1
+ 2597 10f4 56304BE5 		strb	r3, [fp, #-86]
+ 2598 10f8 14111BE5 		ldr	r1, [fp, #-276]
+ 2599 10fc 0130A0E1 		mov	r3, r1
+ 2600 1100 55304BE5 		strb	r3, [fp, #-85]
+ 2601 1104 18111BE5 		ldr	r1, [fp, #-280]
+ 2602 1108 0130A0E1 		mov	r3, r1
+ 2603 110c 54304BE5 		strb	r3, [fp, #-84]
+ 2604 1110 1C111BE5 		ldr	r1, [fp, #-284]
+ 2605 1114 0130A0E1 		mov	r3, r1
+ 2606 1118 53304BE5 		strb	r3, [fp, #-83]
+ 2607 111c 20111BE5 		ldr	r1, [fp, #-288]
+ 2608 1120 0130A0E1 		mov	r3, r1
+ 2609 1124 52304BE5 		strb	r3, [fp, #-82]
+ 2610 1128 24111BE5 		ldr	r1, [fp, #-292]
+ 2611 112c 0130A0E1 		mov	r3, r1
+ 2612 1130 51304BE5 		strb	r3, [fp, #-81]
+ 2613 1134 28111BE5 		ldr	r1, [fp, #-296]
+ 2614 1138 0130A0E1 		mov	r3, r1
+ 2615 113c 50304BE5 		strb	r3, [fp, #-80]
+ 2616 1140 2C111BE5 		ldr	r1, [fp, #-300]
+ 2617 1144 0130A0E1 		mov	r3, r1
+ 2618 1148 4F304BE5 		strb	r3, [fp, #-79]
+ 2619 114c 30111BE5 		ldr	r1, [fp, #-304]
+ 2620 1150 0130A0E1 		mov	r3, r1
+ 2621 1154 4E304BE5 		strb	r3, [fp, #-78]
+ 2622 1158 34111BE5 		ldr	r1, [fp, #-308]
+ 2623 115c 0130A0E1 		mov	r3, r1
+ 2624 1160 4D304BE5 		strb	r3, [fp, #-77]
+ 2625 1164 38111BE5 		ldr	r1, [fp, #-312]
+ 2626 1168 0130A0E1 		mov	r3, r1
+ 2627 116c 4C304BE5 		strb	r3, [fp, #-76]
+ 2628 1170 3C111BE5 		ldr	r1, [fp, #-316]
+ 2629 1174 0130A0E1 		mov	r3, r1
+ 2630 1178 4B304BE5 		strb	r3, [fp, #-75]
+ 2631 117c 40111BE5 		ldr	r1, [fp, #-320]
+ 2632 1180 0130A0E1 		mov	r3, r1
+ 2633 1184 4A304BE5 		strb	r3, [fp, #-74]
+ 2634 1188 44111BE5 		ldr	r1, [fp, #-324]
+ 2635 118c 0130A0E1 		mov	r3, r1
+ 2636 1190 49304BE5 		strb	r3, [fp, #-73]
+ 2637 1194 48111BE5 		ldr	r1, [fp, #-328]
+ 2638 1198 0130A0E1 		mov	r3, r1
+ 2639 119c 48304BE5 		strb	r3, [fp, #-72]
+ 2640 11a0 4C111BE5 		ldr	r1, [fp, #-332]
+ 2641 11a4 0130A0E1 		mov	r3, r1
+ 2642 11a8 47304BE5 		strb	r3, [fp, #-71]
+ 2643 11ac 50111BE5 		ldr	r1, [fp, #-336]
+ 2644 11b0 0130A0E1 		mov	r3, r1
+ 2645 11b4 46304BE5 		strb	r3, [fp, #-70]
+ 2646 11b8 54111BE5 		ldr	r1, [fp, #-340]
+ 2647 11bc 0130A0E1 		mov	r3, r1
+ 2648 11c0 45304BE5 		strb	r3, [fp, #-69]
+ 2649 11c4 58111BE5 		ldr	r1, [fp, #-344]
+ 2650 11c8 0130A0E1 		mov	r3, r1
+ 2651 11cc 44304BE5 		strb	r3, [fp, #-68]
+ 2652 11d0 5C111BE5 		ldr	r1, [fp, #-348]
+ 2653 11d4 0130A0E1 		mov	r3, r1
+ 2654 11d8 43304BE5 		strb	r3, [fp, #-67]
+ 2655 11dc 0A30A0E1 		mov	r3, sl
+ 2656 11e0 42304BE5 		strb	r3, [fp, #-66]
+ 2657 11e4 0730A0E1 		mov	r3, r7
+ 2658 11e8 41304BE5 		strb	r3, [fp, #-65]
+ 2659 11ec 0530A0E1 		mov	r3, r5
+ 2660 11f0 40304BE5 		strb	r3, [fp, #-64]
+ 2661 11f4 0E30A0E1 		mov	r3, lr
+ 2662 11f8 3F304BE5 		strb	r3, [fp, #-63]
+ 2663 11fc 0030A0E1 		mov	r3, r0
+ 2664 1200 3E304BE5 		strb	r3, [fp, #-62]
+ 2665 1204 0230A0E1 		mov	r3, r2
+ 2666 1208 3D304BE5 		strb	r3, [fp, #-61]
+ 413:../reversi8_2026.c ****     {
+ 414:../reversi8_2026.c ****         {NO,NO,NO,NO,NO,NO,NO,NO},
+ 415:../reversi8_2026.c ****         {NO,NO,NO,NO,NO,NO,NO,NO},
+ 416:../reversi8_2026.c ****         {NO,NO,NO,NO,NO,NO,NO,NO},
+ 417:../reversi8_2026.c ****         {NO,NO,NO,NO,NO,NO,NO,NO},
+ 418:../reversi8_2026.c ****         {NO,NO,NO,NO,NO,NO,NO,NO},
+ 419:../reversi8_2026.c ****         {NO,NO,NO,NO,NO,NO,NO,NO},
+ 420:../reversi8_2026.c ****         {NO,NO,NO,NO,NO,NO,NO,NO},
+ 421:../reversi8_2026.c ****         {NO,NO,NO,NO,NO,NO,NO,NO}
+ 422:../reversi8_2026.c ****     };
+ 423:../reversi8_2026.c **** 
+ 424:../reversi8_2026.c **** 
+ 425:../reversi8_2026.c ****     int done;     // la mï¿½quina ha conseguido mover o no
+ 426:../reversi8_2026.c ****     int move = 0; // el humano ha conseguido mover o no
+ 2667              		.loc 1 426 0
+ 2668 120c 0030A0E3 		mov	r3, #0
+ 2669 1210 30300BE5 		str	r3, [fp, #-48]
+ 427:../reversi8_2026.c ****     int blancas, negras; // nï¿½mero de fichas de cada color
+ 428:../reversi8_2026.c ****     int fin = 0;  // fin vale 1 si el humano no ha podido mover
+ 2670              		.loc 1 428 0
+ 2671 1214 0030A0E3 		mov	r3, #0
+ 2672 1218 34300BE5 		str	r3, [fp, #-52]
+ 429:../reversi8_2026.c ****                   // (ha introducido un valor de movimiento con algï¿½n 8)
+ 430:../reversi8_2026.c ****                   // y luego la mï¿½quina tampoco puede
+ 431:../reversi8_2026.c ****     char f, c;    // fila y columna elegidas por la mï¿½quina para su movimiento
+ 432:../reversi8_2026.c **** 
+ 433:../reversi8_2026.c ****     init_table(tablero, candidatas);
+ 2673              		.loc 1 433 0
+ 2674 121c 7C304BE2 		sub	r3, fp, #124
+ 2675 1220 84019FE5 		ldr	r0, .L66+4
+ 2676 1224 0310A0E1 		mov	r1, r3
+ 2677 1228 74FBFFEB 		bl	init_table
+ 434:../reversi8_2026.c **** 
+ 435:../reversi8_2026.c ****     while (fin == 0)
+ 2678              		.loc 1 435 0
+ 2679 122c 510000EA 		b	.L62
+ 2680              	.L65:
+ 436:../reversi8_2026.c ****     {
+ 437:../reversi8_2026.c ****         move = 0;
+ 2681              		.loc 1 437 0
+ 2682 1230 0030A0E3 		mov	r3, #0
+ 2683 1234 30300BE5 		str	r3, [fp, #-48]
+ 438:../reversi8_2026.c ****         esperar_mov(&ready);
+ 2684              		.loc 1 438 0
+ 2685 1238 70019FE5 		ldr	r0, .L66+8
+ 2686 123c FCFBFFEB 		bl	esperar_mov
+ 439:../reversi8_2026.c ****         // si la fila o columna son 8 asumimos que el jugador no puede mover
+ 440:../reversi8_2026.c ****         if (((fila) != DIM) && ((columna) != DIM))
+ 2687              		.loc 1 440 0
+ 2688 1240 6C319FE5 		ldr	r3, .L66+12
+ 2689 1244 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2690 1248 080053E3 		cmp	r3, #8
+ 2691 124c 2200000A 		beq	.L63
+ 2692              		.loc 1 440 0 is_stmt 0 discriminator 1
+ 2693 1250 60319FE5 		ldr	r3, .L66+16
+ 2694 1254 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2695 1258 080053E3 		cmp	r3, #8
+ 2696 125c 1E00000A 		beq	.L63
+ 441:../reversi8_2026.c ****         {
+ 442:../reversi8_2026.c ****             tablero[fila][columna] = FICHA_NEGRA;
+ 2697              		.loc 1 442 0 is_stmt 1
+ 2698 1260 4C319FE5 		ldr	r3, .L66+12
+ 2699 1264 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2700 1268 0300A0E1 		mov	r0, r3
+ 2701 126c 44319FE5 		ldr	r3, .L66+16
+ 2702 1270 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2703 1274 40219FE5 		ldr	r2, .L66+20
+ 2704 1278 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 2705 127c 28119FE5 		ldr	r1, .L66+4
+ 2706 1280 8001A0E1 		mov	r0, r0, asl #3
+ 2707 1284 033080E0 		add	r3, r0, r3
+ 2708 1288 033081E0 		add	r3, r1, r3
+ 2709 128c 0020C3E5 		strb	r2, [r3, #0]
+ 443:../reversi8_2026.c ****             actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
+ 2710              		.loc 1 443 0
+ 2711 1290 1C319FE5 		ldr	r3, .L66+12
+ 2712 1294 0010D3E5 		ldrb	r1, [r3, #0]	@ zero_extendqisi2
+ 2713 1298 18319FE5 		ldr	r3, .L66+16
+ 2714 129c 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 2715 12a0 14319FE5 		ldr	r3, .L66+20
+ 2716 12a4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2717 12a8 FC009FE5 		ldr	r0, .L66+4
+ 2718 12ac 86FCFFEB 		bl	actualizar_tablero
+ 444:../reversi8_2026.c ****             actualizar_candidatas(candidatas, fila, columna);
+ 2719              		.loc 1 444 0
+ 2720 12b0 FC309FE5 		ldr	r3, .L66+12
+ 2721 12b4 0020D3E5 		ldrb	r2, [r3, #0]	@ zero_extendqisi2
+ 2722 12b8 F8309FE5 		ldr	r3, .L66+16
+ 2723 12bc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2724 12c0 7C104BE2 		sub	r1, fp, #124
+ 2725 12c4 0100A0E1 		mov	r0, r1
+ 2726 12c8 0210A0E1 		mov	r1, r2
+ 2727 12cc 0320A0E1 		mov	r2, r3
+ 2728 12d0 8BFDFFEB 		bl	actualizar_candidatas
+ 445:../reversi8_2026.c ****             move = 1;
+ 2729              		.loc 1 445 0
+ 2730 12d4 0130A0E3 		mov	r3, #1
+ 2731 12d8 30300BE5 		str	r3, [fp, #-48]
+ 2732              	.L63:
+ 446:../reversi8_2026.c ****         }
+ 447:../reversi8_2026.c **** 
+ 448:../reversi8_2026.c ****         // escribe el movimiento en las variables globales fila columna
+ 449:../reversi8_2026.c ****         done = elegir_mov(candidatas, tablero, &f, &c);
+ 2733              		.loc 1 449 0
+ 2734 12dc 7C104BE2 		sub	r1, fp, #124
+ 2735 12e0 85204BE2 		sub	r2, fp, #133
+ 2736 12e4 86304BE2 		sub	r3, fp, #134
+ 2737 12e8 0100A0E1 		mov	r0, r1
+ 2738 12ec B8109FE5 		ldr	r1, .L66+4
+ 2739 12f0 B3FCFFEB 		bl	elegir_mov
+ 2740 12f4 38000BE5 		str	r0, [fp, #-56]
+ 450:../reversi8_2026.c ****         if (done == -1)
+ 2741              		.loc 1 450 0
+ 2742 12f8 38301BE5 		ldr	r3, [fp, #-56]
+ 2743 12fc 010073E3 		cmn	r3, #1
+ 2744 1300 0500001A 		bne	.L64
+ 451:../reversi8_2026.c ****         {
+ 452:../reversi8_2026.c ****             if (move == 0)
+ 2745              		.loc 1 452 0
+ 2746 1304 30301BE5 		ldr	r3, [fp, #-48]
+ 2747 1308 000053E3 		cmp	r3, #0
+ 2748 130c 1900001A 		bne	.L62
+ 453:../reversi8_2026.c ****                 fin = 1;
+ 2749              		.loc 1 453 0
+ 2750 1310 0130A0E3 		mov	r3, #1
+ 2751 1314 34300BE5 		str	r3, [fp, #-52]
+ 2752 1318 160000EA 		b	.L62
+ 2753              	.L64:
+ 454:../reversi8_2026.c ****         }
+ 455:../reversi8_2026.c ****         else
+ 456:../reversi8_2026.c ****         {
+ 457:../reversi8_2026.c ****             tablero[f][c] = FICHA_BLANCA;
+ 2754              		.loc 1 457 0
+ 2755 131c 85305BE5 		ldrb	r3, [fp, #-133]	@ zero_extendqisi2
+ 2756 1320 0300A0E1 		mov	r0, r3
+ 2757 1324 86305BE5 		ldrb	r3, [fp, #-134]	@ zero_extendqisi2
+ 2758 1328 90209FE5 		ldr	r2, .L66+24
+ 2759 132c 0020D2E5 		ldrb	r2, [r2, #0]	@ zero_extendqisi2
+ 2760 1330 74109FE5 		ldr	r1, .L66+4
+ 2761 1334 8001A0E1 		mov	r0, r0, asl #3
+ 2762 1338 033080E0 		add	r3, r0, r3
+ 2763 133c 033081E0 		add	r3, r1, r3
+ 2764 1340 0020C3E5 		strb	r2, [r3, #0]
+ 458:../reversi8_2026.c ****             actualizar_tablero(tablero, f, c, FICHA_BLANCA);
+ 2765              		.loc 1 458 0
+ 2766 1344 85105BE5 		ldrb	r1, [fp, #-133]	@ zero_extendqisi2
+ 2767 1348 86205BE5 		ldrb	r2, [fp, #-134]	@ zero_extendqisi2
+ 2768 134c 6C309FE5 		ldr	r3, .L66+24
+ 2769 1350 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2770 1354 50009FE5 		ldr	r0, .L66+4
+ 2771 1358 5BFCFFEB 		bl	actualizar_tablero
+ 459:../reversi8_2026.c ****             actualizar_candidatas(candidatas, f, c);
+ 2772              		.loc 1 459 0
+ 2773 135c 85205BE5 		ldrb	r2, [fp, #-133]	@ zero_extendqisi2
+ 2774 1360 86305BE5 		ldrb	r3, [fp, #-134]	@ zero_extendqisi2
+ 2775 1364 7C104BE2 		sub	r1, fp, #124
+ 2776 1368 0100A0E1 		mov	r0, r1
+ 2777 136c 0210A0E1 		mov	r1, r2
+ 2778 1370 0320A0E1 		mov	r2, r3
+ 2779 1374 62FDFFEB 		bl	actualizar_candidatas
+ 2780              	.L62:
+ 435:../reversi8_2026.c ****     while (fin == 0)
+ 2781              		.loc 1 435 0 discriminator 1
+ 2782 1378 34301BE5 		ldr	r3, [fp, #-52]
+ 2783 137c 000053E3 		cmp	r3, #0
+ 2784 1380 AAFFFF0A 		beq	.L65
+ 460:../reversi8_2026.c ****         }
+ 461:../reversi8_2026.c ****     }
+ 462:../reversi8_2026.c ****     contar(tablero, &blancas, &negras);
+ 2785              		.loc 1 462 0
+ 2786 1384 80204BE2 		sub	r2, fp, #128
+ 2787 1388 84304BE2 		sub	r3, fp, #132
+ 2788 138c 18009FE5 		ldr	r0, .L66+4
+ 2789 1390 0210A0E1 		mov	r1, r2
+ 2790 1394 0320A0E1 		mov	r2, r3
+ 2791 1398 14FDFFEB 		bl	contar
+ 463:../reversi8_2026.c **** }
+ 2792              		.loc 1 463 0
+ 2793 139c 28D04BE2 		sub	sp, fp, #40
+ 2794 13a0 F06F9DE8 		ldmfd	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, lr}
+ 2795 13a4 1EFF2FE1 		bx	lr
+ 2796              	.L67:
+ 2797              		.align	2
+ 2798              	.L66:
+ 2799 13a8 00000000 		.word	NO
+ 2800 13ac 00000000 		.word	tablero
+ 2801 13b0 00000000 		.word	ready
+ 2802 13b4 00000000 		.word	fila
+ 2803 13b8 00000000 		.word	columna
+ 2804 13bc 00000000 		.word	FICHA_NEGRA
+ 2805 13c0 00000000 		.word	FICHA_BLANCA
+ 2806              		.cfi_endproc
+ 2807              	.LFE9:
+ 2809              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 reversi8_2026.c
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:976    .rodata:00000000 CASILLA_VACIA
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:977    .rodata:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:981    .rodata:00000001 FICHA_BLANCA
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:986    .rodata:00000002 FICHA_NEGRA
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:991    .rodata:00000003 NO
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:996    .rodata:00000004 SI
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1001   .rodata:00000005 CASILLA_OCUPADA
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1006   .rodata:00000008 tabla_valor
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1075   .rodata:00000048 vSF
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1088   .rodata:00000050 vSC
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1098   .bss:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1099   .bss:00000000 tablero
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1104   .bss:00000040 fila
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1109   .bss:00000041 columna
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1114   .bss:00000042 ready
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1117   .text:00000000 $a
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1119   .text:00000000 init_table
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1304   .text:00000220 $d
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1312   .text:00000234 $a
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1314   .text:00000234 esperar_mov
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1354   .text:00000274 color_ficha
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1429   .text:00000334 $d
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1433   .text:00000338 $a
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1435   .text:00000338 patron_volteo
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1539   .text:0000043c voltear
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1603   .text:000004cc actualizar_tablero
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1694   .text:000005bc $d
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1699   .text:000005c4 $a
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1701   .text:000005c4 elegir_mov
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1889   .text:000007d8 $d
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1898   .text:000007f0 $a
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:1900   .text:000007f0 contar
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:2003   .text:000008fc $d
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:2008   .text:00000904 $a
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:2010   .text:00000904 actualizar_candidatas
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:2273   .text:00000c54 $d
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:2278   .text:00000c5c $a
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:2281   .text:00000c5c reversi8
+C:\Users\sergi\AppData\Local\Temp\ccuFyG2L.s:2799   .text:000013a8 $d
+                     .debug_frame:00000010 $d
+
+NO UNDEFINED SYMBOLS
