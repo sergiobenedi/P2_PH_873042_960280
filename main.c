@@ -1,8 +1,8 @@
 /*********************************************************************************************
 * Fichero:	main.c
-* Autor:    
+* Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:	punto de entrada de C
-* Version:  <P4-ARM.timer-leds>
+* Version:	1.0
 *********************************************************************************************/
 
 /*--- ficheros de cabecera ---*/

@@ -1,8 +1,8 @@
 /*********************************************************************************************
-* Fichero:		led.c
-* Autor:
+* Fichero:		led.h
+* Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:		funciones de control de los LED de la placa
-* Version:
+* Version:	1.0
 *********************************************************************************************/
 
 #ifndef _LED_H_

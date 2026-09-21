@@ -1,8 +1,8 @@
 /*********************************************************************************************
 * Fichero:	button.c
-* Autor:
+* Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:	Funciones de manejo de los pulsadores (EINT6-7)
-* Version:
+* Version:	1.0
 *********************************************************************************************/
 
 /*--- ficheros de cabecera ---*/

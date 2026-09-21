@@ -1,3 +1,10 @@
+/*********************************************************************************************
+* Fichero:		reversi8_2026.c
+* Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
+* Descrip:		logica del juego Reversi de 8 casillas
+* Version:	1.0
+*********************************************************************************************/
+
 #include "reversi8_2026.h"
 
 // Tama�o del tablero
@@ -65,7 +72,9 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM];
 	    ready = 0;
 
 
-// extern int patron_volteo(char tablero[][8], int *longitud,char f, char c, char SF, char SC, char color);
+// Versiones en ensamblador (reversi8_arm.asm)
+extern int patron_volteo_arm(char tablero[][8], int *longitud, char f, char c, char SF, char SC, char color);
+extern char color_ficha_arm(char tablero[][8], char f, char c, int *es_posicion_correcta);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 0 indica CASILLA_VACIA, 1 indica FICHA_BLANCA y 2 indica FICHA_NEGRA
@@ -156,7 +165,8 @@ static void esperar_mov(char *ready)
 // Esto lo hace por referencia (en *es_posicion_correcta)
 // Si devuelve un 0 no es v�lida o est� vac�a.
 
-static char color_ficha(char tablero[][DIM], char f, char c, int *es_posicion_correcta)
+// sin static: patron_volteo_arm (reversi8_arm.asm) la llama
+char color_ficha(char tablero[][DIM], char f, char c, int *es_posicion_correcta)
 {
     char ficha;
 

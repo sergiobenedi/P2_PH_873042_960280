@@ -1,8 +1,8 @@
 /*********************************************************************************************
 * Fichero:	8led.c
-* Autor:
+* Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:	Funciones de control del display 8-segmentos
-* Version:
+* Version:	1.0
 *********************************************************************************************/
 
 /*--- ficheros de cabecera ---*/

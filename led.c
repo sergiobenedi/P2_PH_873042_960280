@@ -1,8 +1,8 @@
 /*********************************************************************************************
 * Fichero:		led.c
-* Autor:
+* Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:		funciones de control de los LED de la placa
-* Version:
+* Version:	1.0
 *********************************************************************************************/
 
 /*--- ficheros de cabecera ---*/
