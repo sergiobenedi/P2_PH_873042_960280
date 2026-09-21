@@ -76,6 +76,9 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM];
 extern int patron_volteo_arm(char tablero[][8], int *longitud, char f, char c, char SF, char SC, char color);
 extern char color_ficha_arm(char tablero[][8], char f, char c, int *es_posicion_correcta);
 
+// Version de patron_volteo que usa el juego: patron_volteo (C) o patron_volteo_arm (ARM)
+#define PATRON_VOLTEO patron_volteo_arm
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 0 indica CASILLA_VACIA, 1 indica FICHA_BLANCA y 2 indica FICHA_NEGRA
 // pone el tablero a cero y luego coloca las fichas centrales.
@@ -259,7 +262,7 @@ static int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
         SC = vSC[i];
         // flip: numero de fichas a voltear
         flip = 0;
-        modelo = patron_volteo(tablero, &flip, f, c, SF, SC, color);
+        modelo = PATRON_VOLTEO(tablero, &flip, f, c, SF, SC, color);
         //printf("Flip: %d \n", flip);
         if (modelo == MODELO_ENCONTRADO )
         {
@@ -311,7 +314,7 @@ static int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char
 
                         // nos dice qu� hay que voltear en cada direcci�n
                         longitud = 0;
-                        modelo = patron_volteo(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
+                        modelo = PATRON_VOLTEO(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
                         //  //printf("%d ", modelo);
                         if (modelo == MODELO_ENCONTRADO)
                         {
