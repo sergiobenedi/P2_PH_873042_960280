@@ -58,29 +58,22 @@ color_ficha_arm:
 		stmdb	sp!, {fp, ip, lr, pc}
 		sub		fp, ip, #4
 
-		# if ((f < DIM) && (f >= 0) && ...
 		cmp		r1, #DIM				/* sin signo: cubre f < DIM y f >= 0 */
 		bhs		cf_else
-		# ... && (c < DIM) && (c >= 0) && ...
 		cmp		r2, #DIM				/* sin signo: cubre c < DIM y c >= 0 */
 		bhs		cf_else
-		# ... && (tablero[f][c] != CASILLA_VACIA))
 		add		r0, r0, r1, lsl #3		/* r0 = &tablero[f][0] (fila de DIM = 8 = 2^3 bytes) */
 		ldrb	r0, [r0, r2]			/* ficha = tablero[f][c] */
 		cmp		r0, #CASILLA_VACIA
 		beq		cf_else
 
-		# *es_posicion_correcta = 1;  ficha = tablero[f][c] (ya en r0)
 		mov		r1, #1
 		str		r1, [r3]
-		# return ficha;
 		ldmdb	fp, {fp, sp, pc}
 
 cf_else:
-		# *es_posicion_correcta = 0;
 		mov		r1, #0
 		str		r1, [r3]
-		# ficha = CASILLA_VACIA;  return ficha;
 		mov		r0, #CASILLA_VACIA
 		ldmdb	fp, {fp, sp, pc}
 
@@ -145,13 +138,10 @@ patron_volteo_arm:
 		ldrb	r9, [fp, #8]			/* r9 = SC */
 		ldrb	r10, [fp, #12]			/* r10 = color */
 
-		# FA = FA + SF;
 		add		r6, r2, r8
 		and		r6, r6, #0xFF			/* FA es char: truncar a 8 bits */
-		# CA = CA + SC;
 		add		r7, r3, r9
 		and		r7, r7, #0xFF
-		# casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
 		mov		r0, r4
 		mov		r1, r6
 		mov		r2, r7
@@ -159,25 +149,19 @@ patron_volteo_arm:
 		bl		color_ficha				/* cambiar por color_ficha_arm para probar la version ARM */
 
 pv_while:
-		# while ((es_posicion_correcta == 1) && ...
 		ldr		r1, [sp]
 		cmp		r1, #1
 		bne		pv_fin_while
-		# ... && (casilla != color))
 		cmp		r0, r10
 		beq		pv_fin_while
 
-		# FA = FA + SF;
 		add		r6, r6, r8
 		and		r6, r6, #0xFF
-		# CA = CA + SC;
 		add		r7, r7, r9
 		and		r7, r7, #0xFF
-		# *longitud = *longitud + 1;
 		ldr		r1, [r5]
 		add		r1, r1, #1
 		str		r1, [r5]
-		# casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
 		mov		r0, r4
 		mov		r1, r6
 		mov		r2, r7
@@ -186,13 +170,10 @@ pv_while:
 		b		pv_while
 
 pv_fin_while:
-		# if ((es_posicion_correcta == 1) && (casilla == color))
 		ldr		r1, [sp]
 		cmp		r1, #1
 		cmpeq	r0, r10
-		#     return MODELO_ENCONTRADO;
 		moveq	r0, #MODELO_ENCONTRADO
-		# else return NO_HAY_MODELO;
 		movne	r0, #NO_HAY_MODELO
 		ldmdb	fp, {r4-r10, fp, sp, pc}
 
