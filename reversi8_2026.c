@@ -77,7 +77,7 @@ extern int patron_volteo_arm(char tablero[][8], int *longitud, char f, char c, c
 extern char color_ficha_arm(char tablero[][8], char f, char c, int *es_posicion_correcta);
 
 // Version de patron_volteo que usa el juego: patron_volteo (C) o patron_volteo_arm (ARM)
-#define PATRON_VOLTEO patron_volteo_arm
+#define PATRON_VOLTEO patron_volteo
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 0 indica CASILLA_VACIA, 1 indica FICHA_BLANCA y 2 indica FICHA_NEGRA
