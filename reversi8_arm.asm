@@ -56,6 +56,38 @@
 * 	[fp, #-8]	sp (ip)
 * 	[fp, #-12]	fp anterior
 *******************************************************************************************/
+#############################################################################################
+# Codigo C original:
+#
+# char color_ficha(char tablero[][DIM], char f, char c, int *es_posicion_correcta)
+# {
+#     char ficha;
+#
+#     {
+#         *es_posicion_correcta = 1;
+#         ficha = tablero[f][c];
+#     }
+#    # else
+#     {
+#         *es_posicion_correcta = 0;
+#         ficha = CASILLA_VACIA;
+#     }
+#     return ficha;
+# }
+#
+# Entrada:	r0 = tablero
+#			r1 = f
+#			r2 = c
+#			r3 = es_posicion_correcta (puntero)
+# Salida:	r0 = ficha
+# Variables locales: ficha -> r0 (no necesita pila)
+#
+# Marco de pila (como el del compilador):
+#	[fp]		pc
+#	[fp, #-4]	lr
+#	[fp, #-8]	sp (ip)
+#	[fp, #-12]	fp anterior
+#############################################################################################
 .global color_ficha_arm
 color_ficha_arm:
 		mov		ip, sp
@@ -128,6 +160,52 @@ cf_else:
 * 	[fp, #-40]		r4
 * 	[fp, #-44] = [sp]	es_posicion_correcta: va en pila porque se pasa su direccion a color_ficha
 *******************************************************************************************/
+#############################################################################################
+# Codigo C original:
+#
+# int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
+# {
+#     int es_posicion_correcta;
+#     char casilla;
+#
+#     FA = FA + SF;
+#     CA = CA + SC;
+#     casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+#     while ((es_posicion_correcta == 1) && (casilla != color))
+#     {
+#         FA = FA + SF;
+#         CA = CA + SC;
+#         *longitud = *longitud + 1;
+#         casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+#     }
+#         return MODELO_ENCONTRADO;
+#   #  else
+#         return NO_HAY_MODELO;
+# }
+#
+# Entrada:	r0 = tablero
+#			r1 = longitud (puntero)
+#			r2 = FA
+#			r3 = CA
+#			[fp, #4]	SF		(5º parametro, en pila del llamador)
+#			[fp, #8]	SC		(6º parametro)
+#			[fp, #12]	color	(7º parametro)
+# Salida:	r0 = MODELO_ENCONTRADO / NO_HAY_MODELO
+#
+# Uso de registros (r4-r10 porque sobreviven a la llamada a color_ficha):
+#	r4 = tablero	r5 = longitud	r6 = FA		r7 = CA
+#	r8 = SF			r9 = SC			r10 = color	r0 = casilla (valor devuelto)
+#
+# Marco de pila:
+#	[fp]			pc
+#	[fp, #-4]		lr
+#	[fp, #-8]		sp (ip)
+#	[fp, #-12]		fp anterior
+#	[fp, #-16]		r10
+#	...
+#	[fp, #-40]		r4
+#	[fp, #-44] = [sp]	es_posicion_correcta: va en pila porque se pasa su direccion a color_ficha
+#############################################################################################
 .global patron_volteo_arm
 .extern color_ficha
 patron_volteo_arm:

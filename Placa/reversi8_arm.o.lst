@@ -1,0 +1,213 @@
+   1              	# 1 "../reversi8_arm.asm"
+   1              	/*********************************************************************************************
+   0              	
+   0              	
+   0              	
+   2              	* Fichero:		reversi8_arm.asm
+   3              	* Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
+   4              	* Descrip:		versiones en ensamblador ARM de color_ficha() y patron_volteo()
+   5              	*				(misma estructura que el C de reversi8_2026.c, cumpliendo ATPCS)
+   6              	* Version:	1.0
+   7              	*********************************************************************************************/
+   8              	
+   9              	.text
+  10              	.arm
+  11              	
+  12              	# Constantes (mismos valores que en reversi8_2026.c)
+  13              	.equ DIM,				8
+  14              	.equ CASILLA_VACIA,		0
+  15              	.equ NO_HAY_MODELO,		0
+  16              	.equ MODELO_ENCONTRADO,	1
+  17              	
+  18              	# NOTA: en arm-none-eabi-gcc "char" es SIN signo. Un indice negativo (p.ej. FA = 0 + (-1))
+  19              	# queda como 0xFF, por eso basta una comparacion sin signo (< DIM) para cubrir
+  20              	# tambien la condicion ">= 0", y tras cada suma hay que truncar a 8 bits (and #0xFF).
+  21              	
+  22              	#############################################################################################
+  23              	# Codigo C original:
+  24              	#
+  25              	# char color_ficha(char tablero[][DIM], char f, char c, int *es_posicion_correcta)
+  26              	# {
+  27              	#     char ficha;
+  28              	#
+  29              	#     {
+  30              	#         *es_posicion_correcta = 1;
+  31              	#         ficha = tablero[f][c];
+  32              	#     }
+  33              	#    # else
+  34              	#     {
+  35              	#         *es_posicion_correcta = 0;
+  36              	#         ficha = CASILLA_VACIA;
+  37              	#     }
+  38              	#     return ficha;
+  39              	# }
+  40              	#
+  41              	# Entrada:	r0 = tablero
+  42              	#			r1 = f
+  43              	#			r2 = c
+  44              	#			r3 = es_posicion_correcta (puntero)
+  45              	# Salida:	r0 = ficha
+  46              	# Variables locales: ficha -> r0 (no necesita pila)
+  47              	#
+  48              	# Marco de pila (como el del compilador):
+  49              	#	[fp]		pc
+  50              	#	[fp, #-4]	lr
+  51              	#	[fp, #-8]	sp (ip)
+  52              	#	[fp, #-12]	fp anterior
+  53              	#############################################################################################
+  54              	.global color_ficha_arm
+  55              	color_ficha_arm:
+  56 0000 0DC0A0E1 			mov		ip, sp
+  57 0004 00D82DE9 			stmdb	sp!, {fp, ip, lr, pc}
+  58 0008 04B04CE2 			sub		fp, ip, #4
+  59              	
+  60 000c 080051E3 			cmp		r1, #DIM				/* sin signo: cubre f < DIM y f >= 0 */
+  61 0010 0800002A 			bhs		cf_else
+  62              			# ... && (c < DIM) && (c >= 0) && ...
+  63 0014 080052E3 			cmp		r2, #DIM				/* sin signo: cubre c < DIM y c >= 0 */
+  64 0018 0600002A 			bhs		cf_else
+  65              			# ... && (tablero[f][c] != CASILLA_VACIA))
+  66 001c 810180E0 			add		r0, r0, r1, lsl #3		/* r0 = &tablero[f][0] (fila de DIM = 8 = 2^3 bytes) */
+  67 0020 0200D0E7 			ldrb	r0, [r0, r2]			/* ficha = tablero[f][c] */
+  68 0024 000050E3 			cmp		r0, #CASILLA_VACIA
+  69 0028 0200000A 			beq		cf_else
+  70              	
+  71              			# *es_posicion_correcta = 1;  ficha = tablero[f][c] (ya en r0)
+  72 002c 0110A0E3 			mov		r1, #1
+  73 0030 001083E5 			str		r1, [r3]
+  74              			# return ficha;
+  75 0034 00A81BE9 			ldmdb	fp, {fp, sp, pc}
+  76              	
+  77              	cf_else:
+  78              			# *es_posicion_correcta = 0;
+  79 0038 0010A0E3 			mov		r1, #0
+  80 003c 001083E5 			str		r1, [r3]
+  81              			# ficha = CASILLA_VACIA;  return ficha;
+  82 0040 0000A0E3 			mov		r0, #CASILLA_VACIA
+  83 0044 00A81BE9 			ldmdb	fp, {fp, sp, pc}
+  84              	
+  85              	#############################################################################################
+  86              	# Codigo C original:
+  87              	#
+  88              	# int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char co
+  89              	# {
+  90              	#     int es_posicion_correcta;
+  91              	#     char casilla;
+  92              	#
+  93              	#     FA = FA + SF;
+  94              	#     CA = CA + SC;
+  95              	#     casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+  96              	#     while ((es_posicion_correcta == 1) && (casilla != color))
+  97              	#     {
+  98              	#         FA = FA + SF;
+  99              	#         CA = CA + SC;
+ 100              	#         *longitud = *longitud + 1;
+ 101              	#         casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+ 102              	#     }
+ 103              	#         return MODELO_ENCONTRADO;
+ 104              	#   #  else
+ 105              	#         return NO_HAY_MODELO;
+ 106              	# }
+ 107              	#
+ 108              	# Entrada:	r0 = tablero
+ 109              	#			r1 = longitud (puntero)
+ 110              	#			r2 = FA
+ 111              	#			r3 = CA
+ 112              	#			[fp, #4]	SF		(5º parametro, en pila del llamador)
+ 113              	#			[fp, #8]	SC		(6º parametro)
+ 114              	#			[fp, #12]	color	(7º parametro)
+ 115              	# Salida:	r0 = MODELO_ENCONTRADO / NO_HAY_MODELO
+ 116              	#
+ 117              	# Uso de registros (r4-r10 porque sobreviven a la llamada a color_ficha):
+ 118              	#	r4 = tablero	r5 = longitud	r6 = FA		r7 = CA
+ 119              	#	r8 = SF			r9 = SC			r10 = color	r0 = casilla (valor devuelto)
+ 120              	#
+ 121              	# Marco de pila:
+ 122              	#	[fp]			pc
+ 123              	#	[fp, #-4]		lr
+ 124              	#	[fp, #-8]		sp (ip)
+ 125              	#	[fp, #-12]		fp anterior
+ 126              	#	[fp, #-16]		r10
+ 127              	#	...
+ 128              	#	[fp, #-40]		r4
+ 129              	#	[fp, #-44] = [sp]	es_posicion_correcta: va en pila porque se pasa su direccion a color_ficha
+ 130              	#############################################################################################
+ 131              	.global patron_volteo_arm
+ 132              	.extern color_ficha
+ 133              	patron_volteo_arm:
+ 134 0048 0DC0A0E1 			mov		ip, sp
+ 135 004c F0DF2DE9 			stmdb	sp!, {r4-r10, fp, ip, lr, pc}
+ 136 0050 04B04CE2 			sub		fp, ip, #4
+ 137 0054 04D04DE2 			sub		sp, sp, #4				/* int es_posicion_correcta -> [sp] */
+ 138              	
+ 139 0058 0040A0E1 			mov		r4, r0					/* r4 = tablero */
+ 140 005c 0150A0E1 			mov		r5, r1					/* r5 = longitud */
+ 141 0060 0480DBE5 			ldrb	r8, [fp, #4]			/* r8 = SF */
+ 142 0064 0890DBE5 			ldrb	r9, [fp, #8]			/* r9 = SC */
+ 143 0068 0CA0DBE5 			ldrb	r10, [fp, #12]			/* r10 = color */
+ 144              	
+ 145              			# FA = FA + SF;
+ 146 006c 086082E0 			add		r6, r2, r8
+ 147 0070 FF6006E2 			and		r6, r6, #0xFF			/* FA es char: truncar a 8 bits */
+ 148              			# CA = CA + SC;
+ 149 0074 097083E0 			add		r7, r3, r9
+ 150 0078 FF7007E2 			and		r7, r7, #0xFF
+ 151              			# casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+ 152 007c 0400A0E1 			mov		r0, r4
+ 153 0080 0610A0E1 			mov		r1, r6
+ 154 0084 0720A0E1 			mov		r2, r7
+ 155 0088 0D30A0E1 			mov		r3, sp
+ 156 008c FEFFFFEB 			bl		color_ficha				/* cambiar por color_ficha_arm para probar la version ARM */
+ 157              	
+ 158              	pv_while:
+ 159              			# while ((es_posicion_correcta == 1) && ...
+ 160 0090 00109DE5 			ldr		r1, [sp]
+ 161 0094 010051E3 			cmp		r1, #1
+ 162 0098 0E00001A 			bne		pv_fin_while
+ 163              			# ... && (casilla != color))
+ 164 009c 0A0050E1 			cmp		r0, r10
+ 165 00a0 0C00000A 			beq		pv_fin_while
+ 166              	
+ 167              			# FA = FA + SF;
+ 168 00a4 086086E0 			add		r6, r6, r8
+ 169 00a8 FF6006E2 			and		r6, r6, #0xFF
+ 170              			# CA = CA + SC;
+ 171 00ac 097087E0 			add		r7, r7, r9
+ 172 00b0 FF7007E2 			and		r7, r7, #0xFF
+ 173              			# *longitud = *longitud + 1;
+ 174 00b4 001095E5 			ldr		r1, [r5]
+ 175 00b8 011081E2 			add		r1, r1, #1
+ 176 00bc 001085E5 			str		r1, [r5]
+ 177              			# casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+ 178 00c0 0400A0E1 			mov		r0, r4
+ 179 00c4 0610A0E1 			mov		r1, r6
+ 180 00c8 0720A0E1 			mov		r2, r7
+ 181 00cc 0D30A0E1 			mov		r3, sp
+ 182 00d0 FEFFFFEB 			bl		color_ficha
+ 183 00d4 EDFFFFEA 			b		pv_while
+ 184              	
+ 185              	pv_fin_while:
+ 186 00d8 00109DE5 			ldr		r1, [sp]
+ 187 00dc 010051E3 			cmp		r1, #1
+ 188 00e0 0A005001 			cmpeq	r0, r10
+ 189              			#     return MODELO_ENCONTRADO;
+ 190 00e4 0100A003 			moveq	r0, #MODELO_ENCONTRADO
+ 191 00e8 0000A013 			movne	r0, #NO_HAY_MODELO
+ 192 00ec F0AF1BE9 			ldmdb	fp, {r4-r10, fp, sp, pc}
+ 193              	
+ 194              	.end
+DEFINED SYMBOLS
+ ../reversi8_arm.asm:13     *ABS*:00000008 DIM
+ ../reversi8_arm.asm:14     *ABS*:00000000 CASILLA_VACIA
+ ../reversi8_arm.asm:15     *ABS*:00000000 NO_HAY_MODELO
+ ../reversi8_arm.asm:16     *ABS*:00000001 MODELO_ENCONTRADO
+ ../reversi8_arm.asm:55     .text:00000000 color_ficha_arm
+ ../reversi8_arm.asm:56     .text:00000000 $a
+ ../reversi8_arm.asm:77     .text:00000038 cf_else
+ ../reversi8_arm.asm:133    .text:00000048 patron_volteo_arm
+ ../reversi8_arm.asm:158    .text:00000090 pv_while
+ ../reversi8_arm.asm:185    .text:000000d8 pv_fin_while
+                   .debug_aranges:0000000c $d
+
+UNDEFINED SYMBOLS
+color_ficha
