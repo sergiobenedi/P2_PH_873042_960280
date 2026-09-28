@@ -192,7 +192,7 @@ END GROUP
  .comment       0x00000000       0x2b ./reversi8_2026.o
  .comment       0x00000000       0x2b ./timer.o
 
-.debug_info     0x00000000      0xdb8
+.debug_info     0x00000000      0xdbd
  *(.debug_info)
  .debug_info    0x00000000       0xbc ./common/44binit.o
  .debug_info    0x000000bc      0x229 ./common/44blib.o
@@ -200,11 +200,11 @@ END GROUP
  .debug_info    0x000003f2       0x86 ./button.o
  .debug_info    0x00000478       0xf6 ./led.o
  .debug_info    0x0000056e       0x3f ./main.o
- .debug_info    0x000005ad      0x6d7 ./reversi8_2026.o
- .debug_info    0x00000c84       0xba ./reversi8_arm.o
- .debug_info    0x00000d3e       0x7a ./timer.o
+ .debug_info    0x000005ad      0x6dc ./reversi8_2026.o
+ .debug_info    0x00000c89       0xba ./reversi8_arm.o
+ .debug_info    0x00000d43       0x7a ./timer.o
 
-.debug_line     0x00000000      0xd3d
+.debug_line     0x00000000      0xd3b
  *(.debug_line)
  .debug_line    0x00000000      0x10f ./common/44binit.o
  .debug_line    0x0000010f      0x4c7 ./common/44blib.o
@@ -213,8 +213,8 @@ END GROUP
  .debug_line    0x000007e3      0x105 ./led.o
  .debug_line    0x000008e8       0xf1 ./main.o
  .debug_line    0x000009d9      0x1ec ./reversi8_2026.o
- .debug_line    0x00000bc5       0x82 ./reversi8_arm.o
- .debug_line    0x00000c47       0xf6 ./timer.o
+ .debug_line    0x00000bc5       0x80 ./reversi8_arm.o
+ .debug_line    0x00000c45       0xf6 ./timer.o
 
 .debug_abbrev   0x00000000      0x4f2
  *(.debug_abbrev)
@@ -260,7 +260,7 @@ OUTPUT(P1_873042_960280.elf elf32-littlearm)
  .debug_aranges
                 0x00000100       0x20 ./timer.o
 
-.debug_macinfo  0x00000000    0x23943
+.debug_macinfo  0x00000000    0x23961
  .debug_macinfo
                 0x00000000     0x8301 ./common/44blib.o
  .debug_macinfo
@@ -272,9 +272,9 @@ OUTPUT(P1_873042_960280.elf elf32-littlearm)
  .debug_macinfo
                 0x000176a6     0x50b9 ./main.o
  .debug_macinfo
-                0x0001c75f     0x2133 ./reversi8_2026.o
+                0x0001c75f     0x2151 ./reversi8_2026.o
  .debug_macinfo
-                0x0001e892     0x50b1 ./timer.o
+                0x0001e8b0     0x50b1 ./timer.o
 
 .debug_loc      0x00000000      0x554
  .debug_loc     0x00000000      0x108 ./common/44blib.o

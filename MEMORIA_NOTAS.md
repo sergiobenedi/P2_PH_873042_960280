@@ -78,8 +78,13 @@ Total: _ h (pendiente de rellenar)
   El guión permite que `patron_volteo_arm` llame a la versión C, a la ARM o a la Thumb.
 - En `reversi8_2026.c`, el `#define PATRON_VOLTEO patron_volteo | patron_volteo_arm` elige qué
   versión usa el juego. Se usa en `actualizar_tablero` y en `elegir_mov`.
-- La versión de `color_ficha` que llama `patron_volteo_arm` se elige cambiando las dos líneas
-  `bl color_ficha` por `bl color_ficha_arm`.
+- La versión de `color_ficha` se elige con un `#define COLOR_FICHA color_ficha | color_ficha_arm`:
+  - en `reversi8_2026.c`, para la que llama `patron_volteo` (C);
+  - en `reversi8_arm.asm`, para la que llama `patron_volteo_arm`. Funciona porque Eclipse
+    ensambla con `-x assembler-with-cpp`.
+- 2026-09-28: se borran las cabeceras duplicadas con comentarios `#` del `.asm`. Estaban
+  incompletas (faltaba la línea del `if`) y llevaban un `# else` suelto, que es el mismo
+  riesgo del problema 1.
 
 #### Decisiones de diseño `[MET][OPT]`
 - **`char` sin signo en arm-none-eabi-gcc.**
@@ -140,7 +145,22 @@ ldmdb fp, {<regs>, fp, sp, pc}
 [fp,#-16] r10 ... [fp,#-40] r4
 [fp,#-44] es_posicion_correcta  <- sp
 ```
-_Pendiente: captura del marco que genera el compilador para `patron_volteo` en C y comparación con el nuestro._
+Marco que genera el compilador (`-O0 -mapcs-frame`) para `patron_volteo` en C:
+```
+mov   ip, sp
+push  {fp, ip, lr, pc}
+sub   fp, ip, #4
+sub   sp, sp, #24          ; todos los parámetros y locales van a pila
+str   r0, [fp,#-24]        ; tablero
+str   r1, [fp,#-28]        ; longitud
+strb  r2, [fp,#-29]        ; FA
+strb  r3, [fp,#-30]        ; CA
+...                        ; SF/SC en [fp,#4]/[fp,#8]; es_posicion_correcta en [fp,#-20]
+```
+- **La estructura es la misma**: `mov ip,sp` / `stmdb {…,fp,ip,lr,pc}` / `sub fp,ip,#4`, y los parámetros 5.º a 7.º en `[fp,#4…]`.
+- **Diferencia**: el compilador a `-O0` guarda todo en pila y recarga en cada uso.
+  Nosotros guardamos r4-r10 y dejamos en pila solo `es_posicion_correcta`, que es lo que
+  permite el comentario del C ("si se colocan en un registro no hace falta… reservar espacio").
 
 #### Problemas y soluciones `[PROB]`
 1. **El preprocesador rompía el `.asm`.** Eclipse ensambla con `gcc -x assembler-with-cpp`,
@@ -154,6 +174,11 @@ _Pendiente: captura del marco que genera el compilador para `patron_volteo` en C
    - Escribir `fila`, `columna` y por último `ready = 1`, desde la vista Expressions o el monitor de memoria. Después, F8.
    - En nuestro build: `&tablero` = 0x0C0027D0 y `&fila` = 0x0C002810 (`columna` y `ready` en los bytes siguientes).
    - Confusión inicial: las **negras son `02`** y las **blancas `01`**.
+4. **En la placa parecía que el programa se colgaba** (2026-09-28).
+   - "Target not available" en Expressions y la memoria en `00` rojo solo indican que la placa está ejecutando: GDB no puede leer.
+   - El programa no se había colgado. Estaba en `esperar_mov` esperando la siguiente jugada, y el tablero ya estaba bien. Se ve pulsando Suspend.
+   - En la placa las direcciones cambian (otro linker script): `&tablero` = 0x0C0027B0, `&fila` = 0x0C0027F0. Conviene usar `&tablero` en el monitor en lugar de direcciones fijas.
+   - Dentro de `esperar_mov`, `ready` en Expressions es el parámetro `char *` y no la variable global.
 
 ---
 
@@ -170,14 +195,20 @@ fila 4: 00 00 00 02 01 00 00 00
 ```
 Qué ocurre: la negra en (2,3) voltea (3,3). La blanca en (2,2) vuelve a voltear (3,3) por la diagonal.
 
+Cómo se elige la combinación (por defecto C + C):
+- `PATRON_VOLTEO` en `reversi8_2026.c`: `patron_volteo` o `patron_volteo_arm`.
+- `COLOR_FICHA` en `reversi8_2026.c`: qué versión llama `patron_volteo` (C).
+- `COLOR_FICHA` en `reversi8_arm.asm`: qué versión llama `patron_volteo_arm`.
+- Después de cada cambio, Clean + Build.
+
 | patron_volteo | color_ficha | Jugada (2,3) | Estado |
 |---------------|-------------|--------------|--------|
 | C   | C     | tablero correcto | ✅ probado 2026-09-21 |
-| ARM | C     | | pendiente |
-| ARM | ARM   | | pendiente |
+| ARM | C     | tablero correcto | ✅ simulador y placa 2026-09-28 |
+| ARM | ARM   | tablero correcto | ✅ 2026-09-28 |
 | C   | Thumb | | pendiente (Paso 4) |
 | ARM | Thumb | | pendiente (Paso 4) |
-| C   | ARM   | | pendiente |
+| C   | ARM   | tablero correcto | ✅ 2026-09-28 |
 
 ### 3.2 Rendimiento (Pasos 8 y 9) — pendiente
 | Combinación | Tamaño (bytes) | Instrucciones | Tiempo (µs) |

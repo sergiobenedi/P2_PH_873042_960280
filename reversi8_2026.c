@@ -79,6 +79,9 @@ extern char color_ficha_arm(char tablero[][8], char f, char c, int *es_posicion_
 // Version de patron_volteo que usa el juego: patron_volteo (C) o patron_volteo_arm (ARM)
 #define PATRON_VOLTEO patron_volteo
 
+// Version de color_ficha que llama patron_volteo (C): color_ficha (C) o color_ficha_arm (ARM)
+#define COLOR_FICHA color_ficha
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 0 indica CASILLA_VACIA, 1 indica FICHA_BLANCA y 2 indica FICHA_NEGRA
 // pone el tablero a cero y luego coloca las fichas centrales.
@@ -208,7 +211,7 @@ static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, c
 
 	FA = FA + SF;
 	CA = CA + SC;
-	casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+	casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
 	while ((es_posicion_correcta == 1) && (casilla != color))
 	// mientras la casilla est� en el tablero, no est� vac��a,
 	// y es del color rival seguimos buscando el modelo de volteo
@@ -216,7 +219,7 @@ static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, c
 		FA = FA + SF;
 		CA = CA + SC;
 		*longitud = *longitud + 1;
-		casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+		casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
 	}
     // si la ultima posici�n era v�lida y la ficha es del jugador actual,
     // entonces hemos encontrado el patr�n
