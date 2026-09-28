@@ -44,7 +44,7 @@ all: P1_873042_960280.elf secondary-outputs
 P1_873042_960280.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: ARM Sourcery Windows GCC C Linker'
-	arm-none-eabi-gcc -T"C:/Users/Pablo/Desktop/ingieneria_informatica/2_curso_1_cuatri/proyecto_hardware/config_eclipese/Practicas/P1_873042_960280/common/ld_script.ld" -nostartfiles -Wl,-Map,P1_873042_960280.map -mcpu=arm7tdmi -g3 -gdwarf-2 -o "P1_873042_960280.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -T"C:/Users/sergi/Desktop/UNIZAR/3_INGENIERIA_INFORMATICA/1ER_CUATRIMESTRE/3_PROYECTO_HARDWARE/PRACTICAS/P1_873042_960280/common/ld_script.ld" -nostartfiles -Wl,-Map,P1_873042_960280.map -mcpu=arm7tdmi -g3 -gdwarf-2 -o "P1_873042_960280.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

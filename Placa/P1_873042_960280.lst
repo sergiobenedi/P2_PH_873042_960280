@@ -15,25 +15,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .comment      0000002a  00000000  00000000  0000a7ce  2**0
                   CONTENTS, READONLY
-  6 .debug_info   00000dbd  00000000  00000000  0000a7f8  2**0
+  6 .debug_info   00000db8  00000000  00000000  0000a7f8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000ca8  00000000  00000000  0000b5b5  2**0
+  7 .debug_line   00000d3d  00000000  00000000  0000b5b0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 000004f2  00000000  00000000  0000c25d  2**0
+  8 .debug_abbrev 000004f2  00000000  00000000  0000c2ed  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000049c  00000000  00000000  0000c750  2**2
+  9 .debug_frame  0000049c  00000000  00000000  0000c7e0  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_aranges 00000120  00000000  00000000  0000cbf0  2**3
+ 10 .debug_aranges 00000120  00000000  00000000  0000cc80  2**3
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_macinfo 00023925  00000000  00000000  0000cd10  2**0
+ 11 .debug_macinfo 00023943  00000000  00000000  0000cda0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00000554  00000000  00000000  00030635  2**0
+ 12 .debug_loc    00000554  00000000  00000000  000306e3  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_pubnames 00000281  00000000  00000000  00030b89  2**0
+ 13 .debug_pubnames 00000281  00000000  00000000  00030c37  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_pubtypes 00000012  00000000  00000000  00030e0a  2**0
+ 14 .debug_pubtypes 00000012  00000000  00000000  00030eb8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_str    00000428  00000000  00000000  00030e1c  2**0
+ 15 .debug_str    00000423  00000000  00000000  00030eca  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -2269,7 +2269,7 @@ static int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
         flip = 0;
  c001508:	e3a03000 	mov	r3, #0
  c00150c:	e50b301c 	str	r3, [fp, #-28]	; 0xffffffe4
-        modelo = patron_volteo(tablero, &flip, f, c, SF, SC, color);
+        modelo = PATRON_VOLTEO(tablero, &flip, f, c, SF, SC, color);
  c001510:	e24b101c 	sub	r1, fp, #28
  c001514:	e55b2021 	ldrb	r2, [fp, #-33]	; 0xffffffdf
  c001518:	e55b3022 	ldrb	r3, [fp, #-34]	; 0xffffffde
@@ -2420,7 +2420,7 @@ static int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char
                         longitud = 0;
  c001688:	e3a03000 	mov	r3, #0
  c00168c:	e50b3030 	str	r3, [fp, #-48]	; 0xffffffd0
-                        modelo = patron_volteo(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
+                        modelo = PATRON_VOLTEO(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
  c001690:	e51b3010 	ldr	r3, [fp, #-16]
  c001694:	e20320ff 	and	r2, r3, #255	; 0xff
  c001698:	e51b3014 	ldr	r3, [fp, #-20]	; 0xffffffec
@@ -3463,12 +3463,10 @@ color_ficha_arm:
  c0023b8:	e3510008 	cmp	r1, #8
 		bhs		cf_else
  c0023bc:	2a000008 	bcs	c0023e4 <cf_else>
-		# ... && (c < DIM) && (c >= 0) && ...
 		cmp		r2, #DIM				/* sin signo: cubre c < DIM y c >= 0 */
  c0023c0:	e3520008 	cmp	r2, #8
 		bhs		cf_else
  c0023c4:	2a000006 	bcs	c0023e4 <cf_else>
-		# ... && (tablero[f][c] != CASILLA_VACIA))
 		add		r0, r0, r1, lsl #3		/* r0 = &tablero[f][0] (fila de DIM = 8 = 2^3 bytes) */
  c0023c8:	e0800181 	add	r0, r0, r1, lsl #3
 		ldrb	r0, [r0, r2]			/* ficha = tablero[f][c] */
@@ -3478,24 +3476,20 @@ color_ficha_arm:
 		beq		cf_else
  c0023d4:	0a000002 	beq	c0023e4 <cf_else>
 
-		# *es_posicion_correcta = 1;  ficha = tablero[f][c] (ya en r0)
 		mov		r1, #1
  c0023d8:	e3a01001 	mov	r1, #1
 		str		r1, [r3]
  c0023dc:	e5831000 	str	r1, [r3]
-		# return ficha;
 		ldmdb	fp, {fp, sp, pc}
  c0023e0:	e91ba800 	ldmdb	fp, {fp, sp, pc}
 
 0c0023e4 <cf_else>:
 
 cf_else:
-		# *es_posicion_correcta = 0;
 		mov		r1, #0
  c0023e4:	e3a01000 	mov	r1, #0
 		str		r1, [r3]
  c0023e8:	e5831000 	str	r1, [r3]
-		# ficha = CASILLA_VACIA;  return ficha;
 		mov		r0, #CASILLA_VACIA
  c0023ec:	e3a00000 	mov	r0, #0
 		ldmdb	fp, {fp, sp, pc}
@@ -3527,17 +3521,14 @@ patron_volteo_arm:
 		ldrb	r10, [fp, #12]			/* r10 = color */
  c002414:	e5dba00c 	ldrb	sl, [fp, #12]
 
-		# FA = FA + SF;
 		add		r6, r2, r8
  c002418:	e0826008 	add	r6, r2, r8
 		and		r6, r6, #0xFF			/* FA es char: truncar a 8 bits */
  c00241c:	e20660ff 	and	r6, r6, #255	; 0xff
-		# CA = CA + SC;
 		add		r7, r3, r9
  c002420:	e0837009 	add	r7, r3, r9
 		and		r7, r7, #0xFF
  c002424:	e20770ff 	and	r7, r7, #255	; 0xff
-		# casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
 		mov		r0, r4
  c002428:	e1a00004 	mov	r0, r4
 		mov		r1, r6
@@ -3552,37 +3543,31 @@ patron_volteo_arm:
 0c00243c <pv_while>:
 
 pv_while:
-		# while ((es_posicion_correcta == 1) && ...
 		ldr		r1, [sp]
  c00243c:	e59d1000 	ldr	r1, [sp]
 		cmp		r1, #1
  c002440:	e3510001 	cmp	r1, #1
 		bne		pv_fin_while
  c002444:	1a00000e 	bne	c002484 <pv_fin_while>
-		# ... && (casilla != color))
 		cmp		r0, r10
  c002448:	e150000a 	cmp	r0, sl
 		beq		pv_fin_while
  c00244c:	0a00000c 	beq	c002484 <pv_fin_while>
 
-		# FA = FA + SF;
 		add		r6, r6, r8
  c002450:	e0866008 	add	r6, r6, r8
 		and		r6, r6, #0xFF
  c002454:	e20660ff 	and	r6, r6, #255	; 0xff
-		# CA = CA + SC;
 		add		r7, r7, r9
  c002458:	e0877009 	add	r7, r7, r9
 		and		r7, r7, #0xFF
  c00245c:	e20770ff 	and	r7, r7, #255	; 0xff
-		# *longitud = *longitud + 1;
 		ldr		r1, [r5]
  c002460:	e5951000 	ldr	r1, [r5]
 		add		r1, r1, #1
  c002464:	e2811001 	add	r1, r1, #1
 		str		r1, [r5]
  c002468:	e5851000 	str	r1, [r5]
-		# casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
 		mov		r0, r4
  c00246c:	e1a00004 	mov	r0, r4
 		mov		r1, r6
@@ -3605,7 +3590,6 @@ pv_fin_while:
  c002488:	e3510001 	cmp	r1, #1
 		cmpeq	r0, r10
  c00248c:	0150000a 	cmpeq	r0, sl
-		#     return MODELO_ENCONTRADO;
 		moveq	r0, #MODELO_ENCONTRADO
  c002490:	03a00001 	moveq	r0, #1
 		movne	r0, #NO_HAY_MODELO

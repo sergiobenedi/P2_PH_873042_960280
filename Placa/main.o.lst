@@ -66,8 +66,8 @@
  1910              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-C:\Users\Pablo\AppData\Local\Temp\cctxVYuc.s:1879   .text:00000000 $a
-C:\Users\Pablo\AppData\Local\Temp\cctxVYuc.s:1882   .text:00000000 Main
+C:\Users\sergi\AppData\Local\Temp\cc0TwPD7.s:1879   .text:00000000 $a
+C:\Users\sergi\AppData\Local\Temp\cc0TwPD7.s:1882   .text:00000000 Main
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
