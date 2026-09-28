@@ -180,6 +180,21 @@ strb  r3, [fp,#-30]        ; CA
    - En la placa las direcciones cambian (otro linker script): `&tablero` = 0x0C0027B0, `&fila` = 0x0C0027F0. Conviene usar `&tablero` en el monitor en lugar de direcciones fijas.
    - Dentro de `esperar_mov`, `ready` en Expressions es el parámetro `char *` y no la variable global.
 
+### 2026-09-28 — Paso 4: color_ficha_thumb `[MET][OPT][PILA]`
+- Nuevo fichero `reversi8_thumb.asm` con `color_ficha_thumb` (`.thumb` + `.thumb_func`).
+- Misma estructura que `color_ficha_arm`, con dos cambios obligados por Thumb:
+  - no hay desplazamiento integrado en `add`: `lsl r1,r1,#3` + `add r0,r0,r1`;
+  - no hay ejecución condicional ni `ldmdb`: se usan saltos y `bx lr`.
+- **Marco de pila: ninguno** (el guión permite reducirlo en Thumb). Es hoja, usa solo r0-r3 y no
+  llama a nadie, así que ni `lr` ni ningún registro callee-saved se modifican.
+- **Retorno con `bx lr`**: el llamador es ARM (bit 0 de `lr` = 0), así que vuelve a estado ARM.
+  `pop {pc}` no valdría: en ARMv4T no cambia de estado.
+- **Llamada ARM/C → Thumb**: se deja el `bl` normal (en C y en `patron_volteo_arm`). Como el
+  símbolo es `.thumb_func` y ARMv4T no tiene `blx`, el enlazador inserta un **veneer** que carga
+  la dirección con bit 0 = 1 y hace `bx`. Así el cambio de versión sigue siendo solo el `#define`.
+  _Comprobar en el desensamblado/.map que aparece el veneer (y contarlo en instrucciones, Paso 8)._
+- En el camino `else` se reutiliza el 0 de `r0` para escribir `*es_posicion_correcta = 0`.
+
 ---
 
 ## 3. Resultados `[RESUL]`
@@ -206,8 +221,8 @@ Cómo se elige la combinación (por defecto C + C):
 | C   | C     | tablero correcto | ✅ probado 2026-09-21 |
 | ARM | C     | tablero correcto | ✅ simulador y placa 2026-09-28 |
 | ARM | ARM   | tablero correcto | ✅ 2026-09-28 |
-| C   | Thumb | | pendiente (Paso 4) |
-| ARM | Thumb | | pendiente (Paso 4) |
+| C   | Thumb | | implementado, pendiente de probar |
+| ARM | Thumb | | implementado, pendiente de probar |
 | C   | ARM   | tablero correcto | ✅ 2026-09-28 |
 
 ### 3.2 Rendimiento (Pasos 8 y 9) — pendiente
@@ -228,6 +243,7 @@ Cómo se elige la combinación (por defecto C + C):
 | Fichero | Funciones | Líneas |
 |---------|-----------|--------|
 | reversi8_arm.asm | color_ficha_arm, patron_volteo_arm | 184 |
+| reversi8_thumb.asm | color_ficha_thumb | 79 |
 | reversi8_2026.c | juego (proporcionado, modificado) | 476 |
 
 Actualizar con `wc -l` antes de entregar.

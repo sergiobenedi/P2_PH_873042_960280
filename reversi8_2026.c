@@ -75,11 +75,13 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM];
 // Versiones en ensamblador (reversi8_arm.asm)
 extern int patron_volteo_arm(char tablero[][8], int *longitud, char f, char c, char SF, char SC, char color);
 extern char color_ficha_arm(char tablero[][8], char f, char c, int *es_posicion_correcta);
+// Version en ensamblador Thumb (reversi8_thumb.asm)
+extern char color_ficha_thumb(char tablero[][8], char f, char c, int *es_posicion_correcta);
 
 // Version de patron_volteo que usa el juego: patron_volteo (C) o patron_volteo_arm (ARM)
 #define PATRON_VOLTEO patron_volteo
 
-// Version de color_ficha que llama patron_volteo (C): color_ficha (C) o color_ficha_arm (ARM)
+// Version de color_ficha que llama patron_volteo (C): color_ficha (C), color_ficha_arm (ARM) o color_ficha_thumb (Thumb)
 #define COLOR_FICHA color_ficha
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

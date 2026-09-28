@@ -17,7 +17,8 @@
 .equ NO_HAY_MODELO,		0
 .equ MODELO_ENCONTRADO,	1
 
-/* Version de color_ficha que llama patron_volteo_arm: color_ficha (C) o color_ficha_arm (ARM) */
+/* Version de color_ficha que llama patron_volteo_arm: color_ficha (C), color_ficha_arm (ARM)
+   o color_ficha_thumb (Thumb; el enlazador pone el veneer ARM->Thumb en el bl) */
 #define COLOR_FICHA color_ficha
 
 /*******************************************************************************************
