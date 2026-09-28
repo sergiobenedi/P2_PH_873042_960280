@@ -12,7 +12,8 @@ C_SRCS += \
 ../timer.c 
 
 ASM_SRCS += \
-../reversi8_arm.asm 
+../reversi8_arm.asm \
+../reversi8_thumb.asm 
 
 OBJS += \
 ./8led.o \
@@ -21,6 +22,7 @@ OBJS += \
 ./main.o \
 ./reversi8_2026.o \
 ./reversi8_arm.o \
+./reversi8_thumb.o \
 ./timer.o 
 
 C_DEPS += \
@@ -32,7 +34,8 @@ C_DEPS += \
 ./timer.d 
 
 ASM_DEPS += \
-./reversi8_arm.d 
+./reversi8_arm.d \
+./reversi8_thumb.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

@@ -21,185 +21,187 @@
   17              	.equ NO_HAY_MODELO,		0
   18              	.equ MODELO_ENCONTRADO,	1
   19              	
-  20              	/* Version de color_ficha que llama patron_volteo_arm: color_ficha (C) o color_ficha_arm (ARM) */
-  21              	#define COLOR_FICHA color_ficha_arm
-  22              	
-  23              	/*******************************************************************************************
-  24              	* NOTA: en arm-none-eabi-gcc "char" es SIN signo. Un indice negativo (p.ej. FA = 0 + (-1))
-  25              	* queda como 0xFF, por eso basta una comparacion sin signo (< DIM) para cubrir
-  26              	* tambien la condicion ">= 0", y tras cada suma hay que truncar a 8 bits (and #0xFF).
-  27              	*******************************************************************************************/
-  28              	
-  29              	/*******************************************************************************************
-  30              	* Codigo C original:
-  31              	*
-  32              	* char color_ficha(char tablero[][DIM], char f, char c, int *es_posicion_correcta)
-  33              	* {
-  34              	*     char ficha;
-  35              	*
-  36              	*     if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
-  37              	*     {
-  38              	*         *es_posicion_correcta = 1;
-  39              	*         ficha = tablero[f][c];
-  40              	*     }
-  41              	*     else
-  42              	*     {
-  43              	*         *es_posicion_correcta = 0;
-  44              	*         ficha = CASILLA_VACIA;
-  45              	*     }
-  46              	*     return ficha;
-  47              	* }
-  48              	*
-  49              	* Entrada:	r0 = tablero
-  50              	* 			r1 = f
-  51              	* 			r2 = c
-  52              	* 			r3 = es_posicion_correcta (puntero)
-  53              	* Salida:	r0 = ficha
-  54              	* Variables locales: ficha -> r0 (no necesita pila)
-  55              	*
-  56              	* Marco de pila (como el del compilador):
-  57              	* 	[fp]		pc
-  58              	* 	[fp, #-4]	lr
-  59              	* 	[fp, #-8]	sp (ip)
-  60              	* 	[fp, #-12]	fp anterior
-  61              	*******************************************************************************************/
-  62              	.global color_ficha_arm
-  63              	color_ficha_arm:
-  64 0000 0DC0A0E1 			mov		ip, sp
-  65 0004 00D82DE9 			stmdb	sp!, {fp, ip, lr, pc}
-  66 0008 04B04CE2 			sub		fp, ip, #4
-  67              	
-  68 000c 080051E3 			cmp		r1, #DIM				/* sin signo: cubre f < DIM y f >= 0 */
-  69 0010 0800002A 			bhs		cf_else
-  70 0014 080052E3 			cmp		r2, #DIM				/* sin signo: cubre c < DIM y c >= 0 */
-  71 0018 0600002A 			bhs		cf_else
-  72 001c 810180E0 			add		r0, r0, r1, lsl #3		/* r0 = &tablero[f][0] (fila de DIM = 8 = 2^3 bytes) */
-  73 0020 0200D0E7 			ldrb	r0, [r0, r2]			/* ficha = tablero[f][c] */
-  74 0024 000050E3 			cmp		r0, #CASILLA_VACIA
-  75 0028 0200000A 			beq		cf_else
-  76              	
-  77 002c 0110A0E3 			mov		r1, #1
-  78 0030 001083E5 			str		r1, [r3]
-  79 0034 00A81BE9 			ldmdb	fp, {fp, sp, pc}
-  80              	
-  81              	cf_else:
-  82 0038 0010A0E3 			mov		r1, #0
-  83 003c 001083E5 			str		r1, [r3]
-  84 0040 0000A0E3 			mov		r0, #CASILLA_VACIA
-  85 0044 00A81BE9 			ldmdb	fp, {fp, sp, pc}
-  86              	
-  87              	/*******************************************************************************************
-  88              	* Codigo C original:
-  89              	*
-  90              	* int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char co
-  91              	* {
-  92              	*     int es_posicion_correcta;
-  93              	*     char casilla;
-  94              	*
-  95              	*     FA = FA + SF;
-  96              	*     CA = CA + SC;
-  97              	*     casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
-  98              	*     while ((es_posicion_correcta == 1) && (casilla != color))
-  99              	*     {
- 100              	*         FA = FA + SF;
- 101              	*         CA = CA + SC;
- 102              	*         *longitud = *longitud + 1;
- 103              	*         casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
- 104              	*     }
- 105              	*     if ((es_posicion_correcta == 1) && (casilla == color))
- 106              	*         return MODELO_ENCONTRADO;
- 107              	*     else
- 108              	*         return NO_HAY_MODELO;
- 109              	* }
- 110              	*
- 111              	* Entrada:	r0 = tablero
- 112              	* 			r1 = longitud (puntero)
- 113              	* 			r2 = FA
- 114              	* 			r3 = CA
- 115              	* 			[fp, #4]	SF		(5º parametro, en pila del llamador)
- 116              	* 			[fp, #8]	SC		(6º parametro)
- 117              	* 			[fp, #12]	color	(7º parametro)
- 118              	* Salida:	r0 = MODELO_ENCONTRADO / NO_HAY_MODELO
- 119              	*
- 120              	* Uso de registros (r4-r10 porque sobreviven a la llamada a color_ficha):
- 121              	* 	r4 = tablero	r5 = longitud	r6 = FA		r7 = CA
- 122              	* 	r8 = SF			r9 = SC			r10 = color	r0 = casilla (valor devuelto)
- 123              	*
- 124              	* Marco de pila:
- 125              	* 	[fp]			pc
- 126              	* 	[fp, #-4]		lr
- 127              	* 	[fp, #-8]		sp (ip)
- 128              	* 	[fp, #-12]		fp anterior
- 129              	* 	[fp, #-16]		r10
- 130              	* 	...
- 131              	* 	[fp, #-40]		r4
- 132              	* 	[fp, #-44] = [sp]	es_posicion_correcta: va en pila porque se pasa su direccion a color_ficha
- 133              	*******************************************************************************************/
- 134              	.global patron_volteo_arm
- 135              	.extern color_ficha
- 136              	patron_volteo_arm:
- 137 0048 0DC0A0E1 			mov		ip, sp
- 138 004c F0DF2DE9 			stmdb	sp!, {r4-r10, fp, ip, lr, pc}
- 139 0050 04B04CE2 			sub		fp, ip, #4
- 140 0054 04D04DE2 			sub		sp, sp, #4				/* int es_posicion_correcta -> [sp] */
- 141              	
- 142 0058 0040A0E1 			mov		r4, r0					/* r4 = tablero */
- 143 005c 0150A0E1 			mov		r5, r1					/* r5 = longitud */
- 144 0060 0480DBE5 			ldrb	r8, [fp, #4]			/* r8 = SF */
- 145 0064 0890DBE5 			ldrb	r9, [fp, #8]			/* r9 = SC */
- 146 0068 0CA0DBE5 			ldrb	r10, [fp, #12]			/* r10 = color */
- 147              	
- 148 006c 086082E0 			add		r6, r2, r8
- 149 0070 FF6006E2 			and		r6, r6, #0xFF			/* FA es char: truncar a 8 bits */
- 150 0074 097083E0 			add		r7, r3, r9
- 151 0078 FF7007E2 			and		r7, r7, #0xFF
- 152 007c 0400A0E1 			mov		r0, r4
- 153 0080 0610A0E1 			mov		r1, r6
- 154 0084 0720A0E1 			mov		r2, r7
- 155 0088 0D30A0E1 			mov		r3, sp
- 156 008c FEFFFFEB 			bl		COLOR_FICHA
- 157              	
- 158              	pv_while:
- 159 0090 00109DE5 			ldr		r1, [sp]
- 160 0094 010051E3 			cmp		r1, #1
- 161 0098 0E00001A 			bne		pv_fin_while
- 162 009c 0A0050E1 			cmp		r0, r10
- 163 00a0 0C00000A 			beq		pv_fin_while
- 164              	
- 165 00a4 086086E0 			add		r6, r6, r8
- 166 00a8 FF6006E2 			and		r6, r6, #0xFF
- 167 00ac 097087E0 			add		r7, r7, r9
- 168 00b0 FF7007E2 			and		r7, r7, #0xFF
- 169 00b4 001095E5 			ldr		r1, [r5]
- 170 00b8 011081E2 			add		r1, r1, #1
- 171 00bc 001085E5 			str		r1, [r5]
- 172 00c0 0400A0E1 			mov		r0, r4
- 173 00c4 0610A0E1 			mov		r1, r6
- 174 00c8 0720A0E1 			mov		r2, r7
- 175 00cc 0D30A0E1 			mov		r3, sp
- 176 00d0 FEFFFFEB 			bl		COLOR_FICHA
- 177 00d4 EDFFFFEA 			b		pv_while
- 178              	
- 179              	pv_fin_while:
- 180 00d8 00109DE5 			ldr		r1, [sp]
- 181 00dc 010051E3 			cmp		r1, #1
- 182 00e0 0A005001 			cmpeq	r0, r10
- 183 00e4 0100A003 			moveq	r0, #MODELO_ENCONTRADO
- 184 00e8 0000A013 			movne	r0, #NO_HAY_MODELO
- 185 00ec F0AF1BE9 			ldmdb	fp, {r4-r10, fp, sp, pc}
- 186              	
- 187              	.end
+  20              	/* Version de color_ficha que llama patron_volteo_arm: color_ficha (C), color_ficha_arm (ARM)
+  21              	   o color_ficha_thumb (Thumb; el enlazador pone el veneer ARM->Thumb en el bl) */
+  22              	#define COLOR_FICHA color_ficha_thumb
+  23              	
+  24              	/*******************************************************************************************
+  25              	* NOTA: en arm-none-eabi-gcc "char" es SIN signo. Un indice negativo (p.ej. FA = 0 + (-1))
+  26              	* queda como 0xFF, por eso basta una comparacion sin signo (< DIM) para cubrir
+  27              	* tambien la condicion ">= 0", y tras cada suma hay que truncar a 8 bits (and #0xFF).
+  28              	*******************************************************************************************/
+  29              	
+  30              	/*******************************************************************************************
+  31              	* Codigo C original:
+  32              	*
+  33              	* char color_ficha(char tablero[][DIM], char f, char c, int *es_posicion_correcta)
+  34              	* {
+  35              	*     char ficha;
+  36              	*
+  37              	*     if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+  38              	*     {
+  39              	*         *es_posicion_correcta = 1;
+  40              	*         ficha = tablero[f][c];
+  41              	*     }
+  42              	*     else
+  43              	*     {
+  44              	*         *es_posicion_correcta = 0;
+  45              	*         ficha = CASILLA_VACIA;
+  46              	*     }
+  47              	*     return ficha;
+  48              	* }
+  49              	*
+  50              	* Entrada:	r0 = tablero
+  51              	* 			r1 = f
+  52              	* 			r2 = c
+  53              	* 			r3 = es_posicion_correcta (puntero)
+  54              	* Salida:	r0 = ficha
+  55              	* Variables locales: ficha -> r0 (no necesita pila)
+  56              	*
+  57              	* Marco de pila (como el del compilador):
+  58              	* 	[fp]		pc
+  59              	* 	[fp, #-4]	lr
+  60              	* 	[fp, #-8]	sp (ip)
+  61              	* 	[fp, #-12]	fp anterior
+  62              	*******************************************************************************************/
+  63              	.global color_ficha_arm
+  64              	color_ficha_arm:
+  65 0000 0DC0A0E1 			mov		ip, sp
+  66 0004 00D82DE9 			stmdb	sp!, {fp, ip, lr, pc}
+  67 0008 04B04CE2 			sub		fp, ip, #4
+  68              	
+  69 000c 080051E3 			cmp		r1, #DIM				/* sin signo: cubre f < DIM y f >= 0 */
+  70 0010 0800002A 			bhs		cf_else
+  71 0014 080052E3 			cmp		r2, #DIM				/* sin signo: cubre c < DIM y c >= 0 */
+  72 0018 0600002A 			bhs		cf_else
+  73 001c 810180E0 			add		r0, r0, r1, lsl #3		/* r0 = &tablero[f][0] (fila de DIM = 8 = 2^3 bytes) */
+  74 0020 0200D0E7 			ldrb	r0, [r0, r2]			/* ficha = tablero[f][c] */
+  75 0024 000050E3 			cmp		r0, #CASILLA_VACIA
+  76 0028 0200000A 			beq		cf_else
+  77              	
+  78 002c 0110A0E3 			mov		r1, #1
+  79 0030 001083E5 			str		r1, [r3]
+  80 0034 00A81BE9 			ldmdb	fp, {fp, sp, pc}
+  81              	
+  82              	cf_else:
+  83 0038 0010A0E3 			mov		r1, #0
+  84 003c 001083E5 			str		r1, [r3]
+  85 0040 0000A0E3 			mov		r0, #CASILLA_VACIA
+  86 0044 00A81BE9 			ldmdb	fp, {fp, sp, pc}
+  87              	
+  88              	/*******************************************************************************************
+  89              	* Codigo C original:
+  90              	*
+  91              	* int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char co
+  92              	* {
+  93              	*     int es_posicion_correcta;
+  94              	*     char casilla;
+  95              	*
+  96              	*     FA = FA + SF;
+  97              	*     CA = CA + SC;
+  98              	*     casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+  99              	*     while ((es_posicion_correcta == 1) && (casilla != color))
+ 100              	*     {
+ 101              	*         FA = FA + SF;
+ 102              	*         CA = CA + SC;
+ 103              	*         *longitud = *longitud + 1;
+ 104              	*         casilla = color_ficha(tablero, FA, CA, &es_posicion_correcta);
+ 105              	*     }
+ 106              	*     if ((es_posicion_correcta == 1) && (casilla == color))
+ 107              	*         return MODELO_ENCONTRADO;
+ 108              	*     else
+ 109              	*         return NO_HAY_MODELO;
+ 110              	* }
+ 111              	*
+ 112              	* Entrada:	r0 = tablero
+ 113              	* 			r1 = longitud (puntero)
+ 114              	* 			r2 = FA
+ 115              	* 			r3 = CA
+ 116              	* 			[fp, #4]	SF		(5º parametro, en pila del llamador)
+ 117              	* 			[fp, #8]	SC		(6º parametro)
+ 118              	* 			[fp, #12]	color	(7º parametro)
+ 119              	* Salida:	r0 = MODELO_ENCONTRADO / NO_HAY_MODELO
+ 120              	*
+ 121              	* Uso de registros (r4-r10 porque sobreviven a la llamada a color_ficha):
+ 122              	* 	r4 = tablero	r5 = longitud	r6 = FA		r7 = CA
+ 123              	* 	r8 = SF			r9 = SC			r10 = color	r0 = casilla (valor devuelto)
+ 124              	*
+ 125              	* Marco de pila:
+ 126              	* 	[fp]			pc
+ 127              	* 	[fp, #-4]		lr
+ 128              	* 	[fp, #-8]		sp (ip)
+ 129              	* 	[fp, #-12]		fp anterior
+ 130              	* 	[fp, #-16]		r10
+ 131              	* 	...
+ 132              	* 	[fp, #-40]		r4
+ 133              	* 	[fp, #-44] = [sp]	es_posicion_correcta: va en pila porque se pasa su direccion a color_ficha
+ 134              	*******************************************************************************************/
+ 135              	.global patron_volteo_arm
+ 136              	.extern color_ficha
+ 137              	patron_volteo_arm:
+ 138 0048 0DC0A0E1 			mov		ip, sp
+ 139 004c F0DF2DE9 			stmdb	sp!, {r4-r10, fp, ip, lr, pc}
+ 140 0050 04B04CE2 			sub		fp, ip, #4
+ 141 0054 04D04DE2 			sub		sp, sp, #4				/* int es_posicion_correcta -> [sp] */
+ 142              	
+ 143 0058 0040A0E1 			mov		r4, r0					/* r4 = tablero */
+ 144 005c 0150A0E1 			mov		r5, r1					/* r5 = longitud */
+ 145 0060 0480DBE5 			ldrb	r8, [fp, #4]			/* r8 = SF */
+ 146 0064 0890DBE5 			ldrb	r9, [fp, #8]			/* r9 = SC */
+ 147 0068 0CA0DBE5 			ldrb	r10, [fp, #12]			/* r10 = color */
+ 148              	
+ 149 006c 086082E0 			add		r6, r2, r8
+ 150 0070 FF6006E2 			and		r6, r6, #0xFF			/* FA es char: truncar a 8 bits */
+ 151 0074 097083E0 			add		r7, r3, r9
+ 152 0078 FF7007E2 			and		r7, r7, #0xFF
+ 153 007c 0400A0E1 			mov		r0, r4
+ 154 0080 0610A0E1 			mov		r1, r6
+ 155 0084 0720A0E1 			mov		r2, r7
+ 156 0088 0D30A0E1 			mov		r3, sp
+ 157 008c FEFFFFEB 			bl		COLOR_FICHA
+ 158              	
+ 159              	pv_while:
+ 160 0090 00109DE5 			ldr		r1, [sp]
+ 161 0094 010051E3 			cmp		r1, #1
+ 162 0098 0E00001A 			bne		pv_fin_while
+ 163 009c 0A0050E1 			cmp		r0, r10
+ 164 00a0 0C00000A 			beq		pv_fin_while
+ 165              	
+ 166 00a4 086086E0 			add		r6, r6, r8
+ 167 00a8 FF6006E2 			and		r6, r6, #0xFF
+ 168 00ac 097087E0 			add		r7, r7, r9
+ 169 00b0 FF7007E2 			and		r7, r7, #0xFF
+ 170 00b4 001095E5 			ldr		r1, [r5]
+ 171 00b8 011081E2 			add		r1, r1, #1
+ 172 00bc 001085E5 			str		r1, [r5]
+ 173 00c0 0400A0E1 			mov		r0, r4
+ 174 00c4 0610A0E1 			mov		r1, r6
+ 175 00c8 0720A0E1 			mov		r2, r7
+ 176 00cc 0D30A0E1 			mov		r3, sp
+ 177 00d0 FEFFFFEB 			bl		COLOR_FICHA
+ 178 00d4 EDFFFFEA 			b		pv_while
+ 179              	
+ 180              	pv_fin_while:
+ 181 00d8 00109DE5 			ldr		r1, [sp]
+ 182 00dc 010051E3 			cmp		r1, #1
+ 183 00e0 0A005001 			cmpeq	r0, r10
+ 184 00e4 0100A003 			moveq	r0, #MODELO_ENCONTRADO
+ 185 00e8 0000A013 			movne	r0, #NO_HAY_MODELO
+ 186 00ec F0AF1BE9 			ldmdb	fp, {r4-r10, fp, sp, pc}
+ 187              	
+ 188              	.end
 DEFINED SYMBOLS
  ../reversi8_arm.asm:15     *ABS*:00000008 DIM
  ../reversi8_arm.asm:16     *ABS*:00000000 CASILLA_VACIA
  ../reversi8_arm.asm:17     *ABS*:00000000 NO_HAY_MODELO
  ../reversi8_arm.asm:18     *ABS*:00000001 MODELO_ENCONTRADO
- ../reversi8_arm.asm:63     .text:00000000 color_ficha_arm
- ../reversi8_arm.asm:64     .text:00000000 $a
- ../reversi8_arm.asm:81     .text:00000038 cf_else
- ../reversi8_arm.asm:136    .text:00000048 patron_volteo_arm
- ../reversi8_arm.asm:158    .text:00000090 pv_while
- ../reversi8_arm.asm:179    .text:000000d8 pv_fin_while
+ ../reversi8_arm.asm:64     .text:00000000 color_ficha_arm
+ ../reversi8_arm.asm:65     .text:00000000 $a
+ ../reversi8_arm.asm:82     .text:00000038 cf_else
+ ../reversi8_arm.asm:137    .text:00000048 patron_volteo_arm
+ ../reversi8_arm.asm:159    .text:00000090 pv_while
+ ../reversi8_arm.asm:180    .text:000000d8 pv_fin_while
                    .debug_aranges:0000000c $d
 
-NO UNDEFINED SYMBOLS
+UNDEFINED SYMBOLS
+color_ficha_thumb

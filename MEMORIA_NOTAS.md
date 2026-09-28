@@ -192,8 +192,29 @@ strb  r3, [fp,#-30]        ; CA
 - **Llamada ARM/C → Thumb**: se deja el `bl` normal (en C y en `patron_volteo_arm`). Como el
   símbolo es `.thumb_func` y ARMv4T no tiene `blx`, el enlazador inserta un **veneer** que carga
   la dirección con bit 0 = 1 y hace `bx`. Así el cambio de versión sigue siendo solo el `#define`.
-  _Comprobar en el desensamblado/.map que aparece el veneer (y contarlo en instrucciones, Paso 8)._
+  Comprobado en `Placa/P1_873042_960280.lst` (2026-09-28): los 4 `bl` (2 de `patron_volteo`,
+  2 de `patron_volteo_arm`) van a `__color_ficha_thumb_from_arm` (0x0c002710):
+  ```
+  ldr  ip, [pc]
+  bx   ip
+  .word 0x0c00249d     ; color_ficha_thumb (0x0c00249c) | 1 -> estado Thumb
+  ```
+  El veneer va al final de `.text`, no en `.glue_7` (que aparece con tamaño 0 en el `.map`).
+  Coste: 12 bytes (+4 de relleno) y **2 instrucciones ARM extra por llamada** (contarlas en el Paso 8).
+- **Tamaños (`.map`)**: `color_ficha_thumb` = 0x1e = 30 bytes (15 instr. de 2 bytes);
+  `color_ficha_arm` = 0x48 = 72 bytes.
 - En el camino `else` se reutiliza el 0 de `r0` para escribir `*es_posicion_correcta = 0`.
+- **Cambio de estado comprobado en placa** (2026-09-28, C-Thumb, jugada (2,3), breakpoint en
+  la línea 216 de `reversi8_2026.c` y Step Into en modo instrucción):
+
+  | Momento | `cpsr` | Bit T | Estado |
+  |---------|--------|-------|--------|
+  | Antes del `bl` (0x0c00136c) | 0x80000013 | 0 | ARM, Supervisor |
+  | Tras el `bx ip` del veneer (0x0c00249c) | 0x80000033 | 1 | Thumb |
+  | Tras el `bx lr` (0x0c001374) | 0x60000013 | 0 | ARM (r0 = 0: casilla vacía/fuera) |
+
+  Las banderas cambian (N → Z,C) por las comparaciones de `color_ficha_thumb`; no importa porque
+  AAPCS no obliga a conservarlas.
 
 ---
 
@@ -221,8 +242,8 @@ Cómo se elige la combinación (por defecto C + C):
 | C   | C     | tablero correcto | ✅ probado 2026-09-21 |
 | ARM | C     | tablero correcto | ✅ simulador y placa 2026-09-28 |
 | ARM | ARM   | tablero correcto | ✅ 2026-09-28 |
-| C   | Thumb | | implementado, pendiente de probar |
-| ARM | Thumb | | implementado, pendiente de probar |
+| C   | Thumb | tablero correcto | ✅ placa 2026-09-28 |
+| ARM | Thumb | tablero correcto | ✅ placa 2026-09-28 |
 | C   | ARM   | tablero correcto | ✅ 2026-09-28 |
 
 ### 3.2 Rendimiento (Pasos 8 y 9) — pendiente
