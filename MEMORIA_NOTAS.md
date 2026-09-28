@@ -220,6 +220,32 @@ strb  r3, [fp,#-30]        ; CA
   Las banderas cambian (N → Z,C) por las comparaciones de `color_ficha_thumb`; no importa porque
   AAPCS no obliga a conservarlas.
 
+### 2026-09-28 — Paso 7: librería timer2 (sin placa) `[MET][PROB]`
+- Nuevos `timer2.c` / `timer2.h` con `timer2_inicializar`, `timer2_empezar`, `timer2_leer` y `timer2_parar`.
+- **Máxima precisión**: preescalado 0 (bits 8-15 de `TCFG0`) y divisor 1/2 (bits 8-11 de `TCFG1`).
+  F = 64 MHz / (1·2) = **32 MHz → 1 tick = 1/32 µs**.
+- `TCNTB2 = 65535` con auto-reload: cada vuelta son 65536 ticks = **2048 µs** y genera una IRQ.
+  La ISR (`__attribute__((interrupt("IRQ")))`) incrementa `timer2_num_int` y borra `BIT_TIMER2` en `I_ISPC`.
+- `timer2_leer` = `num_int·2048 + (65535 − TCNTO2)/32` µs. Calculado así no desborda hasta 2³² µs (~71 min).
+  Multiplicar primero por 65536 ticks desbordaría a los ~134 s.
+- **Condición de carrera**: si la IRQ salta entre leer `timer2_num_int` y `TCNTO2`, los dos valores no
+  casan. Se repite la lectura mientras `timer2_num_int` cambie.
+- Solo se tocan los bits del timer2 en `TCFG0`, `TCFG1` y `TCON` (lectura-modificación-escritura) para no
+  romper el timer0. `sys_init()` ya deja `INTMOD`/`INTCON` y `BIT_GLOBAL`; basta con desenmascarar `BIT_TIMER2`.
+- **Calibración** en `main.c` (`#define CALIBRAR_TIMER2 1`): mide `Delay(10/100/10000/100000)`
+  (1 ms, 10 ms, 1 s, 10 s) y lo deja en `tiempos_calibracion[4]`. _Pendiente de probar en placa._
+- **Medición del Paso 8**: `timer2_empezar()`/`timer2_parar()` alrededor de `actualizar_tablero` de la
+  jugada humana en `reversi8()`; el resultado queda en `tiempo_volteo_us`. Incluye las 8 llamadas a
+  `patron_volteo` y el `voltear`, que es igual en todas las combinaciones.
+
+#### Problema: `ready` sin `volatile` `[PROB][OPT]`
+- `fila`, `columna` y `ready` se escriben desde fuera (depurador) pero el compilador no lo sabe.
+- A `-O0` funciona por casualidad (siempre recarga de memoria). **A `-O2` el bucle de `esperar_mov`
+  se compila como `b .` (salto a sí mismo en 0x7ac)**: lee `ready` una vez y, si vale 0, se cuelga.
+- Solución: `volatile char fila, columna, ready` y `esperar_mov(volatile char *ready)`. Comprobado
+  con `objdump`: ningún bucle a sí mismo en `-O0/-O1/-O2/-O3/-Os`. Imprescindible para el Paso 9.
+- Responde a la pregunta que deja el propio código ("¿hay que hacer algo con ellas…?").
+
 ---
 
 ## 3. Resultados `[RESUL]`
@@ -250,17 +276,38 @@ Cómo se elige la combinación (por defecto C + C):
 | ARM | Thumb | tablero correcto | ✅ placa 2026-09-28 |
 | C   | ARM   | tablero correcto | ✅ 2026-09-28 |
 
-### 3.2 Rendimiento (Pasos 8 y 9) — pendiente
-| Combinación | Tamaño (bytes) | Instrucciones | Tiempo (µs) |
-|-------------|----------------|---------------|-------------|
+### 3.2 Rendimiento (Pasos 8 y 9) — tamaños hechos, faltan instrucciones y tiempos
+Tamaños por función (bytes, `-O0 -mapcs-frame`; C del `.elf` de Placa con `nm -S`, asm con `size`):
+`patron_volteo` = 260 · `color_ficha` = 196 · `patron_volteo_arm` = 168 · `color_ficha_arm` = 72 ·
+`color_ficha_thumb` = 30 · veneer ARM→Thumb = 12 (+4 de relleno).
 
-| Optimización (C-C) | Tamaño | Instrucciones | Tiempo |
-|--------------------|--------|---------------|--------|
-| -O0 | | | |
-| -O1 | | | |
-| -O2 | | | |
-| -O3 | | | |
-| -Os | | | |
+| patron_volteo | color_ficha | Tamaño (bytes) | Instrucciones | Tiempo (µs) |
+|---------------|-------------|----------------|---------------|-------------|
+| C   | C     | 456 | | |
+| C   | ARM   | 332 | | |
+| C   | Thumb | 290 (+12 veneer) | | |
+| ARM | C     | 364 | | |
+| ARM | ARM   | 240 | | |
+| ARM | Thumb | 198 (+12 veneer) | | |
+
+C-C por nivel de optimización (bytes de `.text` de `reversi8_2026.o`, ya con `volatile`):
+
+| Nivel | patron_volteo | color_ficha | .text del fichero | Instrucciones | Tiempo |
+|-------|---------------|-------------|-------------------|---------------|--------|
+| -O0 | 260 | 196 | 5208 | | |
+| -O1 | 212 | 56 | 1524 | | |
+| -O2 | 220 (`.clone`) | 56 | 2068 | | |
+| -O3 | — (integrada en `actualizar_tablero`, 596) | 56 | 1856 | | |
+| -Os | 164 (`.clone`) | 52 | 1368 | | |
+
+Observaciones:
+- A partir de `-O1` desaparecen `voltear`, `contar`, `elegir_mov`, `init_table` y `esperar_mov`:
+  el compilador las integra en quien las llama (inlining).
+- `-O2` y `-O3` generan clones especializados (`.clone`). A `-O3`, `patron_volteo` ni siquiera existe
+  como función, así que no se puede medir por separado.
+- `-O3` ocupa menos que `-O2` en total porque integra más código en `actualizar_tablero` y `reversi8`
+  se reduce. `-Os` es el más pequeño.
+- `color_ficha` pasa de 196 a 56 bytes solo con `-O1`: deja de guardar parámetros en pila.
 
 ---
 

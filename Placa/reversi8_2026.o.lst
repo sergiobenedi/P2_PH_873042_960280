@@ -147,17 +147,17 @@
    7:../reversi8_2026.c **** 
    8:../reversi8_2026.c **** #include "reversi8_2026.h"
    9:../reversi8_2026.c **** 
-  10:../reversi8_2026.c **** // Tama�o del tablero
+  10:../reversi8_2026.c **** // Tamaño del tablero
   11:../reversi8_2026.c **** enum { DIM=8 };
   12:../reversi8_2026.c **** 
-  13:../reversi8_2026.c **** // Valores que puede devolver la funci�n patron_volteo())
+  13:../reversi8_2026.c **** // Valores que puede devolver la función patron_volteo())
   14:../reversi8_2026.c **** enum {
   15:../reversi8_2026.c **** 	NO_HAY_MODELO = 0,
   16:../reversi8_2026.c ****   	MODELO_ENCONTRADO = 1
   17:../reversi8_2026.c **** };
   18:../reversi8_2026.c **** 
   19:../reversi8_2026.c **** // Estados de las casillas del tablero
-  20:../reversi8_2026.c **** // deber�a ser enum, lo dejamos como const para usar char...
+  20:../reversi8_2026.c **** // debería ser enum, lo dejamos como const para usar char...
   21:../reversi8_2026.c **** const char CASILLA_VACIA = 0;
   22:../reversi8_2026.c **** const char FICHA_BLANCA  = 1;
   23:../reversi8_2026.c **** const char FICHA_NEGRA   = 2;
@@ -171,7 +171,7 @@
   31:../reversi8_2026.c **** 
   32:../reversi8_2026.c **** /////////////////////////////////////////////////////////////////////////////
   33:../reversi8_2026.c **** // TABLAS AUXILIARES
-  34:../reversi8_2026.c **** // declaramos las siguientes tablas como globales para que sean m�s f�ciles visualizarlas en el
+  34:../reversi8_2026.c **** // declaramos las siguientes tablas como globales para que sean más fáciles visualizarlas en el s
   35:../reversi8_2026.c **** // __attribute__ ((aligned (8))): specifies a minimum alignment for the variable or structure field
   36:../reversi8_2026.c **** 
   37:../reversi8_2026.c **** static const char __attribute__ ((aligned (8))) tabla_valor[DIM][DIM] =
@@ -192,9 +192,9 @@
   52:../reversi8_2026.c **** const char vSC[DIM] = { 0, 1, 1, 1, 0,-1,-1,-1};
   53:../reversi8_2026.c **** 
   54:../reversi8_2026.c **** //////////////////////////////////////////////////////////////////////////////////////
-  55:../reversi8_2026.c **** // Variables globales que no deber�an serlo
-  56:../reversi8_2026.c **** // tablero, fila, columna y ready son variables que se deber�an definir como locales dentro de re
-  57:../reversi8_2026.c **** // Sin embargo, las hemos definido como globales para que sea m�s f�cil visualizar el tablero y
+  55:../reversi8_2026.c **** // Variables globales que no deberían serlo
+  56:../reversi8_2026.c **** // tablero, fila, columna y ready son variables que se deberían definir como locales dentro de rev
+  57:../reversi8_2026.c **** // Sin embargo, las hemos definido como globales para que sea más fácil visualizar el tablero y l
   58:../reversi8_2026.c **** //////////////////////////////////////////////////////////////////////////////////////
   59:../reversi8_2026.c **** 
   60:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////
@@ -205,8 +205,8 @@
   65:../reversi8_2026.c **** 
   66:../reversi8_2026.c ****   ////////////////////////////////////////////////////////////////////
   67:../reversi8_2026.c ****      // VARIABLES PARA INTERACCIONAR CON LA ENTRADA SALIDA
-  68:../reversi8_2026.c ****      // Pregunta: �hay que hacer algo con ellas para que esto funcione bien?
-  69:../reversi8_2026.c ****      // (por ejemplo a�adir alguna palabra clave para garantizar que la sincronizaci�n a trav�
+  68:../reversi8_2026.c ****      // Pregunta: ¿hay que hacer algo con ellas para que esto funcione bien?
+  69:../reversi8_2026.c ****      // (por ejemplo añadir alguna palabra clave para garantizar que la sincronización a través 
   70:../reversi8_2026.c **** 	    char fila=0,
   71:../reversi8_2026.c **** 	    columna=0,
   72:../reversi8_2026.c **** 	    ready = 0;
@@ -219,10 +219,10 @@
   79:../reversi8_2026.c **** extern char color_ficha_thumb(char tablero[][8], char f, char c, int *es_posicion_correcta);
   80:../reversi8_2026.c **** 
   81:../reversi8_2026.c **** // Version de patron_volteo que usa el juego: patron_volteo (C) o patron_volteo_arm (ARM)
-  82:../reversi8_2026.c **** #define PATRON_VOLTEO patron_volteo_arm
+  82:../reversi8_2026.c **** #define PATRON_VOLTEO patron_volteo
   83:../reversi8_2026.c **** 
   84:../reversi8_2026.c **** // Version de color_ficha que llama patron_volteo (C): color_ficha (C), color_ficha_arm (ARM) o col
-  85:../reversi8_2026.c **** #define COLOR_FICHA color_ficha_thumb
+  85:../reversi8_2026.c **** #define COLOR_FICHA color_ficha
   86:../reversi8_2026.c **** 
   87:../reversi8_2026.c **** ///////////////////////////////////////////////////////////////////////////////////////////////////
   88:../reversi8_2026.c **** // 0 indica CASILLA_VACIA, 1 indica FICHA_BLANCA y 2 indica FICHA_NEGRA
@@ -314,7 +314,7 @@
  114:../reversi8_2026.c **** 	}
  115:../reversi8_2026.c ****     }
  116:../reversi8_2026.c **** #endif
- 117:../reversi8_2026.c ****     // arriba hay versi�n alternativa
+ 117:../reversi8_2026.c ****     // arriba hay versión alternativa
  118:../reversi8_2026.c ****     tablero[3][3] = FICHA_BLANCA;
  1183              		.loc 1 118 0 is_stmt 1
  1184 0084 18301BE5 		ldr	r3, [fp, #-24]
@@ -479,7 +479,7 @@
  142:../reversi8_2026.c **** 
  143:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
  144:../reversi8_2026.c **** // Espera a que ready valga 1.
- 145:../reversi8_2026.c **** // CUIDADO: si el compilador coloca esta variable en un registro, no funcionar�.
+ 145:../reversi8_2026.c **** // CUIDADO: si el compilador coloca esta variable en un registro, no funcionará.
  146:../reversi8_2026.c **** // Hay que definirla como "volatile" para forzar a que antes de cada uso la cargue de memoria
  147:../reversi8_2026.c **** 
  148:../reversi8_2026.c **** static void esperar_mov(char *ready)
@@ -544,10 +544,10 @@
  168:../reversi8_2026.c **** //    NI GUARDARLAS EN PILA NI RESERVAR UN ESPACIO EN LA PILA PARA ELLAS
  169:../reversi8_2026.c **** //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  170:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
- 171:../reversi8_2026.c **** // Devuelve el contenido de la posici�n indicadas por la fila y columna actual.
- 172:../reversi8_2026.c **** // Adem�s informa si la posici�n es v�lida y contiene alguna ficha.
+ 171:../reversi8_2026.c **** // Devuelve el contenido de la posición indicadas por la fila y columna actual.
+ 172:../reversi8_2026.c **** // Además informa si la posición es válida y contiene alguna ficha.
  173:../reversi8_2026.c **** // Esto lo hace por referencia (en *es_posicion_correcta)
- 174:../reversi8_2026.c **** // Si devuelve un 0 no es v�lida o est� vac�a.
+ 174:../reversi8_2026.c **** // Si devuelve un 0 no es válida o está vacía.
  175:../reversi8_2026.c **** 
  176:../reversi8_2026.c **** // sin static: patron_volteo_arm (reversi8_arm.asm) la llama
  177:../reversi8_2026.c **** char color_ficha(char tablero[][DIM], char f, char c, int *es_posicion_correcta)
@@ -578,7 +578,7 @@
  180:../reversi8_2026.c **** 
  181:../reversi8_2026.c ****     // ficha = tablero[f][c];
  182:../reversi8_2026.c ****     // no puede accederse a tablero[f][c]
- 183:../reversi8_2026.c ****     // ya que alg�n �ndice puede ser negativo
+ 183:../reversi8_2026.c ****     // ya que algún índice puede ser negativo
  184:../reversi8_2026.c **** 
  185:../reversi8_2026.c ****     if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
  1385              		.loc 1 185 0
@@ -651,15 +651,15 @@
  1443              	.LFB3:
  197:../reversi8_2026.c **** 
  198:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
- 199:../reversi8_2026.c **** // La funci�n patron_volteo comprueba si hay que actualizar una determinada direcci�n,
- 200:../reversi8_2026.c **** // busca el patr�n de volteo (n fichas del rival seguidas de una ficha del jugador actual)
- 201:../reversi8_2026.c **** // en una direcci�n determinada
- 202:../reversi8_2026.c **** // SF y SC son las cantidades a sumar para movernos en la direcci�n que toque
+ 199:../reversi8_2026.c **** // La función patron_volteo comprueba si hay que actualizar una determinada dirección,
+ 200:../reversi8_2026.c **** // busca el patrón de volteo (n fichas del rival seguidas de una ficha del jugador actual)
+ 201:../reversi8_2026.c **** // en una dirección determinada
+ 202:../reversi8_2026.c **** // SF y SC son las cantidades a sumar para movernos en la dirección que toque
  203:../reversi8_2026.c **** // color indica el color de la pieza que se acaba de colocar
- 204:../reversi8_2026.c **** // la funci�n devuelve MODELO_ENCONTRADO (1) si encuentra patr�n y NO_HAY_MODELO (0) en caso co
+ 204:../reversi8_2026.c **** // la función devuelve MODELO_ENCONTRADO (1) si encuentra patrón y NO_HAY_MODELO (0) en caso cont
  205:../reversi8_2026.c **** // FA y CA son la fila y columna a analizar
- 206:../reversi8_2026.c **** // longitud es un par�metro por referencia. Sirve para saber la longitud del patr�n que se est�
- 207:../reversi8_2026.c **** //          Se usa para saber cuantas fichas habr�a que voltear
+ 206:../reversi8_2026.c **** // longitud es un parámetro por referencia. Sirve para saber la longitud del patrón que se está 
+ 207:../reversi8_2026.c **** //          Se usa para saber cuantas fichas habría que voltear
  208:../reversi8_2026.c **** 
  209:../reversi8_2026.c **** static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, ch
  210:../reversi8_2026.c **** {
@@ -683,7 +683,7 @@
  1461 034c 1C100BE5 		str	r1, [fp, #-28]
  1462 0350 1D204BE5 		strb	r2, [fp, #-29]
  1463 0354 1E304BE5 		strb	r3, [fp, #-30]
- 211:../reversi8_2026.c **** 	int es_posicion_correcta; // indica si la posici�n es correcta y contiene una ficha de alg�n j
+ 211:../reversi8_2026.c **** 	int es_posicion_correcta; // indica si la posición es correcta y contiene una ficha de algún jug
  212:../reversi8_2026.c **** 	char casilla;   // casilla es la casilla que se lee del tablero
  213:../reversi8_2026.c **** 
  214:../reversi8_2026.c **** 	FA = FA + SF;
@@ -704,14 +704,14 @@
  1476 037c 1E205BE5 		ldrb	r2, [fp, #-30]	@ zero_extendqisi2
  1477 0380 14304BE2 		sub	r3, fp, #20
  1478 0384 18001BE5 		ldr	r0, [fp, #-24]
- 1479 0388 FEFFFFEB 		bl	color_ficha_thumb
+ 1479 0388 FEFFFFEB 		bl	color_ficha
  1480 038c 0030A0E1 		mov	r3, r0
  1481 0390 0D304BE5 		strb	r3, [fp, #-13]
  217:../reversi8_2026.c **** 	while ((es_posicion_correcta == 1) && (casilla != color))
  1482              		.loc 1 217 0
  1483 0394 130000EA 		b	.L16
  1484              	.L18:
- 218:../reversi8_2026.c **** 	// mientras la casilla est� en el tablero, no est� vac��a,
+ 218:../reversi8_2026.c **** 	// mientras la casilla está en el tablero, no está vacía,
  219:../reversi8_2026.c **** 	// y es del color rival seguimos buscando el modelo de volteo
  220:../reversi8_2026.c **** 	{
  221:../reversi8_2026.c **** 		FA = FA + SF;
@@ -739,7 +739,7 @@
  1503 03d0 1E205BE5 		ldrb	r2, [fp, #-30]	@ zero_extendqisi2
  1504 03d4 14304BE2 		sub	r3, fp, #20
  1505 03d8 18001BE5 		ldr	r0, [fp, #-24]
- 1506 03dc FEFFFFEB 		bl	color_ficha_thumb
+ 1506 03dc FEFFFFEB 		bl	color_ficha
  1507 03e0 0030A0E1 		mov	r3, r0
  1508 03e4 0D304BE5 		strb	r3, [fp, #-13]
  1509              	.L16:
@@ -756,8 +756,8 @@
  1518 0400 E4FFFF1A 		bne	.L18
  1519              	.L17:
  225:../reversi8_2026.c **** 	}
- 226:../reversi8_2026.c ****     // si la ultima posici�n era v�lida y la ficha es del jugador actual,
- 227:../reversi8_2026.c ****     // entonces hemos encontrado el patr�n
+ 226:../reversi8_2026.c ****     // si la ultima posición era válida y la ficha es del jugador actual,
+ 227:../reversi8_2026.c ****     // entonces hemos encontrado el patrón
  228:../reversi8_2026.c **** 	if ((es_posicion_correcta == 1) && (casilla == color))
  1520              		.loc 1 228 0 is_stmt 1
  1521 0404 14301BE5 		ldr	r3, [fp, #-20]
@@ -768,13 +768,13 @@
  1526 0414 0C30DBE5 		ldrb	r3, [fp, #12]	@ zero_extendqisi2
  1527 0418 030052E1 		cmp	r2, r3
  1528 041c 0100001A 		bne	.L19
- 229:../reversi8_2026.c **** 		return MODELO_ENCONTRADO; // si hay que voltear una ficha o m�s hemos encontrado el patr�n
+ 229:../reversi8_2026.c **** 		return MODELO_ENCONTRADO; // si hay que voltear una ficha o más hemos encontrado el patrón
  1529              		.loc 1 229 0 is_stmt 1
  1530 0420 0130A0E3 		mov	r3, #1
  1531 0424 000000EA 		b	.L20
  1532              	.L19:
  230:../reversi8_2026.c **** 	else
- 231:../reversi8_2026.c **** 		return NO_HAY_MODELO; // si no hay que voltear no hay patr�n
+ 231:../reversi8_2026.c **** 		return NO_HAY_MODELO; // si no hay que voltear no hay patrón
  1533              		.loc 1 231 0
  1534 0428 0030A0E3 		mov	r3, #0
  1535              	.L20:
@@ -791,8 +791,8 @@
  1547              	.LFB4:
  233:../reversi8_2026.c **** 
  234:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
- 235:../reversi8_2026.c **** // voltea n fichas en la direcci�n que toque
- 236:../reversi8_2026.c **** // SF y SC son las cantidades a sumar para movernos en la direcci�n que toque
+ 235:../reversi8_2026.c **** // voltea n fichas en la dirección que toque
+ 236:../reversi8_2026.c **** // SF y SC son las cantidades a sumar para movernos en la dirección que toque
  237:../reversi8_2026.c **** // color indica el color de la pieza que se acaba de colocar
  238:../reversi8_2026.c **** // FA y CA son la fila y columna a analizar
  239:../reversi8_2026.c **** 
@@ -874,7 +874,7 @@
  251:../reversi8_2026.c **** 
  252:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
  253:../reversi8_2026.c **** // comprueba si hay que actualizar alguna ficha
- 254:../reversi8_2026.c **** // no comprueba que el movimiento realizado sea v�lido
+ 254:../reversi8_2026.c **** // no comprueba que el movimiento realizado sea válido
  255:../reversi8_2026.c **** // f y c son la fila y columna a analizar
  256:../reversi8_2026.c **** // char vSF[DIM] = {-1,-1, 0, 1, 1, 1, 0,-1};
  257:../reversi8_2026.c **** // char vSC[DIM] = { 0, 1, 1, 1, 0,-1,-1,-1};
@@ -901,7 +901,7 @@
  1629 04e0 21104BE5 		strb	r1, [fp, #-33]
  1630 04e4 22204BE5 		strb	r2, [fp, #-34]
  1631 04e8 23304BE5 		strb	r3, [fp, #-35]
- 261:../reversi8_2026.c ****     char SF, SC; // cantidades a sumar para movernos en la direcci�n que toque
+ 261:../reversi8_2026.c ****     char SF, SC; // cantidades a sumar para movernos en la dirección que toque
  262:../reversi8_2026.c ****     int i, flip, modelo;
  263:../reversi8_2026.c **** 
  264:../reversi8_2026.c ****     for (i = 0; i < DIM; i++) // 0 es Norte, 1 NE, 2 E ...
@@ -942,7 +942,7 @@
  1660 0544 23005BE5 		ldrb	r0, [fp, #-35]	@ zero_extendqisi2
  1661 0548 08008DE5 		str	r0, [sp, #8]
  1662 054c 20001BE5 		ldr	r0, [fp, #-32]
- 1663 0550 FEFFFFEB 		bl	patron_volteo_arm
+ 1663 0550 78FFFFEB 		bl	patron_volteo
  1664 0554 18000BE5 		str	r0, [fp, #-24]
  271:../reversi8_2026.c ****         //printf("Flip: %d \n", flip);
  272:../reversi8_2026.c ****         if (modelo == MODELO_ENCONTRADO )
@@ -999,8 +999,8 @@
  1709              	.LFB6:
  279:../reversi8_2026.c **** 
  280:../reversi8_2026.c **** /////////////////////////////////////////////////////////////////////////////////
- 281:../reversi8_2026.c **** // Recorre todo el tablero comprobando en cada posici�n si se puede mover
- 282:../reversi8_2026.c **** // En caso afirmativo, consulta la puntuaci�n de la posici�n y si es la mejor
+ 281:../reversi8_2026.c **** // Recorre todo el tablero comprobando en cada posición si se puede mover
+ 282:../reversi8_2026.c **** // En caso afirmativo, consulta la puntuación de la posición y si es la mejor
  283:../reversi8_2026.c **** // que se ha encontrado la guarda
  284:../reversi8_2026.c **** // Al acabar escribe el movimiento seleccionado en f y c
  285:../reversi8_2026.c **** 
@@ -1042,10 +1042,10 @@
  1734 05ec 0030A0E3 		mov	r3, #0
  1735 05f0 25304BE5 		strb	r3, [fp, #-37]
  297:../reversi8_2026.c ****     int modelo, longitud;
- 298:../reversi8_2026.c ****     char SF, SC; // cantidades a sumar para movernos en la direcci�n que toque
+ 298:../reversi8_2026.c ****     char SF, SC; // cantidades a sumar para movernos en la dirección que toque
  299:../reversi8_2026.c **** 
- 300:../reversi8_2026.c ****     // Recorremos todo el tablero comprobando d�nde podemos mover
- 301:../reversi8_2026.c ****     // Comparamos la puntuaci�n de los movimientos encontrados y nos quedamos con el mejor
+ 300:../reversi8_2026.c ****     // Recorremos todo el tablero comprobando dónde podemos mover
+ 301:../reversi8_2026.c ****     // Comparamos la puntuación de los movimientos encontrados y nos quedamos con el mejor
  302:../reversi8_2026.c ****     for (i=0; i<DIM; i++)
  1736              		.loc 1 302 0
  1737 05f4 0030A0E3 		mov	r3, #0
@@ -1059,7 +1059,7 @@
  1743 0604 14300BE5 		str	r3, [fp, #-20]
  1744 0608 5C0000EA 		b	.L32
  1745              	.L37:
- 305:../reversi8_2026.c ****         {   // indica en qu� casillas quiz� se pueda mover
+ 305:../reversi8_2026.c ****         {   // indica en qué casillas quizá se pueda mover
  306:../reversi8_2026.c ****             if (candidatas[i][j] == SI)
  1746              		.loc 1 306 0
  1747 060c 10301BE5 		ldr	r3, [fp, #-16]
@@ -1097,14 +1097,14 @@
  1774 066c 0030A0E3 		mov	r3, #0
  1775 0670 18300BE5 		str	r3, [fp, #-24]
  312:../reversi8_2026.c **** 
- 313:../reversi8_2026.c ****                     // en este bucle comprobamos si es un movimiento v�lido
- 314:../reversi8_2026.c ****                     // (es decir si implica voltear en alguna direcci�n)
+ 313:../reversi8_2026.c ****                     // en este bucle comprobamos si es un movimiento válido
+ 314:../reversi8_2026.c ****                     // (es decir si implica voltear en alguna dirección)
  315:../reversi8_2026.c ****                     while ((found == 0) && (k < DIM))
  1776              		.loc 1 315 0
  1777 0674 380000EA 		b	.L34
  1778              	.L36:
  316:../reversi8_2026.c ****                     {
- 317:../reversi8_2026.c ****                         SF = vSF[k];    // k representa la direcci�n que miramos
+ 317:../reversi8_2026.c ****                         SF = vSF[k];    // k representa la dirección que miramos
  1779              		.loc 1 317 0
  1780 0678 60219FE5 		ldr	r2, .L39+8
  1781 067c 18301BE5 		ldr	r3, [fp, #-24]
@@ -1119,7 +1119,7 @@
  1789 0698 0030D3E5 		ldrb	r3, [r3, #0]
  1790 069c 27304BE5 		strb	r3, [fp, #-39]
  319:../reversi8_2026.c **** 
- 320:../reversi8_2026.c ****                         // nos dice qu� hay que voltear en cada direcci�n
+ 320:../reversi8_2026.c ****                         // nos dice qué hay que voltear en cada dirección
  321:../reversi8_2026.c ****                         longitud = 0;
  1791              		.loc 1 321 0
  1792 06a0 0030A0E3 		mov	r3, #0
@@ -1139,7 +1139,7 @@
  1805 06d0 04C08DE5 		str	ip, [sp, #4]
  1806 06d4 08008DE5 		str	r0, [sp, #8]
  1807 06d8 3C001BE5 		ldr	r0, [fp, #-60]
- 1808 06dc FEFFFFEB 		bl	patron_volteo_arm
+ 1808 06dc 15FFFFEB 		bl	patron_volteo
  1809 06e0 2C000BE5 		str	r0, [fp, #-44]
  323:../reversi8_2026.c ****                         //  //printf("%d ", modelo);
  324:../reversi8_2026.c ****                         if (modelo == MODELO_ENCONTRADO)
@@ -1225,7 +1225,7 @@
  1873 0798 10301BE5 		ldr	r3, [fp, #-16]
  1874 079c 070053E3 		cmp	r3, #7
  1875 07a0 96FFFFDA 		ble	.L38
- 335:../reversi8_2026.c ****                         // si no hemos encontrado nada probamos con la siguiente direcci�n
+ 335:../reversi8_2026.c ****                         // si no hemos encontrado nada probamos con la siguiente dirección
  336:../reversi8_2026.c ****                     }
  337:../reversi8_2026.c ****                 }
  338:../reversi8_2026.c ****             }
@@ -1243,7 +1243,7 @@
  1883 07b8 FF2003E2 		and	r2, r3, #255
  1884 07bc 44301BE5 		ldr	r3, [fp, #-68]
  1885 07c0 0020C3E5 		strb	r2, [r3, #0]
- 343:../reversi8_2026.c ****     // si no se ha encontrado una posici�n v�lida devuelve -1
+ 343:../reversi8_2026.c ****     // si no se ha encontrado una posición válida devuelve -1
  344:../reversi8_2026.c ****     return mf;
  1886              		.loc 1 344 0
  1887 07c4 20301BE5 		ldr	r3, [fp, #-32]
@@ -1269,8 +1269,8 @@
  1908              	.LFB7:
  346:../reversi8_2026.c **** 
  347:../reversi8_2026.c **** ////////////////////////////////////////////////////////////////////////////////
- 348:../reversi8_2026.c **** // Cuenta el n�mero de fichas de cada color.
- 349:../reversi8_2026.c **** // Los guarda en la direcci�n b (blancas) y n (negras)
+ 348:../reversi8_2026.c **** // Cuenta el número de fichas de cada color.
+ 349:../reversi8_2026.c **** // Los guarda en la dirección b (blancas) y n (negras)
  350:../reversi8_2026.c **** 
  351:../reversi8_2026.c **** static void contar(char tablero[][DIM], int *b, int *n)
  352:../reversi8_2026.c **** {
@@ -1432,7 +1432,7 @@
  2038 0920 11204BE5 		strb	r2, [fp, #-17]
  2039 0924 12304BE5 		strb	r3, [fp, #-18]
  377:../reversi8_2026.c ****     // donde ya se ha colocado no se puede volver a colocar
- 378:../reversi8_2026.c ****     // En las posiciones alrededor s�
+ 378:../reversi8_2026.c ****     // En las posiciones alrededor sí
  379:../reversi8_2026.c ****     candidatas[f][c] = CASILLA_OCUPADA;
  2040              		.loc 1 379 0
  2041 0928 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
@@ -1718,12 +1718,12 @@
  413:../reversi8_2026.c **** // Proceso principal del juego
  414:../reversi8_2026.c **** // Utiliza el tablero,
  415:../reversi8_2026.c **** // y las direcciones en las que indica el jugador la fila y la columna
- 416:../reversi8_2026.c **** // y la se�al de ready que indica que se han actualizado fila y columna
- 417:../reversi8_2026.c **** // tablero, fila, columna y ready son variables globales aunque deber�an ser locales de reversi8,
- 418:../reversi8_2026.c **** // la raz�n es que al meterlas en la pila no las pone juntas, y as� jugar es m�s complicado.
- 419:../reversi8_2026.c **** // en esta versi�n el humano lleva negras y la m�quina blancas
+ 416:../reversi8_2026.c **** // y la señal de ready que indica que se han actualizado fila y columna
+ 417:../reversi8_2026.c **** // tablero, fila, columna y ready son variables globales aunque deberían ser locales de reversi8,
+ 418:../reversi8_2026.c **** // la razón es que al meterlas en la pila no las pone juntas, y así jugar es más complicado.
+ 419:../reversi8_2026.c **** // en esta versión el humano lleva negras y la máquina blancas
  420:../reversi8_2026.c **** // no se comprueba que el humano mueva correctamente.
- 421:../reversi8_2026.c **** // S�lo que la m�quina realice un movimiento correcto.
+ 421:../reversi8_2026.c **** // Sólo que la máquina realice un movimiento correcto.
  422:../reversi8_2026.c **** 
  423:../reversi8_2026.c **** void reversi8()
  424:../reversi8_2026.c **** {
@@ -1753,7 +1753,7 @@
  425:../reversi8_2026.c **** 
  426:../reversi8_2026.c **** 	 ////////////////////////////////////////////////////////////////////
  427:../reversi8_2026.c **** 	 // Tablero candidatas: se usa para no explorar todas las posiciones del tablero
- 428:../reversi8_2026.c **** 	// s�lo se exploran las que est�n alrededor de las fichas colocadas
+ 428:../reversi8_2026.c **** 	// sólo se exploran las que están alrededor de las fichas colocadas
  429:../reversi8_2026.c **** 	 ////////////////////////////////////////////////////////////////////
  430:../reversi8_2026.c **** 	char __attribute__ ((aligned (8))) candidatas[DIM][DIM] =
  2313              		.loc 1 430 0
@@ -2129,19 +2129,19 @@
  440:../reversi8_2026.c ****     };
  441:../reversi8_2026.c **** 
  442:../reversi8_2026.c **** 
- 443:../reversi8_2026.c ****     int done;     // la m�quina ha conseguido mover o no
+ 443:../reversi8_2026.c ****     int done;     // la máquina ha conseguido mover o no
  444:../reversi8_2026.c ****     int move = 0; // el humano ha conseguido mover o no
  2674              		.loc 1 444 0
  2675 120c 0030A0E3 		mov	r3, #0
  2676 1210 30300BE5 		str	r3, [fp, #-48]
- 445:../reversi8_2026.c ****     int blancas, negras; // n�mero de fichas de cada color
+ 445:../reversi8_2026.c ****     int blancas, negras; // número de fichas de cada color
  446:../reversi8_2026.c ****     int fin = 0;  // fin vale 1 si el humano no ha podido mover
  2677              		.loc 1 446 0
  2678 1214 0030A0E3 		mov	r3, #0
  2679 1218 34300BE5 		str	r3, [fp, #-52]
- 447:../reversi8_2026.c ****                   // (ha introducido un valor de movimiento con alg�n 8)
- 448:../reversi8_2026.c ****                   // y luego la m�quina tampoco puede
- 449:../reversi8_2026.c ****     char f, c;    // fila y columna elegidas por la m�quina para su movimiento
+ 447:../reversi8_2026.c ****                   // (ha introducido un valor de movimiento con algún 8)
+ 448:../reversi8_2026.c ****                   // y luego la máquina tampoco puede
+ 449:../reversi8_2026.c ****     char f, c;    // fila y columna elegidas por la máquina para su movimiento
  450:../reversi8_2026.c **** 
  451:../reversi8_2026.c ****     init_table(tablero, candidatas);
  2680              		.loc 1 451 0
@@ -2313,47 +2313,45 @@
  2816              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 reversi8_2026.c
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:982    .rodata:00000000 CASILLA_VACIA
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:983    .rodata:00000000 $d
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:987    .rodata:00000001 FICHA_BLANCA
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:992    .rodata:00000002 FICHA_NEGRA
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:997    .rodata:00000003 NO
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1002   .rodata:00000004 SI
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1007   .rodata:00000005 CASILLA_OCUPADA
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1012   .rodata:00000008 tabla_valor
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1081   .rodata:00000048 vSF
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1094   .rodata:00000050 vSC
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1104   .bss:00000000 $d
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1105   .bss:00000000 tablero
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1110   .bss:00000040 fila
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1115   .bss:00000041 columna
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1120   .bss:00000042 ready
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1123   .text:00000000 $a
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1125   .text:00000000 init_table
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1310   .text:00000220 $d
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1318   .text:00000234 $a
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1320   .text:00000234 esperar_mov
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1361   .text:00000274 color_ficha
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1436   .text:00000334 $d
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1440   .text:00000338 $a
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1442   .text:00000338 patron_volteo
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1546   .text:0000043c voltear
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1610   .text:000004cc actualizar_tablero
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1701   .text:000005bc $d
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1706   .text:000005c4 $a
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1708   .text:000005c4 elegir_mov
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1896   .text:000007d8 $d
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1905   .text:000007f0 $a
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:1907   .text:000007f0 contar
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:2010   .text:000008fc $d
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:2015   .text:00000904 $a
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:2017   .text:00000904 actualizar_candidatas
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:2280   .text:00000c54 $d
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:2285   .text:00000c5c $a
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:2288   .text:00000c5c reversi8
-C:\Users\sergi\AppData\Local\Temp\ccbwgrPa.s:2806   .text:000013a8 $d
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:982    .rodata:00000000 CASILLA_VACIA
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:983    .rodata:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:987    .rodata:00000001 FICHA_BLANCA
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:992    .rodata:00000002 FICHA_NEGRA
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:997    .rodata:00000003 NO
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1002   .rodata:00000004 SI
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1007   .rodata:00000005 CASILLA_OCUPADA
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1012   .rodata:00000008 tabla_valor
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1081   .rodata:00000048 vSF
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1094   .rodata:00000050 vSC
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1104   .bss:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1105   .bss:00000000 tablero
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1110   .bss:00000040 fila
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1115   .bss:00000041 columna
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1120   .bss:00000042 ready
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1123   .text:00000000 $a
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1125   .text:00000000 init_table
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1310   .text:00000220 $d
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1318   .text:00000234 $a
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1320   .text:00000234 esperar_mov
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1361   .text:00000274 color_ficha
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1436   .text:00000334 $d
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1440   .text:00000338 $a
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1442   .text:00000338 patron_volteo
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1546   .text:0000043c voltear
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1610   .text:000004cc actualizar_tablero
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1701   .text:000005bc $d
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1706   .text:000005c4 $a
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1708   .text:000005c4 elegir_mov
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1896   .text:000007d8 $d
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1905   .text:000007f0 $a
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:1907   .text:000007f0 contar
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:2010   .text:000008fc $d
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:2015   .text:00000904 $a
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:2017   .text:00000904 actualizar_candidatas
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:2280   .text:00000c54 $d
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:2285   .text:00000c5c $a
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:2288   .text:00000c5c reversi8
+C:\Users\sergi\AppData\Local\Temp\ccOhCgp6.s:2806   .text:000013a8 $d
                      .debug_frame:00000010 $d
 
-UNDEFINED SYMBOLS
-color_ficha_thumb
-patron_volteo_arm
+NO UNDEFINED SYMBOLS

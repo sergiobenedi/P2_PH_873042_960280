@@ -9,7 +9,8 @@ C_SRCS += \
 ../led.c \
 ../main.c \
 ../reversi8_2026.c \
-../timer.c 
+../timer.c \
+../timer2.c 
 
 ASM_SRCS += \
 ../reversi8_arm.asm \
@@ -23,7 +24,8 @@ OBJS += \
 ./reversi8_2026.o \
 ./reversi8_arm.o \
 ./reversi8_thumb.o \
-./timer.o 
+./timer.o \
+./timer2.o 
 
 C_DEPS += \
 ./8led.d \
@@ -31,7 +33,8 @@ C_DEPS += \
 ./led.d \
 ./main.d \
 ./reversi8_2026.d \
-./timer.d 
+./timer.d \
+./timer2.d 
 
 ASM_DEPS += \
 ./reversi8_arm.d \

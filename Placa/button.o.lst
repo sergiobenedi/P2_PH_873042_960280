@@ -33,12 +33,12 @@
   12:../button.c   **** #include "44b.h"
   13:../button.c   **** #include "def.h"
   14:../button.c   **** 
-  15:../button.c   **** /*--- variables globales del m骴ulo ---*/
-  16:../button.c   **** /* int_count la utilizamos para sacar un n鷐ero por el 8led.
-  17:../button.c   ****   Cuando se pulsa un bot髇 sumamos y con el otro restamos.  veces hay rebotes! */
+  15:../button.c   **** /*--- variables globales del m贸dulo ---*/
+  16:../button.c   **** /* int_count la utilizamos para sacar un n煤mero por el 8led.
+  17:../button.c   ****   Cuando se pulsa un bot贸n sumamos y con el otro restamos. 隆A veces hay rebotes! */
   18:../button.c   **** static unsigned int int_count = 0;
   19:../button.c   **** 
-  20:../button.c   **** /* declaraci髇 de funci髇 que es rutina de servicio de interrupci髇
+  20:../button.c   **** /* declaraci贸n de funci贸n que es rutina de servicio de interrupci贸n
   21:../button.c   ****  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
   22:../button.c   **** void Eint4567_ISR(void) __attribute__((interrupt("IRQ")));
   23:../button.c   **** 
@@ -115,7 +115,7 @@
  2024              	.L5:
   39:../button.c   **** 	}
   40:../button.c   **** 	// }
-  41:../button.c   **** 	D8Led_symbol(int_count & 0x000f); // sacamos el valor por pantalla (m骴ulo 16)
+  41:../button.c   **** 	D8Led_symbol(int_count & 0x000f); // sacamos el valor por pantalla (m贸dulo 16)
  2025              		.loc 1 41 0
  2026 0068 40309FE5 		ldr	r3, .L6+4
  2027 006c 003093E5 		ldr	r3, [r3, #0]
@@ -172,7 +172,7 @@
  2072              		.cfi_offset 11, -16
  2073              	.LCFI3:
  2074              		.cfi_def_cfa 11, 4
-  50:../button.c   **** 	/* Configuracion del controlador de interrupciones. Estos registros est醤 definidos en 44b.h */
+  50:../button.c   **** 	/* Configuraci贸n del controlador de interrupciones. Estos registros est谩n definidos en 44b.h */
   51:../button.c   **** 	rI_ISPC    = 0x3ffffff;	// Borra INTPND escribiendo 1s en I_ISPC
  2075              		.loc 1 51 0
  2076 00c4 A4309FE5 		ldr	r3, .L9
@@ -265,14 +265,14 @@
  2147              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 button.c
-C:\Users\sergi\AppData\Local\Temp\ccSesdNB.s:1964   .bss:00000000 $d
-C:\Users\sergi\AppData\Local\Temp\ccSesdNB.s:1965   .bss:00000000 int_count
-C:\Users\sergi\AppData\Local\Temp\ccSesdNB.s:1968   .text:00000000 $a
-C:\Users\sergi\AppData\Local\Temp\ccSesdNB.s:1971   .text:00000000 Eint4567_ISR
-C:\Users\sergi\AppData\Local\Temp\ccSesdNB.s:2049   .text:000000ac $d
-C:\Users\sergi\AppData\Local\Temp\ccSesdNB.s:2055   .text:000000b8 $a
-C:\Users\sergi\AppData\Local\Temp\ccSesdNB.s:2058   .text:000000b8 Eint4567_init
-C:\Users\sergi\AppData\Local\Temp\ccSesdNB.s:2133   .text:00000170 $d
+C:\Users\sergi\AppData\Local\Temp\ccbYowBk.s:1964   .bss:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccbYowBk.s:1965   .bss:00000000 int_count
+C:\Users\sergi\AppData\Local\Temp\ccbYowBk.s:1968   .text:00000000 $a
+C:\Users\sergi\AppData\Local\Temp\ccbYowBk.s:1971   .text:00000000 Eint4567_ISR
+C:\Users\sergi\AppData\Local\Temp\ccbYowBk.s:2049   .text:000000ac $d
+C:\Users\sergi\AppData\Local\Temp\ccbYowBk.s:2055   .text:000000b8 $a
+C:\Users\sergi\AppData\Local\Temp\ccbYowBk.s:2058   .text:000000b8 Eint4567_init
+C:\Users\sergi\AppData\Local\Temp\ccbYowBk.s:2133   .text:00000170 $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

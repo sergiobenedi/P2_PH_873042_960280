@@ -6,6 +6,7 @@
 *********************************************************************************************/
 
 #include "reversi8_2026.h"
+#include "timer2.h"
 
 // Tamaño del tablero
 enum { DIM=8 };
@@ -67,10 +68,13 @@ static char __attribute__ ((aligned (8))) tablero[DIM][DIM];
      // VARIABLES PARA INTERACCIONAR CON LA ENTRADA SALIDA
      // Pregunta: ¿hay que hacer algo con ellas para que esto funcione bien?
      // (por ejemplo añadir alguna palabra clave para garantizar que la sincronización a través de esa variable funcione)
-	    char fila=0,
+	    volatile char fila=0,
 	    columna=0,
 	    ready = 0;
 
+
+// Paso 8: us que tarda actualizar_tablero en la ultima jugada humana (ver en Expressions)
+unsigned int tiempo_volteo_us = 0;
 
 // Versiones en ensamblador (reversi8_arm.asm)
 extern int patron_volteo_arm(char tablero[][8], int *longitud, char f, char c, char SF, char SC, char color);
@@ -145,7 +149,7 @@ static void init_table(char tablero[][DIM], char candidatas[][DIM])
 // CUIDADO: si el compilador coloca esta variable en un registro, no funcionará.
 // Hay que definirla como "volatile" para forzar a que antes de cada uso la cargue de memoria
 
-static void esperar_mov(char *ready)
+static void esperar_mov(volatile char *ready)
 {
     while (*ready == 0) {};  // bucle de espera de respuestas hasta que el se modifique el valor de ready (hay que hacerlo manualmente)
 
@@ -458,7 +462,9 @@ void reversi8()
         if (((fila) != DIM) && ((columna) != DIM))
         {
             tablero[fila][columna] = FICHA_NEGRA;
+            timer2_empezar();
             actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
+            tiempo_volteo_us = timer2_parar();
             actualizar_candidatas(candidatas, fila, columna);
             move = 1;
         }
