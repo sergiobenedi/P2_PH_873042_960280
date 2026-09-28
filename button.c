@@ -12,12 +12,12 @@
 #include "44b.h"
 #include "def.h"
 
-/*--- variables globales del m骴ulo ---*/
-/* int_count la utilizamos para sacar un n鷐ero por el 8led.
-  Cuando se pulsa un bot髇 sumamos y con el otro restamos.  veces hay rebotes! */
+/*--- variables globales del m贸dulo ---*/
+/* int_count la utilizamos para sacar un n煤mero por el 8led.
+  Cuando se pulsa un bot贸n sumamos y con el otro restamos. 隆A veces hay rebotes! */
 static unsigned int int_count = 0;
 
-/* declaraci髇 de funci髇 que es rutina de servicio de interrupci髇
+/* declaraci贸n de funci贸n que es rutina de servicio de interrupci贸n
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
 void Eint4567_ISR(void) __attribute__((interrupt("IRQ")));
 
@@ -38,7 +38,7 @@ void Eint4567_ISR(void)
 			break;
 	}
 	// }
-	D8Led_symbol(int_count & 0x000f); // sacamos el valor por pantalla (m骴ulo 16)
+	D8Led_symbol(int_count & 0x000f); // sacamos el valor por pantalla (m贸dulo 16)
 
 	/* Finalizar ISR */
 	rEXTINTPND = 0xf;				// borra los bits en EXTINTPND
@@ -47,7 +47,7 @@ void Eint4567_ISR(void)
 
 void Eint4567_init(void)
 {
-	/* Configuracion del controlador de interrupciones. Estos registros est醤 definidos en 44b.h */
+	/* Configuraci贸n del controlador de interrupciones. Estos registros est谩n definidos en 44b.h */
 	rI_ISPC    = 0x3ffffff;	// Borra INTPND escribiendo 1s en I_ISPC
 	rEXTINTPND = 0xf;       // Borra EXTINTPND escribiendo 1s en el propio registro
 	rINTMOD    = 0x0;		// Configura las linas como de tipo IRQ

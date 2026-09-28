@@ -10,12 +10,12 @@
 #include "44b.h"
 #include "44blib.h"
 
-/*--- variables globales del módulo ---*/
+/*--- variables globales del mÃ³dulo ---*/
 /* tabla de segmentos */
 static int
 Symbol[size_8led] = { cero, uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, A, B, C, D, E, F, blank};
 
-/*--- código de las funciones ---*/
+/*--- cÃ³digo de las funciones ---*/
 void D8Led_init(void)
 {
 	/* Estado inicial del display con todos los segmentos iluminados

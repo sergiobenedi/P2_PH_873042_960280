@@ -45,6 +45,7 @@ Toolchain: Eclipse + ARM Sourcery GCC + openOCD (JTAG).
 - [8led.c](8led.c) / [.h](8led.h) — control del display de 8 segmentos (tabla de símbolos por bitmap).
 - [button.c](button.c) / [.h](button.h) — manejo de pulsadores por interrupción externa (EINT4-7).
 - [timer.c](timer.c) / [.h](timer.h) — timer0 del S3C44B0X; expone `switch_leds`.
+- [timer2.c](timer2.c) / [.h](timer2.h) — librería de medición de tiempos con timer2 (Paso 7): `timer2_inicializar/empezar/leer/parar`, resolución 1/32 µs.
 - [common/](common/) — soporte de placa suministrado (`44b.h`, `44blib.*`, `44binit.asm`,
   script de arranque, linker script). **No modificar salvo indicación explícita.**
 - [emulador/](emulador/) — arranque para el modo emulador (`init_b_2026.asm`, linker script propio).

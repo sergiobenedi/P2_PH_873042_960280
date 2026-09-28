@@ -35,7 +35,7 @@ enum {
     size_8led = 17 };
 
 
-/*--- declaración de funciones visibles del módulo 8led.c/8led.h ---*/
+/*--- declaraciÃ³n de funciones visibles del mÃ³dulo 8led.c/8led.h ---*/
 void D8Led_init(void);
 void D8Led_symbol(int value);
 

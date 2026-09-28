@@ -8,7 +8,7 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
-/*--- declaracion de funciones visibles del m�dulo button.c/button.h ---*/
+/*--- declaración de funciones visibles del módulo button.c/button.h ---*/
 void Eint4567_init(void);
 
 #endif /* _BUTTON_H_ */

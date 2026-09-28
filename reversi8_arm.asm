@@ -113,9 +113,9 @@ cf_else:
 * 			r1 = longitud (puntero)
 * 			r2 = FA
 * 			r3 = CA
-* 			[fp, #4]	SF		(5º parametro, en pila del llamador)
-* 			[fp, #8]	SC		(6º parametro)
-* 			[fp, #12]	color	(7º parametro)
+* 			[fp, #4]	SF		(5º parámetro, en pila del llamador)
+* 			[fp, #8]	SC		(6º parámetro)
+* 			[fp, #12]	color	(7º parámetro)
 * Salida:	r0 = MODELO_ENCONTRADO / NO_HAY_MODELO
 *
 * Uso de registros (r4-r10 porque sobreviven a la llamada a color_ficha):

@@ -50,11 +50,15 @@ Maquetación:
 
 | Fecha | Quién | Horas | Qué |
 |-------|-------|-------|-----|
-| 2026-09-15 | | | Montar el proyecto en Eclipse, depurar el código C y añadir el emulador |
-| 2026-09-16 | | | Documentación del proyecto (README, PRACTICA.md) |
-| 2026-09-21 | | | Paso 3: color_ficha_arm, patron_volteo_arm, #define y prueba en el simulador |
+Trabajo siempre en pareja (los dos a la vez), en 3 sesiones de 2 h los lunes.
 
-Total: _ h (pendiente de rellenar)
+| Fecha | Quién | Horas | Qué |
+|-------|-------|-------|-----|
+| 2026-09-14 (lunes) | Sergio y Pablo | 2 | Pasos 1 y 2: montar el proyecto en Eclipse, depurar el código C, añadir el emulador y documentar (README, PRACTICA.md) |
+| 2026-09-21 (lunes) | Sergio y Pablo | 2 | Paso 3: color_ficha_arm, patron_volteo_arm, #define y prueba en el simulador |
+| 2026-09-28 (lunes) | Sergio y Pablo | 2 | Pruebas del Paso 3 en placa; Pasos 4 y 5: color_ficha_thumb y las 6 combinaciones en placa |
+
+Total: 6 h por persona (12 h-persona entre los dos).
 
 ---
 

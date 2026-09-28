@@ -13,7 +13,7 @@
 /*--- variables globales del módulo ---*/
 static int led_state = 0;		/* estado del LED */
 
-/*--- codigo de las funciones públicas ---*/
+/*--- código de las funciones públicas ---*/
 void leds_on()
 {
 	Led_Display(0x3);
