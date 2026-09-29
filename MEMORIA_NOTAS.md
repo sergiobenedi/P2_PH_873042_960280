@@ -183,6 +183,39 @@ strb  r3, [fp,#-30]        ; CA
    - El programa no se había colgado. Estaba en `esperar_mov` esperando la siguiente jugada, y el tablero ya estaba bien. Se ve pulsando Suspend.
    - En la placa las direcciones cambian (otro linker script): `&tablero` = 0x0C0027B0, `&fila` = 0x0C0027F0. Conviene usar `&tablero` en el monitor en lugar de direcciones fijas.
    - Dentro de `esperar_mov`, `ready` en Expressions es el parámetro `char *` y no la variable global.
+5. **El orden de las variables globales cambia con el nivel de optimización** (2026-09-29, Paso 9).
+   - Síntoma: a `-O1` escribimos 2, 3 y 1 en tres bytes seguidos de la vista Memory, con el orden de
+     `-O0` (`fila`, `columna`, `ready`). El programa jugó (3,1), una jugada inválida: no volteó nada
+     y el tiempo medido (116 µs) no servía.
+   - Qué pasaba: a `-O1` el orden es otro. Los valores fueron a la variable de al lado (2 → `ready`,
+     3 → `fila`, 1 → `columna`). La información de depuración del `.elf` era correcta: `&fila` en
+     Expressions daba 0x0C001861.
+
+     | Opciones | Orden en `.bss` |
+     |----------|-----------------|
+     | `-O0` | `fila`, `columna`, `ready` |
+     | `-O1`, `-O2`, `-O3` | `ready` (0x0C001860), `fila` (0x..861), `columna` (0x..862) |
+     | `-O1 -fno-section-anchors` | `fila`, `columna`, `ready` |
+     | `-O1 -fno-toplevel-reorder` | `fila`, `columna`, `ready` |
+
+   - Causa: **`-fsection-anchors`**, que GCC activa en ARM a partir de `-O1`. Agrupa las variables
+     globales del fichero en un bloque y accede a todas con una única dirección base y un
+     desplazamiento (`ldrb r3,[r2,#64]` para `ready`, `ldrb r3,[r2,#65]` para `fila`). Ahorra cargar
+     la dirección de cada variable, pero el compilador decide su orden y deja de ser el del código.
+   - Solución: escribir las variables por nombre desde Expressions (clic en la celda Value o
+     botón derecho → Change Value), con `ready` siempre la última. No suponer nunca la posición
+     relativa de variables distintas.
+6. **A partir de `-O1` el breakpoint de `esperar_mov(&ready)` (línea 460) no para antes de la espera**
+   (2026-09-29, Paso 9).
+   - Síntoma: a `-O0` bastaba con F8 para llegar a la espera. A `-O1` y `-O3` había que pulsar F8 y
+     luego Suspend para poder meter la jugada.
+   - Causa: `esperar_mov` se **integra (inlining)** en `reversi8` y la línea 460 se queda sin
+     instrucciones propias; ningún nivel optimizado le asocia código (comprobado con `objdump -dl`).
+     Eclipse mueve el breakpoint a la siguiente línea con código, la 462, que queda **después** del
+     bucle de espera. El programa entra en el bucle sin parar y solo se detiene al poner `ready = 1`.
+   - Solución: breakpoint en la línea 469 (después de `actualizar_candidatas`), que tiene código en
+     todos los niveles. F8 + Suspend para meter la jugada; al darle a F8 para justo después de la
+     medición y se lee `tiempo_volteo_us`.
 
 ### 2026-09-28 — Paso 4: color_ficha_thumb `[MET][OPT][PILA]`
 - Nuevo fichero `reversi8_thumb.asm` con `color_ficha_thumb` (`.thumb` + `.thumb_func`).
