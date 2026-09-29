@@ -12,7 +12,7 @@
 #include "44b.h"
 
 /* 1: calibrar timer2 contra Delay() antes de jugar (Paso 7); 0: solo el juego */
-#define CALIBRAR_TIMER2 1
+#define CALIBRAR_TIMER2 0
 
 /*--- variables globales ---*/
 /* us medidos por timer2 para Delay() de 1 ms, 10 ms, 1 s y 10 s (ver en Expressions) */

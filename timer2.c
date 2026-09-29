@@ -36,7 +36,7 @@ static void timer2_ISR(void)
 	timer2_num_int++;
 
 	/* borrar bit en I_ISPC para desactivar la solicitud de interrupción */
-	rI_ISPC |= BIT_TIMER2;
+	rI_ISPC = BIT_TIMER2;	// I_ISPC es de solo escritura: con |= se leería basura
 }
 
 void timer2_inicializar(void)

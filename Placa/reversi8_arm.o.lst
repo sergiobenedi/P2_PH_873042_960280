@@ -23,7 +23,7 @@
   19              	
   20              	/* Version de color_ficha que llama patron_volteo_arm: color_ficha (C), color_ficha_arm (ARM)
   21              	   o color_ficha_thumb (Thumb; el enlazador pone el veneer ARM->Thumb en el bl) */
-  22              	#define COLOR_FICHA color_ficha
+  22              	#define COLOR_FICHA color_ficha_thumb
   23              	
   24              	/*******************************************************************************************
   25              	* NOTA: en arm-none-eabi-gcc "char" es SIN signo. Un indice negativo (p.ej. FA = 0 + (-1))
@@ -204,4 +204,4 @@ DEFINED SYMBOLS
                    .debug_aranges:0000000c $d
 
 UNDEFINED SYMBOLS
-color_ficha
+color_ficha_thumb

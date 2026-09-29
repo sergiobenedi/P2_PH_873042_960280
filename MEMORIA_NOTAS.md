@@ -233,7 +233,20 @@ strb  r3, [fp,#-30]        ; CA
 - Solo se tocan los bits del timer2 en `TCFG0`, `TCFG1` y `TCON` (lectura-modificación-escritura) para no
   romper el timer0. `sys_init()` ya deja `INTMOD`/`INTCON` y `BIT_GLOBAL`; basta con desenmascarar `BIT_TIMER2`.
 - **Calibración** en `main.c` (`#define CALIBRAR_TIMER2 1`): mide `Delay(10/100/10000/100000)`
-  (1 ms, 10 ms, 1 s, 10 s) y lo deja en `tiempos_calibracion[4]`. _Pendiente de probar en placa._
+  (1 ms, 10 ms, 1 s, 10 s) y lo deja en `tiempos_calibracion[4]`. Resultado en placa (2026-09-29):
+
+  | Delay | Esperado (µs) | timer2 (µs) | Desviación |
+  |-------|---------------|-------------|------------|
+  | 1 ms  | 1000     | 1023     | +2,3 % |
+  | 10 ms | 10000    | 10169    | +1,7 % |
+  | 1 s   | 1000000  | 1016745  | +1,7 % |
+  | 10 s  | 10000000 | 10167390 | +1,7 % |
+
+  Desviación constante del ~1,7 %: la produce `Delay()`, no el timer2. `Delay(0)` calibra
+  `delayLoopCount` con el watchdog y la división entera redondea (8000000/(i·64)). En 1 ms pesa
+  además el coste fijo de llamar a `timer2_empezar`/`parar` y a `Delay`.
+  **[PROB]** Al primer intento solo `[0]` tenía un valor válido: seguía activo el breakpoint de la ISR
+  y el programa se paraba en la primera IRQ, antes de escribir `[1]`.
 - **Medición del Paso 8**: `timer2_empezar()`/`timer2_parar()` alrededor de `actualizar_tablero` de la
   jugada humana en `reversi8()`; el resultado queda en `tiempo_volteo_us`. Incluye las 8 llamadas a
   `patron_volteo` y el `voltear`, que es igual en todas las combinaciones.
@@ -245,6 +258,31 @@ strb  r3, [fp,#-30]        ; CA
 - Solución: `volatile char fila, columna, ready` y `esperar_mov(volatile char *ready)`. Comprobado
   con `objdump`: ningún bucle a sí mismo en `-O0/-O1/-O2/-O3/-Os`. Imprescindible para el Paso 9.
 - Responde a la pregunta que deja el propio código ("¿hay que hacer algo con ellas…?").
+
+### 2026-09-29 — Paso 6: rutina de interrupción en ensamblador `[MET][PILA]`
+- Comprobado en placa: breakpoint en `timer2_ISR` (timer2.c:36); la pila de llamadas muestra
+  `timer2_ISR` ← `Delay` (el timer2 interrumpe el bucle de `Delay` durante la calibración).
+- Código que genera GCC para `__attribute__((interrupt("IRQ")))` (`-O0 -mapcs-frame`):
+  ```
+  push  {ip}                         ; r12 aparte: el marco APCS lo va a machacar
+  mov   ip, sp
+  push  {r2, r3, fp, ip, lr, pc}     ; marco + solo los registros que usa la ISR
+  sub   fp, ip, #4
+  ...                                ; timer2_num_int++ ; rI_ISPC = BIT_TIMER2
+  sub   sp, fp, #20
+  ldm   sp, {r2, r3, fp, sp, lr}
+  pop   {ip}
+  subs  pc, lr, #4                   ; vuelve a la instrucción interrumpida y CPSR <- SPSR_irq
+  ```
+- Diferencias con una función normal:
+  - Guarda también registros *caller-saved* (r2, r3, ip): la IRQ llega en cualquier instrucción y
+    el código interrumpido no los ha salvado. Solo guarda los que usa.
+  - `lr_irq` = instrucción interrumpida + 4 → se retorna con `lr − 4`. GCC lo hace al salir, no al entrar.
+  - `subs pc, …` (la `s` con destino pc) copia SPSR en CPSR: vuelve a modo SVC y reactiva las IRQ.
+- Camino: vector IRQ 0x18 → controlador vectorizado → `HandlerTIMER2` (44binit.asm) → carga
+  `pISR_TIMER2` (0x0c7fff4c) → `timer2_ISR`.
+- **[PROB]** `I_ISPC` es de solo escritura: `rI_ISPC |= BIT_TIMER2` leía basura y podía borrar otras
+  pendientes. Se cambia por `rI_ISPC = BIT_TIMER2`.
 
 ---
 
@@ -283,12 +321,27 @@ Tamaños por función (bytes, `-O0 -mapcs-frame`; C del `.elf` de Placa con `nm 
 
 | patron_volteo | color_ficha | Tamaño (bytes) | Instrucciones | Tiempo (µs) |
 |---------------|-------------|----------------|---------------|-------------|
-| C   | C     | 456 | | |
-| C   | ARM   | 332 | | |
-| C   | Thumb | 290 (+12 veneer) | | |
-| ARM | C     | 364 | | |
-| ARM | ARM   | 240 | | |
-| ARM | Thumb | 198 (+12 veneer) | | |
+| C   | C     | 456 | | 284 (284, 284, 285) |
+| C   | ARM   | 332 | | 228 (229, 228, 228) |
+| C   | Thumb | 290 (+12 veneer) | | 222 (222, 222, 222) |
+| ARM | C     | 364 | | 258 (258, 259, 258) |
+| ARM | ARM   | 240 | | 200 (200, 201, 200) |
+| ARM | Thumb | 198 (+12 veneer) | | 194 (194, 194, 193) |
+
+Tiempos medidos en placa el 2026-09-29 con `tiempo_volteo_us` (`actualizar_tablero` completo de la jugada
+negra (2,3), `-O0`, 3 repeticiones; la variación entre repeticiones es de ±1 µs).
+
+Análisis de tiempos:
+- Respecto a C-C (284 µs): C-ARM −20 %, C-Thumb −22 %, ARM-C −9 %, ARM-ARM −30 %, ARM-Thumb **−32 %**.
+- Cambiar `color_ficha` rinde más que cambiar `patron_volteo` (C-ARM 228 frente a ARM-C 258):
+  `color_ficha` se llama en cada paso del bucle y la versión C a `-O0` guarda y recarga todo de pila.
+- **Thumb es más rápido que ARM** (222 < 228 y 194 < 200) aunque cada llamada pasa por el veneer
+  (2 instrucciones más). Explicación probable: la memoria de la placa va con **bus de datos de 16 bits**
+  (`Port_Init`, "16bit data bus configuration") y la caché no se activa (nadie escribe `rSYSCFG`;
+  `CACHECFG` de option.h no se usa). Cada instrucción ARM de 32 bits necesita 2 accesos a memoria y
+  una Thumb de 16 bits solo 1, así que se ahorra más en la búsqueda de instrucciones de lo que
+  cuesta el veneer. _Comentarlo con el profesor._
+- ARM-Thumb es la combinación más rápida y también la más pequeña (198 bytes + 12 del veneer).
 
 C-C por nivel de optimización (bytes de `.text` de `reversi8_2026.o`, ya con `volatile`):
 

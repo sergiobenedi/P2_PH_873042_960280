@@ -12,8 +12,9 @@
   21              	.Ltext0:
   22              		.file 1 "../main.c"
  1891              		.align	2
- 1893              	calibrar_timer2:
- 1894              	.LFB0:
+ 1892              		.global	Main
+ 1894              	Main:
+ 1895              	.LFB0:
    1:../main.c     **** /*********************************************************************************************
    2:../main.c     **** * Fichero:	main.c
    3:../main.c     **** * Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
@@ -28,7 +29,7 @@
   12:../main.c     **** #include "44b.h"
   13:../main.c     **** 
   14:../main.c     **** /* 1: calibrar timer2 contra Delay() antes de jugar (Paso 7); 0: solo el juego */
-  15:../main.c     **** #define CALIBRAR_TIMER2 1
+  15:../main.c     **** #define CALIBRAR_TIMER2 0
   16:../main.c     **** 
   17:../main.c     **** /*--- variables globales ---*/
   18:../main.c     **** /* us medidos por timer2 para Delay() de 1 ms, 10 ms, 1 s y 10 s (ver en Expressions) */
@@ -38,146 +39,67 @@
   22:../main.c     **** #if CALIBRAR_TIMER2
   23:../main.c     **** static void calibrar_timer2(void)
   24:../main.c     **** {
- 1895              		.loc 1 24 0
- 1896              		.cfi_startproc
- 1897              		@ Function supports interworking.
- 1898              		@ args = 0, pretend = 0, frame = 8
- 1899              		@ frame_needed = 1, uses_anonymous_args = 0
- 1900 0000 0DC0A0E1 		mov	ip, sp
- 1901              	.LCFI0:
- 1902              		.cfi_def_cfa_register 12
- 1903 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 1904 0008 04B04CE2 		sub	fp, ip, #4
- 1905              		.cfi_offset 14, -8
- 1906              		.cfi_offset 13, -12
- 1907              		.cfi_offset 11, -16
- 1908              	.LCFI1:
- 1909              		.cfi_def_cfa 11, 4
- 1910 000c 08D04DE2 		sub	sp, sp, #8
   25:../main.c     **** 	/* Delay(n) espera n * 100 us */
   26:../main.c     **** 	static const int esperas[4] = { 10, 100, 10000, 100000 };
   27:../main.c     **** 	int i;
   28:../main.c     **** 
   29:../main.c     **** 	for (i = 0; i < 4; i++)
- 1911              		.loc 1 29 0
- 1912 0010 0030A0E3 		mov	r3, #0
- 1913 0014 10300BE5 		str	r3, [fp, #-16]
- 1914 0018 0D0000EA 		b	.L2
- 1915              	.L3:
   30:../main.c     **** 	{
   31:../main.c     **** 		timer2_empezar();
- 1916              		.loc 1 31 0 discriminator 2
- 1917 001c FEFFFFEB 		bl	timer2_empezar
   32:../main.c     **** 		Delay(esperas[i]);
- 1918              		.loc 1 32 0 discriminator 2
- 1919 0020 44309FE5 		ldr	r3, .L4
- 1920 0024 10201BE5 		ldr	r2, [fp, #-16]
- 1921 0028 023193E7 		ldr	r3, [r3, r2, asl #2]
- 1922 002c 0300A0E1 		mov	r0, r3
- 1923 0030 FEFFFFEB 		bl	Delay
   33:../main.c     **** 		tiempos_calibracion[i] = timer2_parar();
- 1924              		.loc 1 33 0 discriminator 2
- 1925 0034 FEFFFFEB 		bl	timer2_parar
- 1926 0038 0010A0E1 		mov	r1, r0
- 1927 003c 2C309FE5 		ldr	r3, .L4+4
- 1928 0040 10201BE5 		ldr	r2, [fp, #-16]
- 1929 0044 021183E7 		str	r1, [r3, r2, asl #2]
-  29:../main.c     **** 	for (i = 0; i < 4; i++)
- 1930              		.loc 1 29 0 discriminator 2
- 1931 0048 10301BE5 		ldr	r3, [fp, #-16]
- 1932 004c 013083E2 		add	r3, r3, #1
- 1933 0050 10300BE5 		str	r3, [fp, #-16]
- 1934              	.L2:
-  29:../main.c     **** 	for (i = 0; i < 4; i++)
- 1935              		.loc 1 29 0 is_stmt 0 discriminator 1
- 1936 0054 10301BE5 		ldr	r3, [fp, #-16]
- 1937 0058 030053E3 		cmp	r3, #3
- 1938 005c EEFFFFDA 		ble	.L3
   34:../main.c     **** 	}
   35:../main.c     **** }
- 1939              		.loc 1 35 0 is_stmt 1
- 1940 0060 0CD04BE2 		sub	sp, fp, #12
- 1941 0064 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 1942 0068 1EFF2FE1 		bx	lr
- 1943              	.L5:
- 1944              		.align	2
- 1945              	.L4:
- 1946 006c 00000000 		.word	esperas.3950
- 1947 0070 00000000 		.word	tiempos_calibracion
- 1948              		.cfi_endproc
- 1949              	.LFE0:
- 1951              		.align	2
- 1952              		.global	Main
- 1954              	Main:
- 1955              	.LFB1:
   36:../main.c     **** #endif
   37:../main.c     **** 
   38:../main.c     **** void Main(void)
   39:../main.c     **** {
- 1956              		.loc 1 39 0
- 1957              		.cfi_startproc
- 1958              		@ Function supports interworking.
- 1959              		@ args = 0, pretend = 0, frame = 0
- 1960              		@ frame_needed = 1, uses_anonymous_args = 0
- 1961 0074 0DC0A0E1 		mov	ip, sp
- 1962              	.LCFI2:
- 1963              		.cfi_def_cfa_register 12
- 1964 0078 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 1965 007c 04B04CE2 		sub	fp, ip, #4
- 1966              		.cfi_offset 14, -8
- 1967              		.cfi_offset 13, -12
- 1968              		.cfi_offset 11, -16
- 1969              	.LCFI3:
- 1970              		.cfi_def_cfa 11, 4
+ 1896              		.loc 1 39 0
+ 1897              		.cfi_startproc
+ 1898              		@ Function supports interworking.
+ 1899              		@ args = 0, pretend = 0, frame = 0
+ 1900              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1901 0000 0DC0A0E1 		mov	ip, sp
+ 1902              	.LCFI0:
+ 1903              		.cfi_def_cfa_register 12
+ 1904 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1905 0008 04B04CE2 		sub	fp, ip, #4
+ 1906              		.cfi_offset 14, -8
+ 1907              		.cfi_offset 13, -12
+ 1908              		.cfi_offset 11, -16
+ 1909              	.LCFI1:
+ 1910              		.cfi_def_cfa 11, 4
   40:../main.c     **** 	/* Inicializa controladores */
   41:../main.c     **** 	sys_init();         // Inicializacion de la placa, interrupciones y puertos
- 1971              		.loc 1 41 0
- 1972 0080 FEFFFFEB 		bl	sys_init
+ 1911              		.loc 1 41 0
+ 1912 000c FEFFFFEB 		bl	sys_init
   42:../main.c     **** 	timer2_inicializar();
- 1973              		.loc 1 42 0
- 1974 0084 FEFFFFEB 		bl	timer2_inicializar
+ 1913              		.loc 1 42 0
+ 1914 0010 FEFFFFEB 		bl	timer2_inicializar
   43:../main.c     **** 
   44:../main.c     **** #if CALIBRAR_TIMER2
   45:../main.c     **** 	calibrar_timer2();
- 1975              		.loc 1 45 0
- 1976 0088 DCFFFFEB 		bl	calibrar_timer2
   46:../main.c     **** #endif
   47:../main.c     **** 
   48:../main.c     **** 	reversi8();
- 1977              		.loc 1 48 0
- 1978 008c FEFFFFEB 		bl	reversi8
+ 1915              		.loc 1 48 0
+ 1916 0014 FEFFFFEB 		bl	reversi8
   49:../main.c     **** }
- 1979              		.loc 1 49 0
- 1980 0090 0CD04BE2 		sub	sp, fp, #12
- 1981 0094 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 1982 0098 1EFF2FE1 		bx	lr
- 1983              		.cfi_endproc
- 1984              	.LFE1:
- 1986              		.section	.rodata
- 1987              		.align	2
- 1990              	esperas.3950:
- 1991 0000 0A000000 		.word	10
- 1992 0004 64000000 		.word	100
- 1993 0008 10270000 		.word	10000
- 1994 000c A0860100 		.word	100000
- 1995              		.text
- 1996              	.Letext0:
+ 1917              		.loc 1 49 0
+ 1918 0018 0CD04BE2 		sub	sp, fp, #12
+ 1919 001c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1920 0020 1EFF2FE1 		bx	lr
+ 1921              		.cfi_endproc
+ 1922              	.LFE0:
+ 1924              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
                             *COM*:00000010 tiempos_calibracion
-C:\Users\sergi\AppData\Local\Temp\ccg2di5M.s:1891   .text:00000000 $a
-C:\Users\sergi\AppData\Local\Temp\ccg2di5M.s:1893   .text:00000000 calibrar_timer2
-C:\Users\sergi\AppData\Local\Temp\ccg2di5M.s:1946   .text:0000006c $d
-C:\Users\sergi\AppData\Local\Temp\ccg2di5M.s:1990   .rodata:00000000 esperas.3950
-C:\Users\sergi\AppData\Local\Temp\ccg2di5M.s:1951   .text:00000074 $a
-C:\Users\sergi\AppData\Local\Temp\ccg2di5M.s:1954   .text:00000074 Main
-C:\Users\sergi\AppData\Local\Temp\ccg2di5M.s:1987   .rodata:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccd0omrm.s:1891   .text:00000000 $a
+C:\Users\sergi\AppData\Local\Temp\ccd0omrm.s:1894   .text:00000000 Main
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
-timer2_empezar
-Delay
-timer2_parar
 sys_init
 timer2_inicializar
 reversi8
