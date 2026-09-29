@@ -411,3 +411,50 @@ Actualizar con `wc -l` antes de entregar.
 ## 5. Ideas para las conclusiones `[CONC]`
 - El `char` sin signo simplifica las comprobaciones de rango en ensamblador.
 - Mantener las variables en registros callee-saved elimina los accesos a memoria dentro del bucle.
+
+---
+
+## 6. Nota de diagnóstico y defensa sobre `volatile` / optimización `[PROB][OPT][CONC]`
+
+### Resumen del problema
+- La práctica usa variables externas a la CPU (`fila`, `columna` y `ready`) que no son modificadas por el
+  propio flujo del programa, sino por el depurador o por la entrada del usuario.
+- El compilador no “sabe” que estas variables cambian fuera del código normal, por lo que puede
+  mantener sus valores en registros o reordenar accesos cuando se activa la optimización.
+- A `-O0` funciona por casualidad porque suele recargar la variable desde memoria cada vez que la usa;
+  a `-O1/O2/O3` el compilador puede eliminar o reusar lecturas y, si no se marca la variable como
+  `volatile`, el bucle de espera puede quedar optimizado a un salto a sí mismo o a una lectura estática.
+
+### Qué hicimos y por qué funcionó
+- Se demostró que la solución correcta era:
+  ```c
+  volatile char fila, columna, ready;
+  static void esperar_mov(volatile char *ready) {
+      while (*ready == 0) {}
+      *ready = 0;
+  }
+  ```
+- La palabra clave `volatile` fuerza al compilador a leer y escribir el valor desde memoria en cada acceso,
+  evitando la optimización errónea de una variable de sincronización con el depurador.
+- Se comprobó con desensamblado (`objdump`) y depuración paso a paso que el programa estaba correcto y
+  que el fallo observadose debía a la semántica del compilador, no a una lógica incorrecta del Reversi.
+
+### Cómo explicarlo en la defensa
+- El problema no es que el compilador “haga trampas”; es que aplica reglas de optimización sobre variables
+  que, en este caso, pueden cambiar fuera del flujo normal del programa.
+- La solución no es cambiar la lógica del juego, sino marcar esas variables como `volatile` y documentar
+  la interacción con el depurador y con el monitor de memoria.
+- La diferencia entre simulador y placa debe explicarse como un efecto de disponibilidad del depurador y del
+  acceso real a memoria, no como un fallo del algoritmo.
+- La evidencia importante es que el programa queda esperando en `esperar_mov` y no “se rompe”, sino que
+  está bloqueado esperando la siguiente jugada válida.
+
+### Comando útil para resetear la rama develop
+```bash
+git fetch origin
+git reset --hard origin/develop
+```
+
+Este comando deja la rama en el estado exacto del remoto y descarta los cambios locales.
+
+---
