@@ -491,16 +491,19 @@ Instrucciones ejecutadas por `actualizar_tablero` en la jugada 4 (simulador, `-O
 | Nivel | Instrucciones | Tiempo (µs) | ns/instr. | Jugada (2,3): instr. / µs / ns/instr. |
 |-------|---------------|-------------|-----------|----------------------------------------|
 | -O0 | 1245 | 340 | 273 | 1037 / 284 / 274 |
-| -O1 | 649 | 124 | 191 | 539 / 125 / 232 |
-| -O2 | 567 | 101 | 178 | 481 / 101 / 210 |
+| -O1 | 649 | 144 | 222 | 539 / 125 / 232 |
+| -O2 | 567 | 108 | 190 | 481 / 101 / 210 |
 | -O3 | 464 | 76 | 164 | 378 / 65 / 172 |
 | -Os | 695 | 142 | 204 | 582 / 122 / 210 |
 
-- **A comprobar:** la jugada 4 ejecuta un ~20 % más de instrucciones en todos los niveles. En `-O0`, `-O3` y
-  `-Os` el tiempo sube en la misma proporción (+20 %, +17 %, +16 %), pero en `-O1` (124 frente a 125) y `-O2` (101
-  frente a 101) **no sube nada**. Probablemente una de las dos medidas de (2,3) en esos niveles se tomó con una
-  compilación vieja (sin Clean). Pendiente de repetir (2,3) a `-O1` y `-O2` con Clean y comprobando el tamaño
-  del `.o`.
+- **`-O1` corregido** (2026-10-05): la primera medida de la jugada 4 (124 µs) era errónea; repetida con el tablero
+  comprobado da **144 µs** (649 instrucciones frente a 539: +20 % de instrucciones, +15 % de tiempo).
+- **`-O2` corregido** (2026-10-05): la primera medida de la jugada 4 (101 µs) tampoco era buena; repetida con build
+  limpio da **108 µs** (567 instrucciones frente a 481: +18 % de instrucciones, +7 % de tiempo). Es el nivel donde
+  las instrucciones extra salen más baratas (~80 ns cada una, frente a ~170 ns a `-O1`/`-Os`); no se ha investigado.
+- Instrucciones por jugada en el simulador a `-O1`: 539, 539, 535 y 649; a `-O2`: 481, 481, 478 y 567.
+- Lección: dos de las cinco medidas de la jugada 4 estaban mal por no comprobar el build ni el tablero. Con un
+  único valor suelto no se ve; hay que cruzar el tiempo con el nº de instrucciones.
 - **[PROB]** Se perdió tiempo porque, al cambiar el nivel de optimización en Eclipse y hacer solo Build, no se
   recompila: `make` solo mira las fechas de los `.c`. Había que hacer **Clean** (síntoma: el mismo tiempo en los
   5 niveles; en un caso 340 µs en todos, el valor de `-O0`, y en otro 76 µs en todos). Se detectó viendo que
