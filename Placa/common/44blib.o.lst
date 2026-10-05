@@ -6,15 +6,33 @@
    6              		.eabi_attribute 24, 1
    7              		.eabi_attribute 25, 1
    8              		.eabi_attribute 26, 1
-   9              		.eabi_attribute 30, 2
+   9              		.eabi_attribute 30, 6
   10              		.eabi_attribute 18, 4
   11              		.file	"44blib.c"
   21              	.Ltext0:
   22              		.file 1 "../common/44blib.c"
- 3126              		.align	2
- 3127              		.global	Delay
- 3129              	Delay:
- 3130              	.LFB0:
+ 3128              		.align	2
+ 3131              	mallocPt:
+ 3132 0000 00000000 		.word	Image_RW_Limit
+ 3133              		.global	restart
+ 3134              		.bss
+ 3135              		.align	2
+ 3138              	restart:
+ 3139 0000 00000000 		.space	4
+ 3140              		.global	run
+ 3141              		.data
+ 3142              		.align	2
+ 3145              	run:
+ 3146 0004 0000000C 		.word	201326592
+ 3147              		.align	2
+ 3150              	delayLoopCount:
+ 3151 0008 90010000 		.word	400
+ 3152              		.global	__aeabi_idiv
+ 3153              		.text
+ 3154              		.align	2
+ 3155              		.global	Delay
+ 3157              	Delay:
+ 3158              	.LFB0:
    1:../common/44blib.c **** #include "44b.h"
    2:../common/44blib.c **** #include "44blib.h"
    3:../common/44blib.c **** #include "def.h"
@@ -46,140 +64,228 @@
   29:../common/44blib.c **** // 100us resolution
   30:../common/44blib.c **** // Delay(10) -> 10*100us resolution
   31:../common/44blib.c **** {
- 3131              		.loc 1 31 0
- 3132              		.cfi_startproc
- 3133              		@ Function supports interworking.
- 3134              		@ args = 0, pretend = 0, frame = 0
- 3135              		@ frame_needed = 1, uses_anonymous_args = 0
- 3136              	.LVL0:
- 3137 0000 0DC0A0E1 		mov	ip, sp
- 3138              	.LCFI0:
- 3139              		.cfi_def_cfa_register 12
+ 3159              		.loc 1 31 0
+ 3160              		.cfi_startproc
+ 3161              		@ Function supports interworking.
+ 3162              		@ args = 0, pretend = 0, frame = 16
+ 3163              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3164 0000 0DC0A0E1 		mov	ip, sp
+ 3165              	.LCFI0:
+ 3166              		.cfi_def_cfa_register 12
+ 3167 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3168 0008 04B04CE2 		sub	fp, ip, #4
+ 3169              		.cfi_offset 14, -8
+ 3170              		.cfi_offset 13, -12
+ 3171              		.cfi_offset 11, -16
+ 3172              	.LCFI1:
+ 3173              		.cfi_def_cfa 11, 4
+ 3174 000c 10D04DE2 		sub	sp, sp, #16
+ 3175 0010 18000BE5 		str	r0, [fp, #-24]
   32:../common/44blib.c **** 	int i,adjust = 0;
+ 3176              		.loc 1 32 0
+ 3177 0014 0030A0E3 		mov	r3, #0
+ 3178 0018 14300BE5 		str	r3, [fp, #-20]
   33:../common/44blib.c **** 	if (time == 0)
- 3140              		.loc 1 33 0
- 3141 0004 000050E3 		cmp	r0, #0
-  31:../common/44blib.c **** {
- 3142              		.loc 1 31 0
- 3143 0008 18D82DE9 		stmfd	sp!, {r3, r4, fp, ip, lr, pc}
- 3144 000c 04B04CE2 		sub	fp, ip, #4
- 3145              		.cfi_offset 14, -8
- 3146              		.cfi_offset 13, -12
- 3147              		.cfi_offset 11, -16
- 3148              		.cfi_offset 4, -20
- 3149              		.cfi_offset 3, -24
- 3150              	.LCFI1:
- 3151              		.cfi_def_cfa 11, 4
- 3152              		.loc 1 33 0
- 3153 0010 1000001A 		bne	.L1
- 3154              	.LVL1:
+ 3179              		.loc 1 33 0
+ 3180 001c 18301BE5 		ldr	r3, [fp, #-24]
+ 3181 0020 000053E3 		cmp	r3, #0
+ 3182 0024 2100001A 		bne	.L3
   34:../common/44blib.c **** 	{
   35:../common/44blib.c **** 		time = 200;
+ 3183              		.loc 1 35 0
+ 3184 0028 C830A0E3 		mov	r3, #200
+ 3185 002c 18300BE5 		str	r3, [fp, #-24]
   36:../common/44blib.c **** 		adjust = 1;
+ 3186              		.loc 1 36 0
+ 3187 0030 0130A0E3 		mov	r3, #1
+ 3188 0034 14300BE5 		str	r3, [fp, #-20]
   37:../common/44blib.c **** 		delayLoopCount = 400;
+ 3189              		.loc 1 37 0
+ 3190 0038 D8309FE5 		ldr	r3, .L8
+ 3191 003c 192EA0E3 		mov	r2, #400
+ 3192 0040 002083E5 		str	r2, [r3, #0]
   38:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
- 3155              		.loc 1 38 0
- 3156 0014 48309FE5 		ldr	r3, .L8
- 3157 0018 48409FE5 		ldr	r4, .L8+4
+ 3193              		.loc 1 38 0
+ 3194 0044 D0309FE5 		ldr	r3, .L8+4
+ 3195 0048 D0209FE5 		ldr	r2, .L8+8
+ 3196 004c 002083E5 		str	r2, [r3, #0]
   39:../common/44blib.c **** 		rWTDAT = 0xffff;
- 3158              		.loc 1 39 0
- 3159 001c 48E09FE5 		ldr	lr, .L8+8
+ 3197              		.loc 1 39 0
+ 3198 0050 CC309FE5 		ldr	r3, .L8+12
+ 3199 0054 CC209FE5 		ldr	r2, .L8+16
+ 3200 0058 002083E5 		str	r2, [r3, #0]
   40:../common/44blib.c **** 		rWTCNT = 0xffff;
+ 3201              		.loc 1 40 0
+ 3202 005c C8309FE5 		ldr	r3, .L8+20
+ 3203 0060 C0209FE5 		ldr	r2, .L8+16
+ 3204 0064 002083E5 		str	r2, [r3, #0]
   41:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disabl
- 3160              		.loc 1 41 0
- 3161 0020 48C09FE5 		ldr	ip, .L8+12
-  38:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
- 3162              		.loc 1 38 0
- 3163 0024 004083E5 		str	r4, [r3, #0]
-  39:../common/44blib.c **** 		rWTDAT = 0xffff;
- 3164              		.loc 1 39 0
- 3165 0028 04E083E5 		str	lr, [r3, #4]
-  40:../common/44blib.c **** 		rWTCNT = 0xffff;
- 3166              		.loc 1 40 0
- 3167 002c 08E083E5 		str	lr, [r3, #8]
- 3168              		.loc 1 41 0
- 3169 0030 00C083E5 		str	ip, [r3, #0]
+ 3205              		.loc 1 41 0
+ 3206 0068 AC309FE5 		ldr	r3, .L8+4
+ 3207 006c BC209FE5 		ldr	r2, .L8+24
+ 3208 0070 002083E5 		str	r2, [r3, #0]
   42:../common/44blib.c **** 	}
   43:../common/44blib.c **** 	for (; time>0; time--)
+ 3209              		.loc 1 43 0
+ 3210 0074 0D0000EA 		b	.L3
+ 3211              	.L6:
   44:../common/44blib.c **** 		for (i = 0; i < delayLoopCount; i++);
+ 3212              		.loc 1 44 0
+ 3213 0078 0030A0E3 		mov	r3, #0
+ 3214 007c 10300BE5 		str	r3, [fp, #-16]
+ 3215 0080 020000EA 		b	.L4
+ 3216              	.L5:
+ 3217              		.loc 1 44 0 is_stmt 0 discriminator 2
+ 3218 0084 10301BE5 		ldr	r3, [fp, #-16]
+ 3219 0088 013083E2 		add	r3, r3, #1
+ 3220 008c 10300BE5 		str	r3, [fp, #-16]
+ 3221              	.L4:
+ 3222              		.loc 1 44 0 discriminator 1
+ 3223 0090 80309FE5 		ldr	r3, .L8
+ 3224 0094 003093E5 		ldr	r3, [r3, #0]
+ 3225 0098 10201BE5 		ldr	r2, [fp, #-16]
+ 3226 009c 030052E1 		cmp	r2, r3
+ 3227 00a0 F7FFFFBA 		blt	.L5
+  43:../common/44blib.c **** 	for (; time>0; time--)
+ 3228              		.loc 1 43 0 is_stmt 1
+ 3229 00a4 18301BE5 		ldr	r3, [fp, #-24]
+ 3230 00a8 013043E2 		sub	r3, r3, #1
+ 3231 00ac 18300BE5 		str	r3, [fp, #-24]
+ 3232              	.L3:
+  43:../common/44blib.c **** 	for (; time>0; time--)
+ 3233              		.loc 1 43 0 is_stmt 0 discriminator 1
+ 3234 00b0 18301BE5 		ldr	r3, [fp, #-24]
+ 3235 00b4 000053E3 		cmp	r3, #0
+ 3236 00b8 EEFFFFCA 		bgt	.L6
   45:../common/44blib.c **** 	if (adjust == 1)
+ 3237              		.loc 1 45 0 is_stmt 1
+ 3238 00bc 14301BE5 		ldr	r3, [fp, #-20]
+ 3239 00c0 010053E3 		cmp	r3, #1
+ 3240 00c4 1000001A 		bne	.L1
   46:../common/44blib.c **** 	{
   47:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3);
- 3170              		.loc 1 47 0
- 3171 0034 004083E5 		str	r4, [r3, #0]
+ 3241              		.loc 1 47 0
+ 3242 00c8 4C309FE5 		ldr	r3, .L8+4
+ 3243 00cc 4C209FE5 		ldr	r2, .L8+8
+ 3244 00d0 002083E5 		str	r2, [r3, #0]
   48:../common/44blib.c **** 		i = 0xffff - rWTCNT;   //  1count/16us?????????//
- 3172              		.loc 1 48 0
- 3173 0038 082093E5 		ldr	r2, [r3, #8]
- 3174              	.LVL2:
- 3175 003c FF0C62E2 		rsb	r0, r2, #65280
- 3176 0040 FF1080E2 		add	r1, r0, #255
+ 3245              		.loc 1 48 0
+ 3246 00d4 50309FE5 		ldr	r3, .L8+20
+ 3247 00d8 003093E5 		ldr	r3, [r3, #0]
+ 3248 00dc FF3C63E2 		rsb	r3, r3, #65280
+ 3249 00e0 FF3083E2 		add	r3, r3, #255
+ 3250 00e4 10300BE5 		str	r3, [fp, #-16]
   49:../common/44blib.c **** 		delayLoopCount = 8000000/(i*64);	//400*100/(i*64/200)   //
- 3177              		.loc 1 49 0
- 3178 0044 0113A0E1 		mov	r1, r1, asl #6
- 3179 0048 24009FE5 		ldr	r0, .L8+16
- 3180 004c FEFFFFEB 		bl	__aeabi_idiv
- 3181              	.LVL3:
-  37:../common/44blib.c **** 		delayLoopCount = 400;
- 3182              		.loc 1 37 0
- 3183 0050 20409FE5 		ldr	r4, .L8+20
- 3184              		.loc 1 49 0
- 3185 0054 000084E5 		str	r0, [r4, #0]
- 3186              	.LVL4:
- 3187              	.L1:
+ 3251              		.loc 1 49 0
+ 3252 00e8 10301BE5 		ldr	r3, [fp, #-16]
+ 3253 00ec 0333A0E1 		mov	r3, r3, asl #6
+ 3254 00f0 3C009FE5 		ldr	r0, .L8+28
+ 3255 00f4 0310A0E1 		mov	r1, r3
+ 3256 00f8 FEFFFFEB 		bl	__aeabi_idiv
+ 3257 00fc 0030A0E1 		mov	r3, r0
+ 3258 0100 0320A0E1 		mov	r2, r3
+ 3259 0104 0C309FE5 		ldr	r3, .L8
+ 3260 0108 002083E5 		str	r2, [r3, #0]
+ 3261              	.L1:
   50:../common/44blib.c **** 	}
   51:../common/44blib.c **** }
- 3188              		.loc 1 51 0
- 3189 0058 14D04BE2 		sub	sp, fp, #20
- 3190 005c 18689DE8 		ldmfd	sp, {r3, r4, fp, sp, lr}
- 3191 0060 1EFF2FE1 		bx	lr
- 3192              	.L9:
- 3193              		.align	2
- 3194              	.L8:
- 3195 0064 0000D301 		.word	30605312
- 3196 0068 103F0000 		.word	16144
- 3197 006c FFFF0000 		.word	65535
- 3198 0070 303F0000 		.word	16176
- 3199 0074 00127A00 		.word	8000000
- 3200 0078 00000000 		.word	.LANCHOR0
- 3201              		.cfi_endproc
- 3202              	.LFE0:
- 3204              		.align	2
- 3205              		.global	DelayMs
- 3207              	DelayMs:
- 3208              	.LFB1:
+ 3262              		.loc 1 51 0
+ 3263 010c 0CD04BE2 		sub	sp, fp, #12
+ 3264 0110 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3265 0114 1EFF2FE1 		bx	lr
+ 3266              	.L9:
+ 3267              		.align	2
+ 3268              	.L8:
+ 3269 0118 08000000 		.word	delayLoopCount
+ 3270 011c 0000D301 		.word	30605312
+ 3271 0120 103F0000 		.word	16144
+ 3272 0124 0400D301 		.word	30605316
+ 3273 0128 FFFF0000 		.word	65535
+ 3274 012c 0800D301 		.word	30605320
+ 3275 0130 303F0000 		.word	16176
+ 3276 0134 00127A00 		.word	8000000
+ 3277              		.cfi_endproc
+ 3278              	.LFE0:
+ 3280              		.align	2
+ 3281              		.global	DelayMs
+ 3283              	DelayMs:
+ 3284              	.LFB1:
   52:../common/44blib.c **** 
   53:../common/44blib.c **** void DelayMs(int ms_time)
   54:../common/44blib.c **** {
- 3209              		.loc 1 54 0
- 3210              		.cfi_startproc
- 3211              		@ Function supports interworking.
- 3212              		@ args = 0, pretend = 0, frame = 0
- 3213              		@ frame_needed = 0, uses_anonymous_args = 0
- 3214              		@ link register save eliminated.
- 3215              	.LVL5:
+ 3285              		.loc 1 54 0
+ 3286              		.cfi_startproc
+ 3287              		@ Function supports interworking.
+ 3288              		@ args = 0, pretend = 0, frame = 16
+ 3289              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3290 0138 0DC0A0E1 		mov	ip, sp
+ 3291              	.LCFI2:
+ 3292              		.cfi_def_cfa_register 12
+ 3293 013c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3294 0140 04B04CE2 		sub	fp, ip, #4
+ 3295              		.cfi_offset 14, -8
+ 3296              		.cfi_offset 13, -12
+ 3297              		.cfi_offset 11, -16
+ 3298              	.LCFI3:
+ 3299              		.cfi_def_cfa 11, 4
+ 3300 0144 10D04DE2 		sub	sp, sp, #16
+ 3301 0148 18000BE5 		str	r0, [fp, #-24]
   55:../common/44blib.c **** 	int i;
   56:../common/44blib.c **** 
   57:../common/44blib.c **** 	for (i = 0; i < 1000*ms_time ; i++)
+ 3302              		.loc 1 57 0
+ 3303 014c 0030A0E3 		mov	r3, #0
+ 3304 0150 10300BE5 		str	r3, [fp, #-16]
+ 3305 0154 020000EA 		b	.L11
+ 3306              	.L12:
+ 3307              		.loc 1 57 0 is_stmt 0 discriminator 2
+ 3308 0158 10301BE5 		ldr	r3, [fp, #-16]
+ 3309 015c 013083E2 		add	r3, r3, #1
+ 3310 0160 10300BE5 		str	r3, [fp, #-16]
+ 3311              	.L11:
+ 3312              		.loc 1 57 0 discriminator 1
+ 3313 0164 18201BE5 		ldr	r2, [fp, #-24]
+ 3314 0168 0230A0E1 		mov	r3, r2
+ 3315 016c 8332A0E1 		mov	r3, r3, asl #5
+ 3316 0170 033062E0 		rsb	r3, r2, r3
+ 3317 0174 0331A0E1 		mov	r3, r3, asl #2
+ 3318 0178 023083E0 		add	r3, r3, r2
+ 3319 017c 8331A0E1 		mov	r3, r3, asl #3
+ 3320 0180 0320A0E1 		mov	r2, r3
+ 3321 0184 10301BE5 		ldr	r3, [fp, #-16]
+ 3322 0188 030052E1 		cmp	r2, r3
+ 3323 018c F1FFFFCA 		bgt	.L12
   58:../common/44blib.c **** 		;
   59:../common/44blib.c **** }
- 3216              		.loc 1 59 0
- 3217 007c 1EFF2FE1 		bx	lr
- 3218              		.cfi_endproc
- 3219              	.LFE1:
- 3221              		.align	2
- 3222              		.global	Port_Init
- 3224              	Port_Init:
- 3225              	.LFB2:
+ 3324              		.loc 1 59 0 is_stmt 1
+ 3325 0190 0CD04BE2 		sub	sp, fp, #12
+ 3326 0194 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3327 0198 1EFF2FE1 		bx	lr
+ 3328              		.cfi_endproc
+ 3329              	.LFE1:
+ 3331              		.align	2
+ 3332              		.global	Port_Init
+ 3334              	Port_Init:
+ 3335              	.LFB2:
   60:../common/44blib.c **** 
   61:../common/44blib.c **** //------------------------PORTS------------------------------//
   62:../common/44blib.c **** void Port_Init(void)
   63:../common/44blib.c **** {
- 3226              		.loc 1 63 0
- 3227              		.cfi_startproc
- 3228              		@ Function supports interworking.
- 3229              		@ args = 0, pretend = 0, frame = 0
- 3230              		@ frame_needed = 0, uses_anonymous_args = 0
- 3231              		@ link register save eliminated.
+ 3336              		.loc 1 63 0
+ 3337              		.cfi_startproc
+ 3338              		@ Function supports interworking.
+ 3339              		@ args = 0, pretend = 0, frame = 0
+ 3340              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3341 019c 0DC0A0E1 		mov	ip, sp
+ 3342              	.LCFI4:
+ 3343              		.cfi_def_cfa_register 12
+ 3344 01a0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3345 01a4 04B04CE2 		sub	fp, ip, #4
+ 3346              		.cfi_offset 14, -8
+ 3347              		.cfi_offset 13, -12
+ 3348              		.cfi_offset 11, -16
+ 3349              	.LCFI5:
+ 3350              		.cfi_def_cfa 11, 4
   64:../common/44blib.c **** 	//CAUTION:Follow the configuration order for setting the ports.
   65:../common/44blib.c **** 	// 1) setting value
   66:../common/44blib.c **** 	// 2) setting control register
@@ -192,9 +298,10 @@
   73:../common/44blib.c **** 	// 		A24	A23	A22	A21	A20	A19	A18	A17	A16	A0
   74:../common/44blib.c **** 	//		0	1	1	1	1	1	1	1	1	1
   75:../common/44blib.c **** 	rPCONA = 0x1ff;
- 3232              		.loc 1 75 0
- 3233 0080 9C309FE5 		ldr	r3, .L12
- 3234 0084 9C009FE5 		ldr	r0, .L12+4
+ 3351              		.loc 1 75 0
+ 3352 01a8 00319FE5 		ldr	r3, .L14
+ 3353 01ac 00219FE5 		ldr	r2, .L14+4
+ 3354 01b0 002083E5 		str	r2, [r3, #0]
   76:../common/44blib.c **** 
   77:../common/44blib.c **** 	// PORT B GROUP
   78:../common/44blib.c **** 	// BIT 	10		9		8		7		6		5		4		3		2		1		0
@@ -202,17 +309,15 @@
   80:../common/44blib.c **** 	//		EXT		NIC		USB		IDE		SMC		NC		NC		Sdram	Sdram	Sdram	Sdram
   81:../common/44blib.c **** 	//      1, 		1,   	1,   	1,    	1,    	0,       0,     1,    	1,    	1,   	1
   82:../common/44blib.c **** 	rPDATB = 0x7ff;
- 3235              		.loc 1 82 0
- 3236 0088 9CC09FE5 		ldr	ip, .L12+8
-  75:../common/44blib.c **** 	rPCONA = 0x1ff;
- 3237              		.loc 1 75 0
- 3238 008c 000083E5 		str	r0, [r3, #0]
- 3239              		.loc 1 82 0
- 3240 0090 0CC083E5 		str	ip, [r3, #12]
+ 3355              		.loc 1 82 0
+ 3356 01b4 FC309FE5 		ldr	r3, .L14+8
+ 3357 01b8 FC209FE5 		ldr	r2, .L14+12
+ 3358 01bc 002083E5 		str	r2, [r3, #0]
   83:../common/44blib.c **** 	rPCONB = 0x1cf;			// P9-LED1 P10-LED2
- 3241              		.loc 1 83 0
- 3242 0094 94C09FE5 		ldr	ip, .L12+12
- 3243 0098 08C083E5 		str	ip, [r3, #8]
+ 3359              		.loc 1 83 0
+ 3360 01c0 F8309FE5 		ldr	r3, .L14+16
+ 3361 01c4 F8209FE5 		ldr	r2, .L14+20
+ 3362 01c8 002083E5 		str	r2, [r3, #0]
   84:../common/44blib.c **** 
   85:../common/44blib.c **** 	// PORT C GROUP
   86:../common/44blib.c **** 	// BUSWIDTH=16
@@ -226,17 +331,20 @@
   94:../common/44blib.c **** 	//   NC		NC		NC		NC		IISCLK	IISDI	IISDO	IISLRCK
   95:../common/44blib.c **** 	//   00		00		00		00		11		11		11		11
   96:../common/44blib.c **** 	rPDATC = 0xff00;
- 3244              		.loc 1 96 0
- 3245 009c FFCCA0E3 		mov	ip, #65280
- 3246 00a0 14C083E5 		str	ip, [r3, #20]
+ 3363              		.loc 1 96 0
+ 3364 01cc F4309FE5 		ldr	r3, .L14+24
+ 3365 01d0 FF2CA0E3 		mov	r2, #65280
+ 3366 01d4 002083E5 		str	r2, [r3, #0]
   97:../common/44blib.c **** 	rPCONC = 0x0ff0ffff;
- 3247              		.loc 1 97 0
- 3248 00a4 88C09FE5 		ldr	ip, .L12+16
- 3249 00a8 10C083E5 		str	ip, [r3, #16]
+ 3367              		.loc 1 97 0
+ 3368 01d8 EC309FE5 		ldr	r3, .L14+28
+ 3369 01dc EC209FE5 		ldr	r2, .L14+32
+ 3370 01e0 002083E5 		str	r2, [r3, #0]
   98:../common/44blib.c **** 	rPUPC  = 0x30ff;	//PULL UP RESISTOR should be enabled to I/O
- 3250              		.loc 1 98 0
- 3251 00ac 84C09FE5 		ldr	ip, .L12+20
- 3252 00b0 18C083E5 		str	ip, [r3, #24]
+ 3371              		.loc 1 98 0
+ 3372 01e4 E8309FE5 		ldr	r3, .L14+36
+ 3373 01e8 E8209FE5 		ldr	r2, .L14+40
+ 3374 01ec 002083E5 		str	r2, [r3, #0]
   99:../common/44blib.c **** 
  100:../common/44blib.c **** 	// PORT D GROUP
  101:../common/44blib.c **** 	// PORT D GROUP(I/O OR LCD)
@@ -244,19 +352,20 @@
  103:../common/44blib.c **** 	//	VF		VM		VLINE	VCLK	VD3		VD2		VD1		VD0
  104:../common/44blib.c **** 	//	00		00		00		00		00		00		00		00
  105:../common/44blib.c **** 	rPDATD= 0xff;
+ 3375              		.loc 1 105 0
+ 3376 01f0 E4309FE5 		ldr	r3, .L14+44
+ 3377 01f4 FF20A0E3 		mov	r2, #255
+ 3378 01f8 002083E5 		str	r2, [r3, #0]
  106:../common/44blib.c **** 	rPCOND= 0xaaaa;
- 3253              		.loc 1 106 0
- 3254 00b4 80C09FE5 		ldr	ip, .L12+24
- 105:../common/44blib.c **** 	rPDATD= 0xff;
- 3255              		.loc 1 105 0
- 3256 00b8 FF10A0E3 		mov	r1, #255
- 3257 00bc 201083E5 		str	r1, [r3, #32]
+ 3379              		.loc 1 106 0
+ 3380 01fc DC309FE5 		ldr	r3, .L14+48
+ 3381 0200 DC209FE5 		ldr	r2, .L14+52
+ 3382 0204 002083E5 		str	r2, [r3, #0]
  107:../common/44blib.c **** 	rPUPD = 0x0;
- 3258              		.loc 1 107 0
- 3259 00c0 0020A0E3 		mov	r2, #0
- 106:../common/44blib.c **** 	rPCOND= 0xaaaa;
- 3260              		.loc 1 106 0
- 3261 00c4 1CC083E5 		str	ip, [r3, #28]
+ 3383              		.loc 1 107 0
+ 3384 0208 D8309FE5 		ldr	r3, .L14+56
+ 3385 020c 0020A0E3 		mov	r2, #0
+ 3386 0210 002083E5 		str	r2, [r3, #0]
  108:../common/44blib.c **** 	// These pins must be set only after CPU's internal LCD controller is enable
  109:../common/44blib.c **** 
  110:../common/44blib.c **** 	// PORT E GROUP
@@ -264,35 +373,40 @@
  112:../common/44blib.c **** 	//  	CODECLK	LED4	LED5	LED6	LED7	BEEP	RXD0	TXD0	LcdDisp
  113:../common/44blib.c **** 	//  	10		01		01		01		01		01		10		10		01
  114:../common/44blib.c **** 	rPDATE	= 0x1ff;
+ 3387              		.loc 1 114 0
+ 3388 0214 D0309FE5 		ldr	r3, .L14+60
+ 3389 0218 94209FE5 		ldr	r2, .L14+4
+ 3390 021c 002083E5 		str	r2, [r3, #0]
  115:../common/44blib.c **** 	rPCONE	= 0x25529;
- 3262              		.loc 1 115 0
- 3263 00c8 25CA80E2 		add	ip, r0, #151552
- 107:../common/44blib.c **** 	rPUPD = 0x0;
- 3264              		.loc 1 107 0
- 3265 00cc 242083E5 		str	r2, [r3, #36]
- 114:../common/44blib.c **** 	rPDATE	= 0x1ff;
- 3266              		.loc 1 114 0
- 3267 00d0 2C0083E5 		str	r0, [r3, #44]
- 3268              		.loc 1 115 0
- 3269 00d4 CA0F8CE2 		add	r0, ip, #808
- 3270 00d8 02C080E2 		add	ip, r0, #2
- 3271 00dc 28C083E5 		str	ip, [r3, #40]
+ 3391              		.loc 1 115 0
+ 3392 0220 C8309FE5 		ldr	r3, .L14+64
+ 3393 0224 C8209FE5 		ldr	r2, .L14+68
+ 3394 0228 002083E5 		str	r2, [r3, #0]
  116:../common/44blib.c **** 	rPUPE	= 0x6;
- 3272              		.loc 1 116 0
- 3273 00e0 0600A0E3 		mov	r0, #6
+ 3395              		.loc 1 116 0
+ 3396 022c C4309FE5 		ldr	r3, .L14+72
+ 3397 0230 0620A0E3 		mov	r2, #6
+ 3398 0234 002083E5 		str	r2, [r3, #0]
  117:../common/44blib.c **** 
  118:../common/44blib.c **** 	// PORT F GROUP
  119:../common/44blib.c **** 	// Bit8		7		6		5		 4		3		2		1		0
  120:../common/44blib.c **** 	// IISCLK	IISDI	IISDO	IISLRCK	Input	Input	Input	IICSDA	IICSCL
  121:../common/44blib.c **** 	// 100		100		100		100		00		00		00		10		10
  122:../common/44blib.c **** 	rPDATF = 0x0;
+ 3399              		.loc 1 122 0
+ 3400 0238 BC309FE5 		ldr	r3, .L14+76
+ 3401 023c 0020A0E3 		mov	r2, #0
+ 3402 0240 002083E5 		str	r2, [r3, #0]
  123:../common/44blib.c **** 	rPCONF = 0x252a;
- 3274              		.loc 1 123 0
- 3275 00e4 54C09FE5 		ldr	ip, .L12+28
- 116:../common/44blib.c **** 	rPUPE	= 0x6;
- 3276              		.loc 1 116 0
- 3277 00e8 300083E5 		str	r0, [r3, #48]
+ 3403              		.loc 1 123 0
+ 3404 0244 B4309FE5 		ldr	r3, .L14+80
+ 3405 0248 B4209FE5 		ldr	r2, .L14+84
+ 3406 024c 002083E5 		str	r2, [r3, #0]
  124:../common/44blib.c **** 	rPUPF  = 0x0;
+ 3407              		.loc 1 124 0
+ 3408 0250 B0309FE5 		ldr	r3, .L14+88
+ 3409 0254 0020A0E3 		mov	r2, #0
+ 3410 0258 002083E5 		str	r2, [r3, #0]
  125:../common/44blib.c **** 
  126:../common/44blib.c **** 	// PORT G GROUP
  127:../common/44blib.c **** 	// BIT7		6		5		4		3		2		1		0
@@ -300,69 +414,84 @@
  129:../common/44blib.c **** 	//	S3		S4		S5		S6		NIC		EXT		IDE		USB
  130:../common/44blib.c **** 	//	11      11      11      11      11      11      11      11
  131:../common/44blib.c **** 	rPDATG = 0xff;
+ 3411              		.loc 1 131 0
+ 3412 025c A8309FE5 		ldr	r3, .L14+92
+ 3413 0260 FF20A0E3 		mov	r2, #255
+ 3414 0264 002083E5 		str	r2, [r3, #0]
  132:../common/44blib.c **** 	rPCONG = 0xffff;
- 3278              		.loc 1 132 0
- 3279 00ec FF0C81E2 		add	r0, r1, #65280
- 122:../common/44blib.c **** 	rPDATF = 0x0;
- 3280              		.loc 1 122 0
- 3281 00f0 382083E5 		str	r2, [r3, #56]
- 123:../common/44blib.c **** 	rPCONF = 0x252a;
- 3282              		.loc 1 123 0
- 3283 00f4 34C083E5 		str	ip, [r3, #52]
- 124:../common/44blib.c **** 	rPUPF  = 0x0;
- 3284              		.loc 1 124 0
- 3285 00f8 3C2083E5 		str	r2, [r3, #60]
- 131:../common/44blib.c **** 	rPDATG = 0xff;
- 3286              		.loc 1 131 0
- 3287 00fc 441083E5 		str	r1, [r3, #68]
- 3288              		.loc 1 132 0
- 3289 0100 400083E5 		str	r0, [r3, #64]
+ 3415              		.loc 1 132 0
+ 3416 0268 A0309FE5 		ldr	r3, .L14+96
+ 3417 026c A0209FE5 		ldr	r2, .L14+100
+ 3418 0270 002083E5 		str	r2, [r3, #0]
  133:../common/44blib.c **** 	rPUPG  = 0x0;		//pull-up portG enabled
+ 3419              		.loc 1 133 0
+ 3420 0274 9C309FE5 		ldr	r3, .L14+104
+ 3421 0278 0020A0E3 		mov	r2, #0
+ 3422 027c 002083E5 		str	r2, [r3, #0]
  134:../common/44blib.c **** 	rSPUCR = 0x7;  		//D15-D0 pull-up disable
+ 3423              		.loc 1 134 0
+ 3424 0280 94309FE5 		ldr	r3, .L14+108
+ 3425 0284 0720A0E3 		mov	r2, #7
+ 3426 0288 002083E5 		str	r2, [r3, #0]
  135:../common/44blib.c **** 
  136:../common/44blib.c **** 	/* Non Cache area */
  137:../common/44blib.c **** 	rNCACHBE0 = ((Non_Cache_End>>12)<<16) | (Non_Cache_Start>>12);
- 3290              		.loc 1 137 0
- 3291 0104 38009FE5 		ldr	r0, .L12+32
- 134:../common/44blib.c **** 	rSPUCR = 0x7;  		//D15-D0 pull-up disable
- 3292              		.loc 1 134 0
- 3293 0108 07C0A0E3 		mov	ip, #7
- 3294              		.loc 1 137 0
- 3295 010c 0715A0E3 		mov	r1, #29360128
- 133:../common/44blib.c **** 	rPUPG  = 0x0;		//pull-up portG enabled
- 3296              		.loc 1 133 0
- 3297 0110 482083E5 		str	r2, [r3, #72]
- 134:../common/44blib.c **** 	rSPUCR = 0x7;  		//D15-D0 pull-up disable
- 3298              		.loc 1 134 0
- 3299 0114 4CC083E5 		str	ip, [r3, #76]
- 3300              		.loc 1 137 0
- 3301 0118 040081E5 		str	r0, [r1, #4]
+ 3427              		.loc 1 137 0
+ 3428 028c 8C309FE5 		ldr	r3, .L14+112
+ 3429 0290 8C209FE5 		ldr	r2, .L14+116
+ 3430 0294 002083E5 		str	r2, [r3, #0]
  138:../common/44blib.c **** 
  139:../common/44blib.c **** 	/* Low level default */
  140:../common/44blib.c **** 	rEXTINT = 0x0;
- 3302              		.loc 1 140 0
- 3303 011c 502083E5 		str	r2, [r3, #80]
+ 3431              		.loc 1 140 0
+ 3432 0298 88309FE5 		ldr	r3, .L14+120
+ 3433 029c 0020A0E3 		mov	r2, #0
+ 3434 02a0 002083E5 		str	r2, [r3, #0]
  141:../common/44blib.c **** }
- 3304              		.loc 1 141 0
- 3305 0120 1EFF2FE1 		bx	lr
- 3306              	.L13:
- 3307              		.align	2
- 3308              	.L12:
- 3309 0124 0000D201 		.word	30539776
- 3310 0128 FF010000 		.word	511
- 3311 012c FF070000 		.word	2047
- 3312 0130 CF010000 		.word	463
- 3313 0134 FFFFF00F 		.word	267452415
- 3314 0138 FF300000 		.word	12543
- 3315 013c AAAA0000 		.word	43690
- 3316 0140 2A250000 		.word	9514
- 3317 0144 002000C0 		.word	-1073733632
- 3318              		.cfi_endproc
- 3319              	.LFE2:
- 3321              		.align	2
- 3322              		.global	malloc
- 3324              	malloc:
- 3325              	.LFB3:
+ 3435              		.loc 1 141 0
+ 3436 02a4 0CD04BE2 		sub	sp, fp, #12
+ 3437 02a8 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3438 02ac 1EFF2FE1 		bx	lr
+ 3439              	.L15:
+ 3440              		.align	2
+ 3441              	.L14:
+ 3442 02b0 0000D201 		.word	30539776
+ 3443 02b4 FF010000 		.word	511
+ 3444 02b8 0C00D201 		.word	30539788
+ 3445 02bc FF070000 		.word	2047
+ 3446 02c0 0800D201 		.word	30539784
+ 3447 02c4 CF010000 		.word	463
+ 3448 02c8 1400D201 		.word	30539796
+ 3449 02cc 1000D201 		.word	30539792
+ 3450 02d0 FFFFF00F 		.word	267452415
+ 3451 02d4 1800D201 		.word	30539800
+ 3452 02d8 FF300000 		.word	12543
+ 3453 02dc 2000D201 		.word	30539808
+ 3454 02e0 1C00D201 		.word	30539804
+ 3455 02e4 AAAA0000 		.word	43690
+ 3456 02e8 2400D201 		.word	30539812
+ 3457 02ec 2C00D201 		.word	30539820
+ 3458 02f0 2800D201 		.word	30539816
+ 3459 02f4 29550200 		.word	152873
+ 3460 02f8 3000D201 		.word	30539824
+ 3461 02fc 3800D201 		.word	30539832
+ 3462 0300 3400D201 		.word	30539828
+ 3463 0304 2A250000 		.word	9514
+ 3464 0308 3C00D201 		.word	30539836
+ 3465 030c 4400D201 		.word	30539844
+ 3466 0310 4000D201 		.word	30539840
+ 3467 0314 FFFF0000 		.word	65535
+ 3468 0318 4800D201 		.word	30539848
+ 3469 031c 4C00D201 		.word	30539852
+ 3470 0320 0400C001 		.word	29360132
+ 3471 0324 002000C0 		.word	-1073733632
+ 3472 0328 5000D201 		.word	30539856
+ 3473              		.cfi_endproc
+ 3474              	.LFE2:
+ 3476              		.align	2
+ 3477              		.global	malloc
+ 3479              	malloc:
+ 3480              	.LFB3:
  142:../common/44blib.c **** 
  143:../common/44blib.c **** 
  144:../common/44blib.c **** //--------------------------------HEAP---------------------------------//
@@ -370,382 +499,222 @@
  146:../common/44blib.c **** /* Very simple; Use malloc() & free() like Stack */
  147:../common/44blib.c **** // void *mallocPt=Image$$RW$$Limit;
  148:../common/44blib.c **** {
- 3326              		.loc 1 148 0
- 3327              		.cfi_startproc
- 3328              		@ Function supports interworking.
- 3329              		@ args = 0, pretend = 0, frame = 0
- 3330              		@ frame_needed = 0, uses_anonymous_args = 0
- 3331              		@ link register save eliminated.
- 3332              	.LVL6:
+ 3481              		.loc 1 148 0
+ 3482              		.cfi_startproc
+ 3483              		@ Function supports interworking.
+ 3484              		@ args = 0, pretend = 0, frame = 16
+ 3485              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3486 032c 0DC0A0E1 		mov	ip, sp
+ 3487              	.LCFI6:
+ 3488              		.cfi_def_cfa_register 12
+ 3489 0330 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3490 0334 04B04CE2 		sub	fp, ip, #4
+ 3491              		.cfi_offset 14, -8
+ 3492              		.cfi_offset 13, -12
+ 3493              		.cfi_offset 11, -16
+ 3494              	.LCFI7:
+ 3495              		.cfi_def_cfa 11, 4
+ 3496 0338 10D04DE2 		sub	sp, sp, #16
+ 3497 033c 18000BE5 		str	r0, [fp, #-24]
  149:../common/44blib.c **** 	void *returnPt = mallocPt;
- 3333              		.loc 1 149 0
- 3334 0148 2C109FE5 		ldr	r1, .L16
+ 3498              		.loc 1 149 0
+ 3499 0340 7C309FE5 		ldr	r3, .L19
+ 3500 0344 003093E5 		ldr	r3, [r3, #0]
+ 3501 0348 10300BE5 		str	r3, [fp, #-16]
  150:../common/44blib.c **** 
  151:../common/44blib.c **** 	mallocPt = (int *) mallocPt +nbyte/4 + ((nbyte%4)>0); //to align 4byte
- 3335              		.loc 1 151 0
- 3336 014c 033010E2 		ands	r3, r0, #3
- 149:../common/44blib.c **** 	void *returnPt = mallocPt;
- 3337              		.loc 1 149 0
- 3338 0150 042091E5 		ldr	r2, [r1, #4]
- 3339              	.LVL7:
- 3340              		.loc 1 151 0
- 3341 0154 0130A013 		movne	r3, #1
- 3342 0158 20C183E0 		add	ip, r3, r0, lsr #2
+ 3502              		.loc 1 151 0
+ 3503 034c 70309FE5 		ldr	r3, .L19
+ 3504 0350 002093E5 		ldr	r2, [r3, #0]
+ 3505 0354 18301BE5 		ldr	r3, [fp, #-24]
+ 3506 0358 2311A0E1 		mov	r1, r3, lsr #2
+ 3507 035c 18301BE5 		ldr	r3, [fp, #-24]
+ 3508 0360 033003E2 		and	r3, r3, #3
+ 3509 0364 000053E3 		cmp	r3, #0
+ 3510 0368 0030A003 		moveq	r3, #0
+ 3511 036c 0130A013 		movne	r3, #1
+ 3512 0370 033081E0 		add	r3, r1, r3
+ 3513 0374 0331A0E1 		mov	r3, r3, asl #2
+ 3514 0378 032082E0 		add	r2, r2, r3
+ 3515 037c 40309FE5 		ldr	r3, .L19
+ 3516 0380 002083E5 		str	r2, [r3, #0]
  152:../common/44blib.c **** 
  153:../common/44blib.c **** 	if ((int)mallocPt > HEAPEND)
- 3343              		.loc 1 153 0
- 3344 015c 1C009FE5 		ldr	r0, .L16+4
- 3345              	.LVL8:
- 151:../common/44blib.c **** 	mallocPt = (int *) mallocPt +nbyte/4 + ((nbyte%4)>0); //to align 4byte
- 3346              		.loc 1 151 0
- 3347 0160 0C3182E0 		add	r3, r2, ip, asl #2
- 3348              		.loc 1 153 0
- 3349 0164 000053E1 		cmp	r3, r0
- 151:../common/44blib.c **** 	mallocPt = (int *) mallocPt +nbyte/4 + ((nbyte%4)>0); //to align 4byte
- 3350              		.loc 1 151 0
- 3351 0168 043081E5 		str	r3, [r1, #4]
+ 3517              		.loc 1 153 0
+ 3518 0384 38309FE5 		ldr	r3, .L19
+ 3519 0388 003093E5 		ldr	r3, [r3, #0]
+ 3520 038c 0320A0E1 		mov	r2, r3
+ 3521 0390 30309FE5 		ldr	r3, .L19+4
+ 3522 0394 030052E1 		cmp	r2, r3
+ 3523 0398 040000DA 		ble	.L17
  154:../common/44blib.c **** 	{
  155:../common/44blib.c **** 		mallocPt = returnPt;
- 3352              		.loc 1 155 0
- 3353 016c 042081C5 		strgt	r2, [r1, #4]
+ 3524              		.loc 1 155 0
+ 3525 039c 20309FE5 		ldr	r3, .L19
+ 3526 03a0 10201BE5 		ldr	r2, [fp, #-16]
+ 3527 03a4 002083E5 		str	r2, [r3, #0]
  156:../common/44blib.c **** 		return NULL;
- 3354              		.loc 1 156 0
- 3355 0170 0020A0C3 		movgt	r2, #0
+ 3528              		.loc 1 156 0
+ 3529 03a8 0030A0E3 		mov	r3, #0
+ 3530 03ac 000000EA 		b	.L18
+ 3531              	.L17:
  157:../common/44blib.c **** 	}
  158:../common/44blib.c **** 	return returnPt;
+ 3532              		.loc 1 158 0
+ 3533 03b0 10301BE5 		ldr	r3, [fp, #-16]
+ 3534              	.L18:
  159:../common/44blib.c **** }
- 3356              		.loc 1 159 0
- 3357 0174 0200A0E1 		mov	r0, r2
- 3358 0178 1EFF2FE1 		bx	lr
- 3359              	.L17:
- 3360              		.align	2
- 3361              	.L16:
- 3362 017c 00000000 		.word	.LANCHOR0
- 3363 0180 00F07F0C 		.word	209711104
- 3364              		.cfi_endproc
- 3365              	.LFE3:
- 3367              		.align	2
- 3368              		.global	free
- 3370              	free:
- 3371              	.LFB4:
+ 3535              		.loc 1 159 0
+ 3536 03b4 0300A0E1 		mov	r0, r3
+ 3537 03b8 0CD04BE2 		sub	sp, fp, #12
+ 3538 03bc 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3539 03c0 1EFF2FE1 		bx	lr
+ 3540              	.L20:
+ 3541              		.align	2
+ 3542              	.L19:
+ 3543 03c4 00000000 		.word	mallocPt
+ 3544 03c8 00F07F0C 		.word	209711104
+ 3545              		.cfi_endproc
+ 3546              	.LFE3:
+ 3548              		.align	2
+ 3549              		.global	free
+ 3551              	free:
+ 3552              	.LFB4:
  160:../common/44blib.c **** 
  161:../common/44blib.c **** void free(void *pt)
  162:../common/44blib.c **** {
- 3372              		.loc 1 162 0
- 3373              		.cfi_startproc
- 3374              		@ Function supports interworking.
- 3375              		@ args = 0, pretend = 0, frame = 0
- 3376              		@ frame_needed = 0, uses_anonymous_args = 0
- 3377              		@ link register save eliminated.
- 3378              	.LVL9:
+ 3553              		.loc 1 162 0
+ 3554              		.cfi_startproc
+ 3555              		@ Function supports interworking.
+ 3556              		@ args = 0, pretend = 0, frame = 8
+ 3557              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3558 03cc 0DC0A0E1 		mov	ip, sp
+ 3559              	.LCFI8:
+ 3560              		.cfi_def_cfa_register 12
+ 3561 03d0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3562 03d4 04B04CE2 		sub	fp, ip, #4
+ 3563              		.cfi_offset 14, -8
+ 3564              		.cfi_offset 13, -12
+ 3565              		.cfi_offset 11, -16
+ 3566              	.LCFI9:
+ 3567              		.cfi_def_cfa 11, 4
+ 3568 03d8 08D04DE2 		sub	sp, sp, #8
+ 3569 03dc 10000BE5 		str	r0, [fp, #-16]
  163:../common/44blib.c **** 	mallocPt = pt;
- 3379              		.loc 1 163 0
- 3380 0184 04309FE5 		ldr	r3, .L19
- 3381 0188 040083E5 		str	r0, [r3, #4]
+ 3570              		.loc 1 163 0
+ 3571 03e0 10309FE5 		ldr	r3, .L22
+ 3572 03e4 10201BE5 		ldr	r2, [fp, #-16]
+ 3573 03e8 002083E5 		str	r2, [r3, #0]
  164:../common/44blib.c **** }
- 3382              		.loc 1 164 0
- 3383 018c 1EFF2FE1 		bx	lr
- 3384              	.L20:
- 3385              		.align	2
- 3386              	.L19:
- 3387 0190 00000000 		.word	.LANCHOR0
- 3388              		.cfi_endproc
- 3389              	.LFE4:
- 3391              		.align	2
- 3392              		.global	sys_init
- 3394              	sys_init:
- 3395              	.LFB5:
+ 3574              		.loc 1 164 0
+ 3575 03ec 0CD04BE2 		sub	sp, fp, #12
+ 3576 03f0 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3577 03f4 1EFF2FE1 		bx	lr
+ 3578              	.L23:
+ 3579              		.align	2
+ 3580              	.L22:
+ 3581 03f8 00000000 		.word	mallocPt
+ 3582              		.cfi_endproc
+ 3583              	.LFE4:
+ 3585              		.align	2
+ 3586              		.global	sys_init
+ 3588              	sys_init:
+ 3589              	.LFB5:
  165:../common/44blib.c **** 
  166:../common/44blib.c **** //--------------------------------INIT---------------------------------//
  167:../common/44blib.c **** void sys_init()// Interrupt & Port
  168:../common/44blib.c **** {
- 3396              		.loc 1 168 0
- 3397              		.cfi_startproc
- 3398              		@ Function supports interworking.
- 3399              		@ args = 0, pretend = 0, frame = 0
- 3400              		@ frame_needed = 1, uses_anonymous_args = 0
- 3401 0194 0DC0A0E1 		mov	ip, sp
- 3402              	.LCFI2:
- 3403              		.cfi_def_cfa_register 12
- 3404 0198 78D82DE9 		stmfd	sp!, {r3, r4, r5, r6, fp, ip, lr, pc}
+ 3590              		.loc 1 168 0
+ 3591              		.cfi_startproc
+ 3592              		@ Function supports interworking.
+ 3593              		@ args = 0, pretend = 0, frame = 0
+ 3594              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3595 03fc 0DC0A0E1 		mov	ip, sp
+ 3596              	.LCFI10:
+ 3597              		.cfi_def_cfa_register 12
+ 3598 0400 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3599 0404 04B04CE2 		sub	fp, ip, #4
+ 3600              		.cfi_offset 14, -8
+ 3601              		.cfi_offset 13, -12
+ 3602              		.cfi_offset 11, -16
+ 3603              	.LCFI11:
+ 3604              		.cfi_def_cfa 11, 4
  169:../common/44blib.c **** 	/* enable interrupt */
  170:../common/44blib.c **** 	rINTMOD = 0x0;
- 3405              		.loc 1 170 0
- 3406 019c 0010A0E3 		mov	r1, #0
- 3407 01a0 1E46A0E3 		mov	r4, #31457280
- 3408              		.cfi_offset 14, -8
- 3409              		.cfi_offset 13, -12
- 3410              		.cfi_offset 11, -16
- 3411              		.cfi_offset 6, -20
- 3412              		.cfi_offset 5, -24
- 3413              		.cfi_offset 4, -28
- 3414              		.cfi_offset 3, -32
+ 3605              		.loc 1 170 0
+ 3606 0408 4C309FE5 		ldr	r3, .L25
+ 3607 040c 0020A0E3 		mov	r2, #0
+ 3608 0410 002083E5 		str	r2, [r3, #0]
  171:../common/44blib.c **** 	rINTCON = 0x1;
- 3415              		.loc 1 171 0
- 3416 01a4 0160A0E3 		mov	r6, #1
- 170:../common/44blib.c **** 	rINTMOD = 0x0;
- 3417              		.loc 1 170 0
- 3418 01a8 081084E5 		str	r1, [r4, #8]
+ 3609              		.loc 1 171 0
+ 3610 0414 1E36A0E3 		mov	r3, #31457280
+ 3611 0418 0120A0E3 		mov	r2, #1
+ 3612 041c 002083E5 		str	r2, [r3, #0]
  172:../common/44blib.c **** 	rI_ISPC = 0xffffffff;			// clear all interrupt pend
+ 3613              		.loc 1 172 0
+ 3614 0420 38309FE5 		ldr	r3, .L25+4
+ 3615 0424 0020E0E3 		mvn	r2, #0
+ 3616 0428 002083E5 		str	r2, [r3, #0]
  173:../common/44blib.c **** 	rEXTINTPND = 0xf;				  // clear EXTINTPND reg
- 3419              		.loc 1 173 0
- 3420 01ac 00319FE5 		ldr	r3, .L22
- 171:../common/44blib.c **** 	rINTCON = 0x1;
- 3421              		.loc 1 171 0
- 3422 01b0 006084E5 		str	r6, [r4, #0]
- 172:../common/44blib.c **** 	rI_ISPC = 0xffffffff;			// clear all interrupt pend
- 3423              		.loc 1 172 0
- 3424 01b4 0060E0E3 		mvn	r6, #0
- 3425 01b8 246084E5 		str	r6, [r4, #36]
- 3426              	.LBB6:
- 3427              	.LBB8:
-  75:../common/44blib.c **** 	rPCONA = 0x1ff;
- 3428              		.loc 1 75 0
- 3429 01bc F4509FE5 		ldr	r5, .L22+4
- 3430              	.LBE8:
- 3431              	.LBE6:
- 3432              		.loc 1 173 0
- 3433 01c0 0F60A0E3 		mov	r6, #15
- 3434 01c4 546083E5 		str	r6, [r3, #84]
- 3435              	.LBB10:
- 3436              	.LBB7:
-  82:../common/44blib.c **** 	rPDATB = 0x7ff;
- 3437              		.loc 1 82 0
- 3438 01c8 7F6E86E2 		add	r6, r6, #2032
-  75:../common/44blib.c **** 	rPCONA = 0x1ff;
- 3439              		.loc 1 75 0
- 3440 01cc 005083E5 		str	r5, [r3, #0]
-  82:../common/44blib.c **** 	rPDATB = 0x7ff;
- 3441              		.loc 1 82 0
- 3442 01d0 0C6083E5 		str	r6, [r3, #12]
-  83:../common/44blib.c **** 	rPCONB = 0x1cf;			// P9-LED1 P10-LED2
- 3443              		.loc 1 83 0
- 3444 01d4 E0609FE5 		ldr	r6, .L22+8
- 3445 01d8 086083E5 		str	r6, [r3, #8]
-  96:../common/44blib.c **** 	rPDATC = 0xff00;
- 3446              		.loc 1 96 0
- 3447 01dc FF6CA0E3 		mov	r6, #65280
- 3448 01e0 146083E5 		str	r6, [r3, #20]
-  97:../common/44blib.c **** 	rPCONC = 0x0ff0ffff;
- 3449              		.loc 1 97 0
- 3450 01e4 D4609FE5 		ldr	r6, .L22+12
- 3451 01e8 106083E5 		str	r6, [r3, #16]
-  98:../common/44blib.c **** 	rPUPC  = 0x30ff;	//PULL UP RESISTOR should be enabled to I/O
- 3452              		.loc 1 98 0
- 3453 01ec D0609FE5 		ldr	r6, .L22+16
- 3454 01f0 186083E5 		str	r6, [r3, #24]
- 106:../common/44blib.c **** 	rPCOND= 0xaaaa;
- 3455              		.loc 1 106 0
- 3456 01f4 CC609FE5 		ldr	r6, .L22+20
- 105:../common/44blib.c **** 	rPDATD= 0xff;
- 3457              		.loc 1 105 0
- 3458 01f8 FFE0A0E3 		mov	lr, #255
- 3459 01fc 20E083E5 		str	lr, [r3, #32]
- 106:../common/44blib.c **** 	rPCOND= 0xaaaa;
- 3460              		.loc 1 106 0
- 3461 0200 1C6083E5 		str	r6, [r3, #28]
- 107:../common/44blib.c **** 	rPUPD = 0x0;
- 3462              		.loc 1 107 0
- 3463 0204 241083E5 		str	r1, [r3, #36]
- 114:../common/44blib.c **** 	rPDATE	= 0x1ff;
- 3464              		.loc 1 114 0
- 3465 0208 2C5083E5 		str	r5, [r3, #44]
- 115:../common/44blib.c **** 	rPCONE	= 0x25529;
- 3466              		.loc 1 115 0
- 3467 020c 255A85E2 		add	r5, r5, #151552
- 3468 0210 CA5F85E2 		add	r5, r5, #808
- 3469 0214 025085E2 		add	r5, r5, #2
- 3470 0218 285083E5 		str	r5, [r3, #40]
- 116:../common/44blib.c **** 	rPUPE	= 0x6;
- 3471              		.loc 1 116 0
- 3472 021c 0650A0E3 		mov	r5, #6
- 3473 0220 305083E5 		str	r5, [r3, #48]
- 123:../common/44blib.c **** 	rPCONF = 0x252a;
- 3474              		.loc 1 123 0
- 3475 0224 A0509FE5 		ldr	r5, .L22+24
- 132:../common/44blib.c **** 	rPCONG = 0xffff;
- 3476              		.loc 1 132 0
- 3477 0228 A0009FE5 		ldr	r0, .L22+28
- 122:../common/44blib.c **** 	rPDATF = 0x0;
- 3478              		.loc 1 122 0
- 3479 022c 381083E5 		str	r1, [r3, #56]
- 123:../common/44blib.c **** 	rPCONF = 0x252a;
- 3480              		.loc 1 123 0
- 3481 0230 345083E5 		str	r5, [r3, #52]
- 134:../common/44blib.c **** 	rSPUCR = 0x7;  		//D15-D0 pull-up disable
- 3482              		.loc 1 134 0
- 3483 0234 0750A0E3 		mov	r5, #7
- 124:../common/44blib.c **** 	rPUPF  = 0x0;
- 3484              		.loc 1 124 0
- 3485 0238 3C1083E5 		str	r1, [r3, #60]
- 131:../common/44blib.c **** 	rPDATG = 0xff;
- 3486              		.loc 1 131 0
- 3487 023c 44E083E5 		str	lr, [r3, #68]
- 132:../common/44blib.c **** 	rPCONG = 0xffff;
- 3488              		.loc 1 132 0
- 3489 0240 400083E5 		str	r0, [r3, #64]
- 133:../common/44blib.c **** 	rPUPG  = 0x0;		//pull-up portG enabled
- 3490              		.loc 1 133 0
- 3491 0244 481083E5 		str	r1, [r3, #72]
- 134:../common/44blib.c **** 	rSPUCR = 0x7;  		//D15-D0 pull-up disable
- 3492              		.loc 1 134 0
- 3493 0248 4C5083E5 		str	r5, [r3, #76]
- 137:../common/44blib.c **** 	rNCACHBE0 = ((Non_Cache_End>>12)<<16) | (Non_Cache_Start>>12);
- 3494              		.loc 1 137 0
- 3495 024c 80509FE5 		ldr	r5, .L22+32
- 3496 0250 07E5A0E3 		mov	lr, #29360128
- 3497 0254 04508EE5 		str	r5, [lr, #4]
- 3498              	.LBE7:
- 3499              	.LBE10:
- 3500              	.LBB11:
- 3501              	.LBB13:
-  38:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
- 3502              		.loc 1 38 0
- 3503 0258 78209FE5 		ldr	r2, .L22+36
- 3504              	.LBE13:
- 3505              	.LBE11:
- 168:../common/44blib.c **** {
- 3506              		.loc 1 168 0
- 3507 025c 04B04CE2 		sub	fp, ip, #4
- 3508              	.LCFI3:
- 3509              		.cfi_def_cfa 11, 4
- 3510              	.LBB16:
- 3511              	.LBB14:
-  41:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disabl
- 3512              		.loc 1 41 0
- 3513 0260 74E09FE5 		ldr	lr, .L22+40
-  38:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
- 3514              		.loc 1 38 0
- 3515 0264 74C09FE5 		ldr	ip, .L22+44
- 3516              	.LBE14:
- 3517              	.LBE16:
- 3518              	.LBB17:
- 3519              	.LBB9:
- 140:../common/44blib.c **** 	rEXTINT = 0x0;
- 3520              		.loc 1 140 0
- 3521 0268 501083E5 		str	r1, [r3, #80]
- 3522              	.LVL10:
- 3523              	.LBE9:
- 3524              	.LBE17:
- 3525              	.LBB18:
- 3526              	.LBB12:
-  38:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
- 3527              		.loc 1 38 0
- 3528 026c 00C082E5 		str	ip, [r2, #0]
-  39:../common/44blib.c **** 		rWTDAT = 0xffff;
- 3529              		.loc 1 39 0
- 3530 0270 040082E5 		str	r0, [r2, #4]
-  40:../common/44blib.c **** 		rWTCNT = 0xffff;
- 3531              		.loc 1 40 0
- 3532 0274 080082E5 		str	r0, [r2, #8]
-  41:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disabl
- 3533              		.loc 1 41 0
- 3534 0278 00E082E5 		str	lr, [r2, #0]
- 3535              	.LVL11:
-  47:../common/44blib.c **** 		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3);
- 3536              		.loc 1 47 0
- 3537 027c 00C082E5 		str	ip, [r2, #0]
-  48:../common/44blib.c **** 		i = 0xffff - rWTCNT;   //  1count/16us?????????//
- 3538              		.loc 1 48 0
- 3539 0280 08C092E5 		ldr	ip, [r2, #8]
- 3540              	.LVL12:
- 3541 0284 FF0C6CE2 		rsb	r0, ip, #65280
- 3542 0288 FF2080E2 		add	r2, r0, #255
-  49:../common/44blib.c **** 		delayLoopCount = 8000000/(i*64);	//400*100/(i*64/200)   //
- 3543              		.loc 1 49 0
- 3544 028c 0213A0E1 		mov	r1, r2, asl #6
- 3545 0290 4C009FE5 		ldr	r0, .L22+48
- 3546 0294 FEFFFFEB 		bl	__aeabi_idiv
- 3547              	.LVL13:
- 3548 0298 48109FE5 		ldr	r1, .L22+52
- 3549              	.LBE12:
- 3550              	.LBE18:
+ 3617              		.loc 1 173 0
+ 3618 042c 30309FE5 		ldr	r3, .L25+8
+ 3619 0430 0F20A0E3 		mov	r2, #15
+ 3620 0434 002083E5 		str	r2, [r3, #0]
  174:../common/44blib.c **** 	Port_Init();					    // Initial 44B0X's I/O port
+ 3621              		.loc 1 174 0
+ 3622 0438 FEFFFFEB 		bl	Port_Init
  175:../common/44blib.c **** 	Delay(0);						      // delay time				
+ 3623              		.loc 1 175 0
+ 3624 043c 0000A0E3 		mov	r0, #0
+ 3625 0440 FEFFFFEB 		bl	Delay
  176:../common/44blib.c **** 	rINTMSK = ~(BIT_GLOBAL);  //enable interrupt mask vector
- 3551              		.loc 1 176 0
- 3552 029c 0133E0E3 		mvn	r3, #67108864
- 3553              	.LBB19:
- 3554              	.LBB15:
-  49:../common/44blib.c **** 		delayLoopCount = 8000000/(i*64);	//400*100/(i*64/200)   //
- 3555              		.loc 1 49 0
- 3556 02a0 000081E5 		str	r0, [r1, #0]
- 3557              	.LBE15:
- 3558              	.LBE19:
- 3559              		.loc 1 176 0
- 3560 02a4 0C3084E5 		str	r3, [r4, #12]
+ 3626              		.loc 1 176 0
+ 3627 0444 1C309FE5 		ldr	r3, .L25+12
+ 3628 0448 0123E0E3 		mvn	r2, #67108864
+ 3629 044c 002083E5 		str	r2, [r3, #0]
  177:../common/44blib.c **** }
- 3561              		.loc 1 177 0
- 3562 02a8 1CD04BE2 		sub	sp, fp, #28
- 3563 02ac 78689DE8 		ldmfd	sp, {r3, r4, r5, r6, fp, sp, lr}
- 3564 02b0 1EFF2FE1 		bx	lr
- 3565              	.L23:
- 3566              		.align	2
- 3567              	.L22:
- 3568 02b4 0000D201 		.word	30539776
- 3569 02b8 FF010000 		.word	511
- 3570 02bc CF010000 		.word	463
- 3571 02c0 FFFFF00F 		.word	267452415
- 3572 02c4 FF300000 		.word	12543
- 3573 02c8 AAAA0000 		.word	43690
- 3574 02cc 2A250000 		.word	9514
- 3575 02d0 FFFF0000 		.word	65535
- 3576 02d4 002000C0 		.word	-1073733632
- 3577 02d8 0000D301 		.word	30605312
- 3578 02dc 303F0000 		.word	16176
- 3579 02e0 103F0000 		.word	16144
- 3580 02e4 00127A00 		.word	8000000
- 3581 02e8 00000000 		.word	.LANCHOR0
- 3582              		.cfi_endproc
- 3583              	.LFE5:
- 3585              		.global	mallocPt
- 3586              		.global	restart
- 3587              		.global	run
- 3588              		.comm	downPt,4,4
- 3589              		.comm	fileSize,4,4
- 3590              		.data
- 3591              		.align	2
- 3592              		.set	.LANCHOR0,. + 0
- 3595              	delayLoopCount:
- 3596 0000 90010000 		.word	400
- 3599              	mallocPt:
- 3600 0004 00000000 		.word	Image_RW_Limit
- 3603              	run:
- 3604 0008 0000000C 		.word	201326592
- 3605              		.bss
- 3606              		.align	2
- 3609              	restart:
- 3610 0000 00000000 		.space	4
- 3611              		.text
- 3612              	.Letext0:
+ 3630              		.loc 1 177 0
+ 3631 0450 0CD04BE2 		sub	sp, fp, #12
+ 3632 0454 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3633 0458 1EFF2FE1 		bx	lr
+ 3634              	.L26:
+ 3635              		.align	2
+ 3636              	.L25:
+ 3637 045c 0800E001 		.word	31457288
+ 3638 0460 2400E001 		.word	31457316
+ 3639 0464 5400D201 		.word	30539860
+ 3640 0468 0C00E001 		.word	31457292
+ 3641              		.cfi_endproc
+ 3642              	.LFE5:
+ 3644              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 44blib.c
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3126   .text:00000000 $a
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3129   .text:00000000 Delay
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3195   .text:00000064 $d
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3204   .text:0000007c $a
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3207   .text:0000007c DelayMs
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3224   .text:00000080 Port_Init
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3309   .text:00000124 $d
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3321   .text:00000148 $a
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3324   .text:00000148 malloc
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3362   .text:0000017c $d
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3367   .text:00000184 $a
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3370   .text:00000184 free
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3387   .text:00000190 $d
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3391   .text:00000194 $a
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3394   .text:00000194 sys_init
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3568   .text:000002b4 $d
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3599   .data:00000004 mallocPt
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3609   .bss:00000000 restart
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3603   .data:00000008 run
                             *COM*:00000004 downPt
                             *COM*:00000004 fileSize
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3591   .data:00000000 $d
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3595   .data:00000000 delayLoopCount
-C:\Users\sergi\AppData\Local\Temp\cclbJ2kV.s:3606   .bss:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3131   .data:00000000 mallocPt
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3128   .data:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3138   .bss:00000000 restart
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3135   .bss:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3145   .data:00000004 run
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3150   .data:00000008 delayLoopCount
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3154   .text:00000000 $a
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3157   .text:00000000 Delay
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3269   .text:00000118 $d
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3280   .text:00000138 $a
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3283   .text:00000138 DelayMs
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3334   .text:0000019c Port_Init
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3442   .text:000002b0 $d
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3476   .text:0000032c $a
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3479   .text:0000032c malloc
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3543   .text:000003c4 $d
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3548   .text:000003cc $a
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3551   .text:000003cc free
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3581   .text:000003f8 $d
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3585   .text:000003fc $a
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3588   .text:000003fc sys_init
+C:\Users\sergi\AppData\Local\Temp\ccHJaxhp.s:3637   .text:0000045c $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
-__aeabi_idiv
 Image_RW_Limit
+__aeabi_idiv

@@ -57,8 +57,9 @@ Trabajo siempre en pareja (los dos a la vez), en 3 sesiones de 2 h los lunes.
 | 2026-09-14 (lunes) | Sergio y Pablo | 2 | Pasos 1 y 2: montar el proyecto en Eclipse, depurar el código C, añadir el emulador y documentar (README, PRACTICA.md) |
 | 2026-09-21 (lunes) | Sergio y Pablo | 2 | Paso 3: color_ficha_arm, patron_volteo_arm, #define y prueba en el simulador |
 | 2026-09-28 (lunes) | Sergio y Pablo | 2 | Pruebas del Paso 3 en placa; Pasos 4 y 5: color_ficha_thumb y las 6 combinaciones en placa |
+| 2026-10-05 (lunes) | Sergio y Pablo | 2 | Pasos 7-9: timer2, calibración, tiempos de las 6 combinaciones y de -O0..-Os en placa (la sesión del 29-09 no tiene horas anotadas) |
 
-Total: 6 h por persona (12 h-persona entre los dos).
+Total: 8 h por persona (16 h-persona entre los dos).
 
 ---
 
@@ -205,6 +206,16 @@ strb  r3, [fp,#-30]        ; CA
    - Solución: escribir las variables por nombre desde Expressions (clic en la celda Value o
      botón derecho → Change Value), con `ready` siempre la última. No suponer nunca la posición
      relativa de variables distintas.
+   - **A `-O3` y `-Os`** pasó lo mismo, y de forma más visible: no se podía escribir en Expressions en
+     la posición donde antes estaba `ready` (la de `-O0`), y en la vista Memory las variables seguían
+     dadas la vuelta (`ready` primero, luego `fila` y `columna`). Hay que ir siempre por nombre.
+   - Además, la expresión `ready` en Expressions deja de servir: como `esperar_mov` se integra,
+     `ready` resuelve al parámetro `char *` y muestra `<value optimized out>`, con tipo
+     `volatile char *`. La variable global se escribe como **`::ready`** (tipo `volatile char`,
+     editable). `fila` y `columna` sí salen directas. Con `&fila` = 0x0C001669 en `-Os`, `ready`
+     queda un byte antes, en 0x0C001668. Comprobado en la vista Memory: desde 0x0C001668 se lee
+     `00 03 02` = `ready`, `fila` = 3, `columna` = 2 (`ready` = 0 porque el programa ya había
+     consumido la jugada). Es el orden inverso al de `-O0` (`fila`, `columna`, `ready`).
 6. **A partir de `-O1` el breakpoint de `esperar_mov(&ready)` (línea 460) no para antes de la espera**
    (2026-09-29, Paso 9).
    - Síntoma: a `-O0` bastaba con F8 para llegar a la espera. A `-O1` y `-O3` había que pulsar F8 y
@@ -372,15 +383,34 @@ Tamaños por función (bytes, `-O0 -mapcs-frame`; C del `.elf` de Placa con `nm 
 
 | patron_volteo | color_ficha | Tamaño (bytes) | Instrucciones | Tiempo (µs) |
 |---------------|-------------|----------------|---------------|-------------|
-| C   | C     | 456 | | 284 (284, 284, 285) |
-| C   | ARM   | 332 | | 228 (229, 228, 228) |
-| C   | Thumb | 290 (+12 veneer) | | 222 (222, 222, 222) |
-| ARM | C     | 364 | | 258 (258, 259, 258) |
-| ARM | ARM   | 240 | | 200 (200, 201, 200) |
-| ARM | Thumb | 198 (+12 veneer) | | 194 (194, 194, 193) |
+| C   | C     | 456 | 1037 | 284 (284, 284, 285) |
+| C   | ARM   | 332 | 821 | 228 (229, 228, 228) |
+| C   | Thumb | 290 (+12 veneer) | 815 | 222 (222, 222, 222) |
+| ARM | C     | 364 | 950 | 258 (258, 259, 258) |
+| ARM | ARM   | 240 | 734 | 200 (200, 201, 200) |
+| ARM | Thumb | 198 (+12 veneer) | 728 | 194 (194, 194, 193) |
 
 Tiempos medidos en placa el 2026-09-29 con `tiempo_volteo_us` (`actualizar_tablero` completo de la jugada
 negra (2,3), `-O0`, 3 repeticiones; la variación entre repeticiones es de ±1 µs).
+
+Instrucciones: contadas en el simulador (`arm-none-eabi-gdb` con `target sim`, `-O0`, jugada (2,3); `stepi` entre
+la llamada `bl actualizar_tablero` de la jugada humana y su retorno, veneer incluido). Mismo resultado
+de tablero que en la placa en las 6 combinaciones. Los ficheros de prueba están en el scratchpad, fuera del repo.
+
+| Combinación | Instrucciones | Tiempo (µs) | ns/instrucción |
+|-------------|---------------|-------------|----------------|
+| C-C | 1037 | 284 | 274 |
+| C-ARM | 821 | 228 | 278 |
+| C-Thumb | 815 | 222 | 272 |
+| ARM-C | 950 | 258 | 272 |
+| ARM-ARM | 734 | 200 | 272 |
+| ARM-Thumb | 728 | 194 | 266 |
+
+- Unos 270 ns por instrucción = **~17 ciclos a 64 MHz**. Muy lejos del ideal (1-3 ciclos): confirma que la
+  memoria externa es lenta (bus de 16 bits, sin caché ni estados de espera ajustados). Hace que el
+  tiempo siga casi de forma lineal al número de instrucciones.
+- Thumb ejecuta algo menos de instrucciones que ARM aun contando las 2 del veneer por llamada
+  (815 < 821 y 728 < 734) y además cada una es de 16 bits: el ahorro de tiempo viene de ambas cosas.
 
 Análisis de tiempos:
 - Respecto a C-C (284 µs): C-ARM −20 %, C-Thumb −22 %, ARM-C −9 %, ARM-ARM −30 %, ARM-Thumb **−32 %**.
@@ -400,9 +430,23 @@ C-C por nivel de optimización (bytes de `.text` de `reversi8_2026.o`, ya con `v
 |-------|---------------|-------------|-------------------|---------------|--------|
 | -O0 | 260 | 196 | 5208 | | 284 |
 | -O1 | 212 | 56 | 1524 | | 125 |
-| -O2 | 220 (`.clone`) | 56 | 2068 | | |
-| -O3 | — (integrada en `actualizar_tablero`, 596) | 56 | 1856 | | |
-| -Os | 164 (`.clone`) | 52 | 1368 | | |
+| -O2 | 220 (`.clone`) | 56 | 2068 | | 101 |
+| -O3 | — (integrada en `actualizar_tablero`, 596) | 56 | 1856 | | 65 |
+| -Os | 164 (`.clone`) | 52 | 1368 | | 122 |
+
+Tiempos de `tiempo_volteo_us` en placa (2026-10-05, C-C, jugada negra (2,3), 3 repeticiones):
+`-O0` 284 µs · `-O1` 125 · `-O2` 101 (101, 102, 101) · `-O3` **65** · `-Os` 122. Frente a `-O0`:
+-56 %, -64 %, **-77 %**, -57 %. Comparado con las versiones en ensamblador (mejor: ARM-Thumb, 194 µs),
+`-O1` ya la mejora y `-O3` la divide por 3.
+
+Por qué salen así (llamadas que quedan en el `.o`, `objdump`):
+- `-O1`: `color_ficha` y `patron_volteo` siguen siendo funciones (2 `bl` a cada una).
+- `-O2`: `color_ficha` se integra en `patron_volteo.clone` y desaparece la llamada.
+- `-O3`: se integra también `patron_volteo`; `actualizar_tablero` crece a 147 instrucciones y no queda
+  ninguna llamada. Es el más rápido (65 µs) y no el más pequeño.
+- `-Os`: conserva la llamada a `color_ficha` (menos código, 1368 bytes en total) y paga el marco
+  de pila `-mapcs-frame` en cada llamada; por eso queda entre `-O1` y `-O2`.
+- Compromiso tamaño/velocidad: `-Os` es el más pequeño, `-O3` el más rápido.
 
 Observaciones:
 - A partir de `-O1` desaparecen `voltear`, `contar`, `elegir_mov`, `init_table` y `esperar_mov`:
@@ -412,6 +456,32 @@ Observaciones:
 - `-O3` ocupa menos que `-O2` en total porque integra más código en `actualizar_tablero` y `reversi8`
   se reduce. `-Os` es el más pequeño.
 - `color_ficha` pasa de 196 a 56 bytes solo con `-O1`: deja de guardar parámetros en pila.
+
+### 3.3 Apartado opcional: jugada que voltea más fichas `[RESUL]`
+Desde el tablero inicial toda primera jugada voltea 1 sola ficha, y la segunda negra también (máximo 1).
+Con el simulador se ha buscado una secuencia de partida (las respuestas de la máquina son las reales
+de `elegir_mov`) donde el humano pueda voltear 3:
+
+| Turno | Humano (negras) | Respuesta de la máquina |
+|-------|-----------------|--------------------------|
+| 1 | (2,3) | blanca en (2,2) |
+| 2 | (5,4) | blanca en (5,5) |
+| 3 | (5,6) | blanca en (2,4) |
+| 4 | **(1,4)** | voltea (2,4), (3,4) y (4,4): **3 fichas** en la misma dirección (sur) |
+
+Tablero antes de la jugada 4 (fila 1 a 5): `fila 2: 00 00 01 01 01`, `fila 3: 00 00 00 01 01`,
+`fila 4: 00 00 00 02 01`, `fila 5: 00 00 00 00 02 02 02`. Tras ella, la columna 4 de las filas 1-4 queda a 02.
+
+Instrucciones ejecutadas por `actualizar_tablero` en la jugada 4 (simulador, `-O0`; entre paréntesis, la jugada (2,3)):
+
+| Combinación | Instrucciones | Tiempo (µs) |
+|-------------|---------------|-------------|
+| C-C | 1245 (1037) | |
+| C-ARM | 951 (821) | |
+| C-Thumb | 944 (815) | |
+| ARM-C | 1138 (950) | |
+| ARM-ARM | 844 (734) | |
+| ARM-Thumb | 837 (728) | |
 
 ---
 

@@ -6,15 +6,15 @@
    6              		.eabi_attribute 24, 1
    7              		.eabi_attribute 25, 1
    8              		.eabi_attribute 26, 1
-   9              		.eabi_attribute 30, 2
+   9              		.eabi_attribute 30, 6
   10              		.eabi_attribute 18, 4
   11              		.file	"main.c"
   21              	.Ltext0:
   22              		.file 1 "../main.c"
- 1890              		.align	2
- 1891              		.global	Main
- 1893              	Main:
- 1894              	.LFB0:
+ 1891              		.align	2
+ 1892              		.global	Main
+ 1894              	Main:
+ 1895              	.LFB0:
    1:../main.c     **** /*********************************************************************************************
    2:../main.c     **** * Fichero:	main.c
    3:../main.c     **** * Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
@@ -54,50 +54,49 @@
   37:../main.c     **** 
   38:../main.c     **** void Main(void)
   39:../main.c     **** {
- 1895              		.loc 1 39 0
- 1896              		.cfi_startproc
- 1897              		@ Function supports interworking.
- 1898              		@ args = 0, pretend = 0, frame = 0
- 1899              		@ frame_needed = 1, uses_anonymous_args = 0
- 1900 0000 0DC0A0E1 		mov	ip, sp
- 1901              	.LCFI0:
- 1902              		.cfi_def_cfa_register 12
- 1903 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
- 1904 0008 04B04CE2 		sub	fp, ip, #4
- 1905              		.cfi_offset 14, -8
- 1906              		.cfi_offset 13, -12
- 1907              		.cfi_offset 11, -16
- 1908              	.LCFI1:
- 1909              		.cfi_def_cfa 11, 4
+ 1896              		.loc 1 39 0
+ 1897              		.cfi_startproc
+ 1898              		@ Function supports interworking.
+ 1899              		@ args = 0, pretend = 0, frame = 0
+ 1900              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1901 0000 0DC0A0E1 		mov	ip, sp
+ 1902              	.LCFI0:
+ 1903              		.cfi_def_cfa_register 12
+ 1904 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1905 0008 04B04CE2 		sub	fp, ip, #4
+ 1906              		.cfi_offset 14, -8
+ 1907              		.cfi_offset 13, -12
+ 1908              		.cfi_offset 11, -16
+ 1909              	.LCFI1:
+ 1910              		.cfi_def_cfa 11, 4
   40:../main.c     **** 	/* Inicializa controladores */
   41:../main.c     **** 	sys_init();         // Inicializacion de la placa, interrupciones y puertos
- 1910              		.loc 1 41 0
- 1911 000c FEFFFFEB 		bl	sys_init
+ 1911              		.loc 1 41 0
+ 1912 000c FEFFFFEB 		bl	sys_init
   42:../main.c     **** 	timer2_inicializar();
- 1912              		.loc 1 42 0
- 1913 0010 FEFFFFEB 		bl	timer2_inicializar
+ 1913              		.loc 1 42 0
+ 1914 0010 FEFFFFEB 		bl	timer2_inicializar
   43:../main.c     **** 
   44:../main.c     **** #if CALIBRAR_TIMER2
   45:../main.c     **** 	calibrar_timer2();
   46:../main.c     **** #endif
   47:../main.c     **** 
   48:../main.c     **** 	reversi8();
- 1914              		.loc 1 48 0
- 1915 0014 FEFFFFEB 		bl	reversi8
+ 1915              		.loc 1 48 0
+ 1916 0014 FEFFFFEB 		bl	reversi8
   49:../main.c     **** }
- 1916              		.loc 1 49 0
- 1917 0018 0CD04BE2 		sub	sp, fp, #12
- 1918 001c 00689DE8 		ldmfd	sp, {fp, sp, lr}
- 1919 0020 1EFF2FE1 		bx	lr
- 1920              		.cfi_endproc
- 1921              	.LFE0:
- 1923              		.comm	tiempos_calibracion,16,4
+ 1917              		.loc 1 49 0
+ 1918 0018 0CD04BE2 		sub	sp, fp, #12
+ 1919 001c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1920 0020 1EFF2FE1 		bx	lr
+ 1921              		.cfi_endproc
+ 1922              	.LFE0:
  1924              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-C:\Users\sergi\AppData\Local\Temp\cceVesaf.s:1890   .text:00000000 $a
-C:\Users\sergi\AppData\Local\Temp\cceVesaf.s:1893   .text:00000000 Main
                             *COM*:00000010 tiempos_calibracion
+C:\Users\sergi\AppData\Local\Temp\cc4U5kDm.s:1891   .text:00000000 $a
+C:\Users\sergi\AppData\Local\Temp\cc4U5kDm.s:1894   .text:00000000 Main
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
