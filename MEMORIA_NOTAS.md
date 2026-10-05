@@ -234,18 +234,6 @@ strb  r3, [fp,#-30]        ; CA
      par de F6 (Step Over) antes de leer la variable.
    - Lección: con optimización, "línea de código" y "posición en el programa" dejan de coincidir; el
      depurador enseña el estado de la memoria en la instrucción, no en la línea de C.
-8. **A `-O3` no se puede escribir `ready` desde Expressions y la memoria sigue "dada la vuelta"**
-   (2026-10-05, Paso 9).
-   - Síntoma: en Expressions, `ready` aparece como `volatile char *` con valor `<value optimized out>`
-     y no se puede editar. Lo que antes era la variable global ahora es el parámetro de `esperar_mov`,
-     que al integrarse (inlining) en `reversi8` deja de existir.
-   - Solución: escribir **`::ready`** (la global, con el operador de ámbito). Ahí sí se edita
-     (en la captura vale 1 tras ponerlo).
-   - El orden en memoria sigue invertido respecto al código, igual que en el problema 5
-     (`-fsection-anchors`): a partir de `0x0C001B08` están `ready` = 01, `fila` = 02 y `columna` = 03
-     (en el código van `fila`, `columna`, `ready`). `&fila` = 0x0C001B09 lo confirma.
-   - Conclusión: a partir de `-O1`, usar siempre las variables por nombre (`fila`, `columna`, `::ready`)
-     y nunca escribir bytes seguidos en el monitor de memoria.
 
 ### 2026-09-28 — Paso 4: color_ficha_thumb `[MET][OPT][PILA]`
 - Nuevo fichero `reversi8_thumb.asm` con `color_ficha_thumb` (`.thumb` + `.thumb_func`).
