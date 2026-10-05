@@ -6,7 +6,7 @@
    6              		.eabi_attribute 24, 1
    7              		.eabi_attribute 25, 1
    8              		.eabi_attribute 26, 1
-   9              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 30, 2
   10              		.eabi_attribute 18, 4
   11              		.file	"8led.c"
   21              	.Ltext0:
@@ -109,12 +109,12 @@
  1950              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 8led.c
-C:\Users\sergi\AppData\Local\Temp\ccvZr8vM.s:1879   .text:00000000 $a
-C:\Users\sergi\AppData\Local\Temp\ccvZr8vM.s:1882   .text:00000000 D8Led_init
-C:\Users\sergi\AppData\Local\Temp\ccvZr8vM.s:1902   .text:00000010 D8Led_symbol
-C:\Users\sergi\AppData\Local\Temp\ccvZr8vM.s:1922   .text:00000028 $d
-C:\Users\sergi\AppData\Local\Temp\ccvZr8vM.s:1927   .rodata:00000000 $d
-C:\Users\sergi\AppData\Local\Temp\ccvZr8vM.s:1931   .rodata:00000000 Symbol
+C:\Users\sergi\AppData\Local\Temp\ccmjIjQl.s:1879   .text:00000000 $a
+C:\Users\sergi\AppData\Local\Temp\ccmjIjQl.s:1882   .text:00000000 D8Led_init
+C:\Users\sergi\AppData\Local\Temp\ccmjIjQl.s:1902   .text:00000010 D8Led_symbol
+C:\Users\sergi\AppData\Local\Temp\ccmjIjQl.s:1922   .text:00000028 $d
+C:\Users\sergi\AppData\Local\Temp\ccmjIjQl.s:1927   .rodata:00000000 $d
+C:\Users\sergi\AppData\Local\Temp\ccmjIjQl.s:1931   .rodata:00000000 Symbol
                      .debug_frame:00000010 $d
 
 NO UNDEFINED SYMBOLS

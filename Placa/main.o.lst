@@ -6,7 +6,7 @@
    6              		.eabi_attribute 24, 1
    7              		.eabi_attribute 25, 1
    8              		.eabi_attribute 26, 1
-   9              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 30, 2
   10              		.eabi_attribute 18, 4
   11              		.file	"main.c"
   21              	.Ltext0:
@@ -95,8 +95,8 @@
  1924              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-C:\Users\sergi\AppData\Local\Temp\ccy8P3js.s:1890   .text:00000000 $a
-C:\Users\sergi\AppData\Local\Temp\ccy8P3js.s:1893   .text:00000000 Main
+C:\Users\sergi\AppData\Local\Temp\cceVesaf.s:1890   .text:00000000 $a
+C:\Users\sergi\AppData\Local\Temp\cceVesaf.s:1893   .text:00000000 Main
                             *COM*:00000010 tiempos_calibracion
                      .debug_frame:00000010 $d
 

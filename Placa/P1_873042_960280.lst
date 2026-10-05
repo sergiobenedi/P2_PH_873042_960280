@@ -3,39 +3,39 @@ P1_873042_960280.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00001758  0c000000  0c000000  00008000  2**2
+  0 .text         00001a04  0c000000  0c000000  00008000  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000014  0c001758  0c001758  00009758  2**2
+  1 .data         00000014  0c001a04  0c001a04  00009a04  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .rodata       000000a0  0c001770  0c001770  00009770  2**3
+  2 .rodata       000000a0  0c001a18  0c001a18  00009a18  2**3
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .bss          00000078  0c001810  0c001810  00009810  2**3
+  3 .bss          00000078  0c001ab8  0c001ab8  00009ab8  2**3
                   ALLOC
-  4 .ARM.attributes 0000002e  00000000  00000000  00009810  2**0
+  4 .ARM.attributes 0000002e  00000000  00000000  00009ab8  2**0
                   CONTENTS, READONLY
-  5 .comment      0000002a  00000000  00000000  0000983e  2**0
+  5 .comment      0000002a  00000000  00000000  00009ae6  2**0
                   CONTENTS, READONLY
-  6 .debug_info   00001073  00000000  00000000  00009868  2**0
+  6 .debug_info   000013ac  00000000  00000000  00009b10  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000e48  00000000  00000000  0000a8db  2**0
+  7 .debug_line   00001013  00000000  00000000  0000aebc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 0000077a  00000000  00000000  0000b723  2**0
+  8 .debug_abbrev 00000852  00000000  00000000  0000becf  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000430  00000000  00000000  0000bea0  2**2
+  9 .debug_frame  00000378  00000000  00000000  0000c724  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_aranges 00000160  00000000  00000000  0000c2d0  2**3
+ 10 .debug_aranges 00000160  00000000  00000000  0000caa0  2**3
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_macinfo 00028b0a  00000000  00000000  0000c430  2**0
+ 11 .debug_macinfo 00028b0a  00000000  00000000  0000cc00  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    000009c3  00000000  00000000  00034f3a  2**0
+ 12 .debug_loc    00000853  00000000  00000000  0003570a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_pubnames 0000030b  00000000  00000000  000358fd  2**0
+ 13 .debug_pubnames 0000030b  00000000  00000000  00035f5d  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_pubtypes 00000012  00000000  00000000  00035c08  2**0
+ 14 .debug_pubtypes 00000012  00000000  00000000  00036268  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_str    000004b0  00000000  00000000  00035c1a  2**0
+ 15 .debug_ranges 00000360  00000000  00000000  0003627a  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_ranges 00000050  00000000  00000000  000360ca  2**0
+ 16 .debug_str    000004b0  00000000  00000000  000365da  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -668,7 +668,7 @@ F2:
  c0004e8:	e12ff000 	msr	CPSR_fsxc, r0
 	/* jump to main() */
    	BL	Main
- c0004ec:	eb0001dd 	bl	c000c68 <Main>
+ c0004ec:	eb000230 	bl	c000db4 <Main>
    	B   .	    
  c0004f0:	eafffffe 	b	c0004f0 <F2+0x1c>
 
@@ -852,10 +852,10 @@ U0: subs    r0,r0,#1
  c0006a8:	0c0006d8 	.word	0x0c0006d8
  c0006ac:	0c7ff100 	.word	0x0c7ff100
  c0006b0:	0c0003e4 	.word	0x0c0003e4
- c0006b4:	0c001758 	.word	0x0c001758
- c0006b8:	0c001758 	.word	0x0c001758
- c0006bc:	0c001810 	.word	0x0c001810
- c0006c0:	0c001888 	.word	0x0c001888
+ c0006b4:	0c001a04 	.word	0x0c001a04
+ c0006b8:	0c001a04 	.word	0x0c001a04
+ c0006bc:	0c001ab8 	.word	0x0c001ab8
+ c0006c0:	0c001b30 	.word	0x0c001b30
  c0006c4:	0c7ff200 	.word	0x0c7ff200
  c0006c8:	0c7ff300 	.word	0x0c7ff300
  c0006cc:	0c7ff400 	.word	0x0c7ff400
@@ -885,2034 +885,3517 @@ void Delay(int time)
 // Delay(10) -> 10*100us resolution
 {
  c00070c:	e1a0c00d 	mov	ip, sp
- c000710:	e92dd800 	push	{fp, ip, lr, pc}
- c000714:	e24cb004 	sub	fp, ip, #4
 	int i,adjust = 0;
 	if (time == 0)
- c000718:	e3500000 	cmp	r0, #0
- c00071c:	1a000010 	bne	c000764 <Delay+0x58>
-	{
-		time = 200;
-		adjust = 1;
-		delayLoopCount = 400;
- c000720:	e3a02e19 	mov	r2, #400	; 0x190
- c000724:	e59f30b0 	ldr	r3, [pc, #176]	; c0007dc <Delay+0xd0>
- c000728:	e5832000 	str	r2, [r3]
-		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
- c00072c:	e59f30ac 	ldr	r3, [pc, #172]	; c0007e0 <Delay+0xd4>
- c000730:	e2822df6 	add	r2, r2, #15744	; 0x3d80
- c000734:	e5832000 	str	r2, [r3]
-		rWTDAT = 0xffff;
- c000738:	e59f20a4 	ldr	r2, [pc, #164]	; c0007e4 <Delay+0xd8>
- c00073c:	e5832004 	str	r2, [r3, #4]
-		rWTCNT = 0xffff;
- c000740:	e5832008 	str	r2, [r3, #8]
-		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disable //
- c000744:	e59f209c 	ldr	r2, [pc, #156]	; c0007e8 <Delay+0xdc>
- c000748:	e5832000 	str	r2, [r3]
-{
-	int i,adjust = 0;
-	if (time == 0)
-	{
-		time = 200;
-		adjust = 1;
- c00074c:	e3a0c001 	mov	ip, #1
-// Delay(10) -> 10*100us resolution
-{
-	int i,adjust = 0;
-	if (time == 0)
-	{
-		time = 200;
- c000750:	e3a000c8 	mov	r0, #200	; 0xc8
-		rWTDAT = 0xffff;
-		rWTCNT = 0xffff;
-		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disable //
-	}
-	for (; time>0; time--)
-		for (i = 0; i < delayLoopCount; i++);
- c000754:	e59f3080 	ldr	r3, [pc, #128]	; c0007dc <Delay+0xd0>
- c000758:	e5932000 	ldr	r2, [r3]
- c00075c:	e3a01000 	mov	r1, #0
- c000760:	ea000009 	b	c00078c <Delay+0x80>
-		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
-		rWTDAT = 0xffff;
-		rWTCNT = 0xffff;
-		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disable //
-	}
-	for (; time>0; time--)
- c000764:	e3500000 	cmp	r0, #0
+ c000710:	e3500000 	cmp	r0, #0
+void Delay(int time)
 // time=0: adjust the Delay function by WatchDog timer
 // time>0: the number of loop time
 // 100us resolution
 // Delay(10) -> 10*100us resolution
 {
+ c000714:	e92dd818 	push	{r3, r4, fp, ip, lr, pc}
+ c000718:	e24cb004 	sub	fp, ip, #4
 	int i,adjust = 0;
- c000768:	c3a0c000 	movgt	ip, #0
+	if (time == 0)
+ c00071c:	1a000010 	bne	c000764 <Delay+0x58>
+	{
+		time = 200;
+		adjust = 1;
+		delayLoopCount = 400;
 		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
+ c000720:	e59f3048 	ldr	r3, [pc, #72]	; c000770 <Delay+0x64>
+ c000724:	e59f4048 	ldr	r4, [pc, #72]	; c000774 <Delay+0x68>
 		rWTDAT = 0xffff;
+ c000728:	e59fe048 	ldr	lr, [pc, #72]	; c000778 <Delay+0x6c>
 		rWTCNT = 0xffff;
 		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disable //
-	}
-	for (; time>0; time--)
- c00076c:	cafffff8 	bgt	c000754 <Delay+0x48>
- c000770:	ea000016 	b	c0007d0 <Delay+0xc4>
-		for (i = 0; i < delayLoopCount; i++);
- c000774:	e2833001 	add	r3, r3, #1
- c000778:	e1530002 	cmp	r3, r2
- c00077c:	1afffffc 	bne	c000774 <Delay+0x68>
+ c00072c:	e59fc048 	ldr	ip, [pc, #72]	; c00077c <Delay+0x70>
+	if (time == 0)
+	{
+		time = 200;
+		adjust = 1;
+		delayLoopCount = 400;
 		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
+ c000730:	e5834000 	str	r4, [r3]
 		rWTDAT = 0xffff;
+ c000734:	e583e004 	str	lr, [r3, #4]
 		rWTCNT = 0xffff;
+ c000738:	e583e008 	str	lr, [r3, #8]
 		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disable //
+ c00073c:	e583c000 	str	ip, [r3]
 	}
 	for (; time>0; time--)
- c000780:	e2400001 	sub	r0, r0, #1
- c000784:	e3500000 	cmp	r0, #0
- c000788:	da000003 	ble	c00079c <Delay+0x90>
 		for (i = 0; i < delayLoopCount; i++);
- c00078c:	e3520000 	cmp	r2, #0
- c000790:	c1a03001 	movgt	r3, r1
- c000794:	cafffff6 	bgt	c000774 <Delay+0x68>
- c000798:	eafffff8 	b	c000780 <Delay+0x74>
 	if (adjust == 1)
- c00079c:	e35c0001 	cmp	ip, #1
- c0007a0:	1a00000a 	bne	c0007d0 <Delay+0xc4>
 	{
 		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3);
- c0007a4:	e59f3034 	ldr	r3, [pc, #52]	; c0007e0 <Delay+0xd4>
- c0007a8:	e59f203c 	ldr	r2, [pc, #60]	; c0007ec <Delay+0xe0>
- c0007ac:	e5832000 	str	r2, [r3]
+ c000740:	e5834000 	str	r4, [r3]
 		i = 0xffff - rWTCNT;   //  1count/16us?????????//
- c0007b0:	e5931008 	ldr	r1, [r3, #8]
- c0007b4:	e2611cff 	rsb	r1, r1, #65280	; 0xff00
- c0007b8:	e28110ff 	add	r1, r1, #255	; 0xff
+ c000744:	e5932008 	ldr	r2, [r3, #8]
+ c000748:	e2620cff 	rsb	r0, r2, #65280	; 0xff00
+ c00074c:	e28010ff 	add	r1, r0, #255	; 0xff
 		delayLoopCount = 8000000/(i*64);	//400*100/(i*64/200)   //
- c0007bc:	e59f002c 	ldr	r0, [pc, #44]	; c0007f0 <Delay+0xe4>
- c0007c0:	e1a01301 	lsl	r1, r1, #6
- c0007c4:	eb000350 	bl	c00150c <__aeabi_idiv>
- c0007c8:	e59f300c 	ldr	r3, [pc, #12]	; c0007dc <Delay+0xd0>
- c0007cc:	e5830000 	str	r0, [r3]
+ c000750:	e1a01301 	lsl	r1, r1, #6
+ c000754:	e59f0024 	ldr	r0, [pc, #36]	; c000780 <Delay+0x74>
+ c000758:	eb000416 	bl	c0017b8 <__aeabi_idiv>
+	int i,adjust = 0;
+	if (time == 0)
+	{
+		time = 200;
+		adjust = 1;
+		delayLoopCount = 400;
+ c00075c:	e59f4020 	ldr	r4, [pc, #32]	; c000784 <Delay+0x78>
+		for (i = 0; i < delayLoopCount; i++);
+	if (adjust == 1)
+	{
+		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3);
+		i = 0xffff - rWTCNT;   //  1count/16us?????????//
+		delayLoopCount = 8000000/(i*64);	//400*100/(i*64/200)   //
+ c000760:	e5840000 	str	r0, [r4]
 	}
 }
- c0007d0:	e24bd00c 	sub	sp, fp, #12
- c0007d4:	e89d6800 	ldm	sp, {fp, sp, lr}
- c0007d8:	e12fff1e 	bx	lr
- c0007dc:	0c001760 	.word	0x0c001760
- c0007e0:	01d30000 	.word	0x01d30000
- c0007e4:	0000ffff 	.word	0x0000ffff
- c0007e8:	00003f30 	.word	0x00003f30
- c0007ec:	00003f10 	.word	0x00003f10
- c0007f0:	007a1200 	.word	0x007a1200
+ c000764:	e24bd014 	sub	sp, fp, #20
+ c000768:	e89d6818 	ldm	sp, {r3, r4, fp, sp, lr}
+ c00076c:	e12fff1e 	bx	lr
+ c000770:	01d30000 	.word	0x01d30000
+ c000774:	00003f10 	.word	0x00003f10
+ c000778:	0000ffff 	.word	0x0000ffff
+ c00077c:	00003f30 	.word	0x00003f30
+ c000780:	007a1200 	.word	0x007a1200
+ c000784:	0c001a0c 	.word	0x0c001a0c
 
-0c0007f4 <DelayMs>:
-
-void DelayMs(int ms_time)
+0c000788 <DelayMs>:
 {
 	int i;
 
 	for (i = 0; i < 1000*ms_time ; i++)
- c0007f4:	e0603280 	rsb	r3, r0, r0, lsl #5
- c0007f8:	e0800103 	add	r0, r0, r3, lsl #2
- c0007fc:	e1a00180 	lsl	r0, r0, #3
- c000800:	e1a02000 	mov	r2, r0
- c000804:	e3500000 	cmp	r0, #0
- c000808:	d12fff1e 	bxle	lr
- c00080c:	e3a03000 	mov	r3, #0
- c000810:	e2833001 	add	r3, r3, #1
- c000814:	e1530002 	cmp	r3, r2
- c000818:	1afffffc 	bne	c000810 <DelayMs+0x1c>
- c00081c:	e12fff1e 	bx	lr
+		;
+}
+ c000788:	e12fff1e 	bx	lr
 
-0c000820 <Port_Init>:
+0c00078c <Port_Init>:
 
 	// PORT A GROUP
 	// BIT 	9	8	7	6	5	4	3	2	1	0
 	// 		A24	A23	A22	A21	A20	A19	A18	A17	A16	A0
 	//		0	1	1	1	1	1	1	1	1	1
 	rPCONA = 0x1ff;
- c000820:	e59f309c 	ldr	r3, [pc, #156]	; c0008c4 <Port_Init+0xa4>
- c000824:	e59f009c 	ldr	r0, [pc, #156]	; c0008c8 <Port_Init+0xa8>
- c000828:	e5830000 	str	r0, [r3]
+ c00078c:	e59f309c 	ldr	r3, [pc, #156]	; c000830 <Port_Init+0xa4>
+ c000790:	e59f009c 	ldr	r0, [pc, #156]	; c000834 <Port_Init+0xa8>
 	// PORT B GROUP
 	// BIT 	10		9		8		7		6		5		4		3		2		1		0
 	//		/CS5	/CS4	/CS3	/CS2	/CS1	GPB5	GPB4	/SRAS	/SCAS	SCLK	SCKE
 	//		EXT		NIC		USB		IDE		SMC		NC		NC		Sdram	Sdram	Sdram	Sdram
 	//      1, 		1,   	1,   	1,    	1,    	0,       0,     1,    	1,    	1,   	1
 	rPDATB = 0x7ff;
- c00082c:	e59f2098 	ldr	r2, [pc, #152]	; c0008cc <Port_Init+0xac>
- c000830:	e583200c 	str	r2, [r3, #12]
+ c000794:	e59fc09c 	ldr	ip, [pc, #156]	; c000838 <Port_Init+0xac>
+
+	// PORT A GROUP
+	// BIT 	9	8	7	6	5	4	3	2	1	0
+	// 		A24	A23	A22	A21	A20	A19	A18	A17	A16	A0
+	//		0	1	1	1	1	1	1	1	1	1
+	rPCONA = 0x1ff;
+ c000798:	e5830000 	str	r0, [r3]
+	// PORT B GROUP
+	// BIT 	10		9		8		7		6		5		4		3		2		1		0
+	//		/CS5	/CS4	/CS3	/CS2	/CS1	GPB5	GPB4	/SRAS	/SCAS	SCLK	SCKE
+	//		EXT		NIC		USB		IDE		SMC		NC		NC		Sdram	Sdram	Sdram	Sdram
+	//      1, 		1,   	1,   	1,    	1,    	0,       0,     1,    	1,    	1,   	1
+	rPDATB = 0x7ff;
+ c00079c:	e583c00c 	str	ip, [r3, #12]
 	rPCONB = 0x1cf;			// P9-LED1 P10-LED2
- c000834:	e59f2094 	ldr	r2, [pc, #148]	; c0008d0 <Port_Init+0xb0>
- c000838:	e5832008 	str	r2, [r3, #8]
+ c0007a0:	e59fc094 	ldr	ip, [pc, #148]	; c00083c <Port_Init+0xb0>
+ c0007a4:	e583c008 	str	ip, [r3, #8]
 
 	//  PC7		6		5		4		3		2		1		0
 	//   I		I		I		I		I		I		I		I
 	//   NC		NC		NC		NC		IISCLK	IISDI	IISDO	IISLRCK
 	//   00		00		00		00		11		11		11		11
 	rPDATC = 0xff00;
- c00083c:	e3a02cff 	mov	r2, #65280	; 0xff00
- c000840:	e5832014 	str	r2, [r3, #20]
+ c0007a8:	e3a0ccff 	mov	ip, #65280	; 0xff00
+ c0007ac:	e583c014 	str	ip, [r3, #20]
 	rPCONC = 0x0ff0ffff;
- c000844:	e59f2088 	ldr	r2, [pc, #136]	; c0008d4 <Port_Init+0xb4>
- c000848:	e5832010 	str	r2, [r3, #16]
+ c0007b0:	e59fc088 	ldr	ip, [pc, #136]	; c000840 <Port_Init+0xb4>
+ c0007b4:	e583c010 	str	ip, [r3, #16]
 	rPUPC  = 0x30ff;	//PULL UP RESISTOR should be enabled to I/O
- c00084c:	e59f2084 	ldr	r2, [pc, #132]	; c0008d8 <Port_Init+0xb8>
- c000850:	e5832018 	str	r2, [r3, #24]
+ c0007b8:	e59fc084 	ldr	ip, [pc, #132]	; c000844 <Port_Init+0xb8>
+ c0007bc:	e583c018 	str	ip, [r3, #24]
+	// PORT D GROUP(I/O OR LCD)
+	// BIT7		6		5		4		3		2		1		0
+	//	VF		VM		VLINE	VCLK	VD3		VD2		VD1		VD0
+	//	00		00		00		00		00		00		00		00
+	rPDATD= 0xff;
+	rPCOND= 0xaaaa;
+ c0007c0:	e59fc080 	ldr	ip, [pc, #128]	; c000848 <Port_Init+0xbc>
 	// PORT D GROUP
 	// PORT D GROUP(I/O OR LCD)
 	// BIT7		6		5		4		3		2		1		0
 	//	VF		VM		VLINE	VCLK	VD3		VD2		VD1		VD0
 	//	00		00		00		00		00		00		00		00
 	rPDATD= 0xff;
- c000854:	e3a010ff 	mov	r1, #255	; 0xff
- c000858:	e5831020 	str	r1, [r3, #32]
+ c0007c4:	e3a010ff 	mov	r1, #255	; 0xff
+ c0007c8:	e5831020 	str	r1, [r3, #32]
 	rPCOND= 0xaaaa;
- c00085c:	e59f2078 	ldr	r2, [pc, #120]	; c0008dc <Port_Init+0xbc>
- c000860:	e583201c 	str	r2, [r3, #28]
 	rPUPD = 0x0;
- c000864:	e3a02000 	mov	r2, #0
- c000868:	e5832024 	str	r2, [r3, #36]	; 0x24
+ c0007cc:	e3a02000 	mov	r2, #0
+	// PORT D GROUP(I/O OR LCD)
+	// BIT7		6		5		4		3		2		1		0
+	//	VF		VM		VLINE	VCLK	VD3		VD2		VD1		VD0
+	//	00		00		00		00		00		00		00		00
+	rPDATD= 0xff;
+	rPCOND= 0xaaaa;
+ c0007d0:	e583c01c 	str	ip, [r3, #28]
+	// PORT E GROUP
+	// Bit	8		7		6		5		4		3		2		1		0
+	//  	CODECLK	LED4	LED5	LED6	LED7	BEEP	RXD0	TXD0	LcdDisp
+	//  	10		01		01		01		01		01		10		10		01
+	rPDATE	= 0x1ff;
+	rPCONE	= 0x25529;
+ c0007d4:	e280ca25 	add	ip, r0, #151552	; 0x25000
+	// BIT7		6		5		4		3		2		1		0
+	//	VF		VM		VLINE	VCLK	VD3		VD2		VD1		VD0
+	//	00		00		00		00		00		00		00		00
+	rPDATD= 0xff;
+	rPCOND= 0xaaaa;
+	rPUPD = 0x0;
+ c0007d8:	e5832024 	str	r2, [r3, #36]	; 0x24
 
 	// PORT E GROUP
 	// Bit	8		7		6		5		4		3		2		1		0
 	//  	CODECLK	LED4	LED5	LED6	LED7	BEEP	RXD0	TXD0	LcdDisp
 	//  	10		01		01		01		01		01		10		10		01
 	rPDATE	= 0x1ff;
- c00086c:	e583002c 	str	r0, [r3, #44]	; 0x2c
+ c0007dc:	e583002c 	str	r0, [r3, #44]	; 0x2c
 	rPCONE	= 0x25529;
- c000870:	e2800a25 	add	r0, r0, #151552	; 0x25000
- c000874:	e2800fca 	add	r0, r0, #808	; 0x328
- c000878:	e2800002 	add	r0, r0, #2
- c00087c:	e5830028 	str	r0, [r3, #40]	; 0x28
+ c0007e0:	e28c0fca 	add	r0, ip, #808	; 0x328
+ c0007e4:	e280c002 	add	ip, r0, #2
+ c0007e8:	e583c028 	str	ip, [r3, #40]	; 0x28
 	rPUPE	= 0x6;
- c000880:	e3a00006 	mov	r0, #6
- c000884:	e5830030 	str	r0, [r3, #48]	; 0x30
+ c0007ec:	e3a00006 	mov	r0, #6
+	// PORT F GROUP
+	// Bit8		7		6		5		 4		3		2		1		0
+	// IISCLK	IISDI	IISDO	IISLRCK	Input	Input	Input	IICSDA	IICSCL
+	// 100		100		100		100		00		00		00		10		10
+	rPDATF = 0x0;
+	rPCONF = 0x252a;
+ c0007f0:	e59fc054 	ldr	ip, [pc, #84]	; c00084c <Port_Init+0xc0>
+	// Bit	8		7		6		5		4		3		2		1		0
+	//  	CODECLK	LED4	LED5	LED6	LED7	BEEP	RXD0	TXD0	LcdDisp
+	//  	10		01		01		01		01		01		10		10		01
+	rPDATE	= 0x1ff;
+	rPCONE	= 0x25529;
+	rPUPE	= 0x6;
+ c0007f4:	e5830030 	str	r0, [r3, #48]	; 0x30
+	// BIT7		6		5		4		3		2		1		0
+	// 	INT7	INT6	INT5	INT4	INT3	INT2	INT1	INT0
+	//	S3		S4		S5		S6		NIC		EXT		IDE		USB
+	//	11      11      11      11      11      11      11      11
+	rPDATG = 0xff;
+	rPCONG = 0xffff;
+ c0007f8:	e2810cff 	add	r0, r1, #65280	; 0xff00
 
 	// PORT F GROUP
 	// Bit8		7		6		5		 4		3		2		1		0
 	// IISCLK	IISDI	IISDO	IISLRCK	Input	Input	Input	IICSDA	IICSCL
 	// 100		100		100		100		00		00		00		10		10
 	rPDATF = 0x0;
- c000888:	e5832038 	str	r2, [r3, #56]	; 0x38
+ c0007fc:	e5832038 	str	r2, [r3, #56]	; 0x38
 	rPCONF = 0x252a;
- c00088c:	e59f004c 	ldr	r0, [pc, #76]	; c0008e0 <Port_Init+0xc0>
- c000890:	e5830034 	str	r0, [r3, #52]	; 0x34
+ c000800:	e583c034 	str	ip, [r3, #52]	; 0x34
 	rPUPF  = 0x0;
- c000894:	e583203c 	str	r2, [r3, #60]	; 0x3c
+ c000804:	e583203c 	str	r2, [r3, #60]	; 0x3c
 	// PORT G GROUP
 	// BIT7		6		5		4		3		2		1		0
 	// 	INT7	INT6	INT5	INT4	INT3	INT2	INT1	INT0
 	//	S3		S4		S5		S6		NIC		EXT		IDE		USB
 	//	11      11      11      11      11      11      11      11
 	rPDATG = 0xff;
- c000898:	e5831044 	str	r1, [r3, #68]	; 0x44
+ c000808:	e5831044 	str	r1, [r3, #68]	; 0x44
 	rPCONG = 0xffff;
- c00089c:	e2811cff 	add	r1, r1, #65280	; 0xff00
- c0008a0:	e5831040 	str	r1, [r3, #64]	; 0x40
+ c00080c:	e5830040 	str	r0, [r3, #64]	; 0x40
 	rPUPG  = 0x0;		//pull-up portG enabled
- c0008a4:	e5832048 	str	r2, [r3, #72]	; 0x48
 	rSPUCR = 0x7;  		//D15-D0 pull-up disable
- c0008a8:	e3a01007 	mov	r1, #7
- c0008ac:	e583104c 	str	r1, [r3, #76]	; 0x4c
 
 	/* Non Cache area */
 	rNCACHBE0 = ((Non_Cache_End>>12)<<16) | (Non_Cache_Start>>12);
- c0008b0:	e59f002c 	ldr	r0, [pc, #44]	; c0008e4 <Port_Init+0xc4>
- c0008b4:	e3a01507 	mov	r1, #29360128	; 0x1c00000
- c0008b8:	e5810004 	str	r0, [r1, #4]
+ c000810:	e59f0038 	ldr	r0, [pc, #56]	; c000850 <Port_Init+0xc4>
+	//	S3		S4		S5		S6		NIC		EXT		IDE		USB
+	//	11      11      11      11      11      11      11      11
+	rPDATG = 0xff;
+	rPCONG = 0xffff;
+	rPUPG  = 0x0;		//pull-up portG enabled
+	rSPUCR = 0x7;  		//D15-D0 pull-up disable
+ c000814:	e3a0c007 	mov	ip, #7
+
+	/* Non Cache area */
+	rNCACHBE0 = ((Non_Cache_End>>12)<<16) | (Non_Cache_Start>>12);
+ c000818:	e3a01507 	mov	r1, #29360128	; 0x1c00000
+	// 	INT7	INT6	INT5	INT4	INT3	INT2	INT1	INT0
+	//	S3		S4		S5		S6		NIC		EXT		IDE		USB
+	//	11      11      11      11      11      11      11      11
+	rPDATG = 0xff;
+	rPCONG = 0xffff;
+	rPUPG  = 0x0;		//pull-up portG enabled
+ c00081c:	e5832048 	str	r2, [r3, #72]	; 0x48
+	rSPUCR = 0x7;  		//D15-D0 pull-up disable
+ c000820:	e583c04c 	str	ip, [r3, #76]	; 0x4c
+
+	/* Non Cache area */
+	rNCACHBE0 = ((Non_Cache_End>>12)<<16) | (Non_Cache_Start>>12);
+ c000824:	e5810004 	str	r0, [r1, #4]
 
 	/* Low level default */
 	rEXTINT = 0x0;
- c0008bc:	e5832050 	str	r2, [r3, #80]	; 0x50
+ c000828:	e5832050 	str	r2, [r3, #80]	; 0x50
 }
- c0008c0:	e12fff1e 	bx	lr
- c0008c4:	01d20000 	.word	0x01d20000
- c0008c8:	000001ff 	.word	0x000001ff
- c0008cc:	000007ff 	.word	0x000007ff
- c0008d0:	000001cf 	.word	0x000001cf
- c0008d4:	0ff0ffff 	.word	0x0ff0ffff
- c0008d8:	000030ff 	.word	0x000030ff
- c0008dc:	0000aaaa 	.word	0x0000aaaa
- c0008e0:	0000252a 	.word	0x0000252a
- c0008e4:	c0002000 	.word	0xc0002000
+ c00082c:	e12fff1e 	bx	lr
+ c000830:	01d20000 	.word	0x01d20000
+ c000834:	000001ff 	.word	0x000001ff
+ c000838:	000007ff 	.word	0x000007ff
+ c00083c:	000001cf 	.word	0x000001cf
+ c000840:	0ff0ffff 	.word	0x0ff0ffff
+ c000844:	000030ff 	.word	0x000030ff
+ c000848:	0000aaaa 	.word	0x0000aaaa
+ c00084c:	0000252a 	.word	0x0000252a
+ c000850:	c0002000 	.word	0xc0002000
 
-0c0008e8 <malloc>:
+0c000854 <malloc>:
 //--------------------------------HEAP---------------------------------//
 void *malloc(unsigned nbyte)
 /* Very simple; Use malloc() & free() like Stack */
 // void *mallocPt=Image$$RW$$Limit;
 {
 	void *returnPt = mallocPt;
- c0008e8:	e59f1030 	ldr	r1, [pc, #48]	; c000920 <malloc+0x38>
- c0008ec:	e5912004 	ldr	r2, [r1, #4]
+ c000854:	e59f102c 	ldr	r1, [pc, #44]	; c000888 <malloc+0x34>
 
 	mallocPt = (int *) mallocPt +nbyte/4 + ((nbyte%4)>0); //to align 4byte
- c0008f0:	e2103003 	ands	r3, r0, #3
- c0008f4:	13a03001 	movne	r3, #1
- c0008f8:	e0833120 	add	r3, r3, r0, lsr #2
- c0008fc:	e0823103 	add	r3, r2, r3, lsl #2
- c000900:	e5813004 	str	r3, [r1, #4]
+ c000858:	e2103003 	ands	r3, r0, #3
+//--------------------------------HEAP---------------------------------//
+void *malloc(unsigned nbyte)
+/* Very simple; Use malloc() & free() like Stack */
+// void *mallocPt=Image$$RW$$Limit;
+{
+	void *returnPt = mallocPt;
+ c00085c:	e5912004 	ldr	r2, [r1, #4]
+
+	mallocPt = (int *) mallocPt +nbyte/4 + ((nbyte%4)>0); //to align 4byte
+ c000860:	13a03001 	movne	r3, #1
+ c000864:	e083c120 	add	ip, r3, r0, lsr #2
 
 	if ((int)mallocPt > HEAPEND)
- c000904:	e59f1018 	ldr	r1, [pc, #24]	; c000924 <malloc+0x3c>
- c000908:	e1530001 	cmp	r3, r1
+ c000868:	e59f001c 	ldr	r0, [pc, #28]	; c00088c <malloc+0x38>
+/* Very simple; Use malloc() & free() like Stack */
+// void *mallocPt=Image$$RW$$Limit;
+{
+	void *returnPt = mallocPt;
+
+	mallocPt = (int *) mallocPt +nbyte/4 + ((nbyte%4)>0); //to align 4byte
+ c00086c:	e082310c 	add	r3, r2, ip, lsl #2
+
+	if ((int)mallocPt > HEAPEND)
+ c000870:	e1530000 	cmp	r3, r0
+/* Very simple; Use malloc() & free() like Stack */
+// void *mallocPt=Image$$RW$$Limit;
+{
+	void *returnPt = mallocPt;
+
+	mallocPt = (int *) mallocPt +nbyte/4 + ((nbyte%4)>0); //to align 4byte
+ c000874:	e5813004 	str	r3, [r1, #4]
+
+	if ((int)mallocPt > HEAPEND)
 	{
 		mallocPt = returnPt;
- c00090c:	c59f300c 	ldrgt	r3, [pc, #12]	; c000920 <malloc+0x38>
- c000910:	c5832004 	strgt	r2, [r3, #4]
+ c000878:	c5812004 	strgt	r2, [r1, #4]
 		return NULL;
- c000914:	c3a02000 	movgt	r2, #0
+ c00087c:	c3a02000 	movgt	r2, #0
 	}
 	return returnPt;
 }
- c000918:	e1a00002 	mov	r0, r2
- c00091c:	e12fff1e 	bx	lr
- c000920:	0c001760 	.word	0x0c001760
- c000924:	0c7ff000 	.word	0x0c7ff000
+ c000880:	e1a00002 	mov	r0, r2
+ c000884:	e12fff1e 	bx	lr
+ c000888:	0c001a0c 	.word	0x0c001a0c
+ c00088c:	0c7ff000 	.word	0x0c7ff000
 
-0c000928 <free>:
+0c000890 <free>:
 
 void free(void *pt)
 {
 	mallocPt = pt;
- c000928:	e59f3004 	ldr	r3, [pc, #4]	; c000934 <free+0xc>
- c00092c:	e5830004 	str	r0, [r3, #4]
+ c000890:	e59f3004 	ldr	r3, [pc, #4]	; c00089c <free+0xc>
+ c000894:	e5830004 	str	r0, [r3, #4]
 }
- c000930:	e12fff1e 	bx	lr
- c000934:	0c001760 	.word	0x0c001760
+ c000898:	e12fff1e 	bx	lr
+ c00089c:	0c001a0c 	.word	0x0c001a0c
 
-0c000938 <sys_init>:
+0c0008a0 <sys_init>:
 
 //--------------------------------INIT---------------------------------//
 void sys_init()// Interrupt & Port
 {
- c000938:	e1a0c00d 	mov	ip, sp
- c00093c:	e92dd830 	push	{r4, r5, fp, ip, lr, pc}
- c000940:	e24cb004 	sub	fp, ip, #4
+ c0008a0:	e1a0c00d 	mov	ip, sp
+ c0008a4:	e92dd878 	push	{r3, r4, r5, r6, fp, ip, lr, pc}
 	/* enable interrupt */
 	rINTMOD = 0x0;
- c000944:	e3a0461e 	mov	r4, #31457280	; 0x1e00000
- c000948:	e3a05000 	mov	r5, #0
- c00094c:	e5845008 	str	r5, [r4, #8]
+ c0008a8:	e3a01000 	mov	r1, #0
+ c0008ac:	e3a0461e 	mov	r4, #31457280	; 0x1e00000
 	rINTCON = 0x1;
- c000950:	e3a03001 	mov	r3, #1
- c000954:	e5843000 	str	r3, [r4]
-	rI_ISPC = 0xffffffff;			// clear all interrupt pend
- c000958:	e3e03000 	mvn	r3, #0
- c00095c:	e5843024 	str	r3, [r4, #36]	; 0x24
-	rEXTINTPND = 0xf;				  // clear EXTINTPND reg
- c000960:	e3a0200f 	mov	r2, #15
- c000964:	e59f3020 	ldr	r3, [pc, #32]	; c00098c <sys_init+0x54>
- c000968:	e5832054 	str	r2, [r3, #84]	; 0x54
-	Port_Init();					    // Initial 44B0X's I/O port
- c00096c:	ebffffab 	bl	c000820 <Port_Init>
-	Delay(0);						      // delay time				
- c000970:	e1a00005 	mov	r0, r5
- c000974:	ebffff64 	bl	c00070c <Delay>
-	rINTMSK = ~(BIT_GLOBAL);  //enable interrupt mask vector
- c000978:	e3e03301 	mvn	r3, #67108864	; 0x4000000
- c00097c:	e584300c 	str	r3, [r4, #12]
-}
- c000980:	e24bd014 	sub	sp, fp, #20
- c000984:	e89d6830 	ldm	sp, {r4, r5, fp, sp, lr}
- c000988:	e12fff1e 	bx	lr
- c00098c:	01d20000 	.word	0x01d20000
+ c0008b0:	e3a06001 	mov	r6, #1
 
-0c000990 <D8Led_init>:
+//--------------------------------INIT---------------------------------//
+void sys_init()// Interrupt & Port
+{
+	/* enable interrupt */
+	rINTMOD = 0x0;
+ c0008b4:	e5841008 	str	r1, [r4, #8]
+	rINTCON = 0x1;
+	rI_ISPC = 0xffffffff;			// clear all interrupt pend
+	rEXTINTPND = 0xf;				  // clear EXTINTPND reg
+ c0008b8:	e59f3100 	ldr	r3, [pc, #256]	; c0009c0 <sys_init+0x120>
+//--------------------------------INIT---------------------------------//
+void sys_init()// Interrupt & Port
+{
+	/* enable interrupt */
+	rINTMOD = 0x0;
+	rINTCON = 0x1;
+ c0008bc:	e5846000 	str	r6, [r4]
+	rI_ISPC = 0xffffffff;			// clear all interrupt pend
+ c0008c0:	e3e06000 	mvn	r6, #0
+ c0008c4:	e5846024 	str	r6, [r4, #36]	; 0x24
+
+	// PORT A GROUP
+	// BIT 	9	8	7	6	5	4	3	2	1	0
+	// 		A24	A23	A22	A21	A20	A19	A18	A17	A16	A0
+	//		0	1	1	1	1	1	1	1	1	1
+	rPCONA = 0x1ff;
+ c0008c8:	e59f50f4 	ldr	r5, [pc, #244]	; c0009c4 <sys_init+0x124>
+{
+	/* enable interrupt */
+	rINTMOD = 0x0;
+	rINTCON = 0x1;
+	rI_ISPC = 0xffffffff;			// clear all interrupt pend
+	rEXTINTPND = 0xf;				  // clear EXTINTPND reg
+ c0008cc:	e3a0600f 	mov	r6, #15
+ c0008d0:	e5836054 	str	r6, [r3, #84]	; 0x54
+	// PORT B GROUP
+	// BIT 	10		9		8		7		6		5		4		3		2		1		0
+	//		/CS5	/CS4	/CS3	/CS2	/CS1	GPB5	GPB4	/SRAS	/SCAS	SCLK	SCKE
+	//		EXT		NIC		USB		IDE		SMC		NC		NC		Sdram	Sdram	Sdram	Sdram
+	//      1, 		1,   	1,   	1,    	1,    	0,       0,     1,    	1,    	1,   	1
+	rPDATB = 0x7ff;
+ c0008d4:	e2866e7f 	add	r6, r6, #2032	; 0x7f0
+
+	// PORT A GROUP
+	// BIT 	9	8	7	6	5	4	3	2	1	0
+	// 		A24	A23	A22	A21	A20	A19	A18	A17	A16	A0
+	//		0	1	1	1	1	1	1	1	1	1
+	rPCONA = 0x1ff;
+ c0008d8:	e5835000 	str	r5, [r3]
+	// PORT B GROUP
+	// BIT 	10		9		8		7		6		5		4		3		2		1		0
+	//		/CS5	/CS4	/CS3	/CS2	/CS1	GPB5	GPB4	/SRAS	/SCAS	SCLK	SCKE
+	//		EXT		NIC		USB		IDE		SMC		NC		NC		Sdram	Sdram	Sdram	Sdram
+	//      1, 		1,   	1,   	1,    	1,    	0,       0,     1,    	1,    	1,   	1
+	rPDATB = 0x7ff;
+ c0008dc:	e583600c 	str	r6, [r3, #12]
+	rPCONB = 0x1cf;			// P9-LED1 P10-LED2
+ c0008e0:	e59f60e0 	ldr	r6, [pc, #224]	; c0009c8 <sys_init+0x128>
+ c0008e4:	e5836008 	str	r6, [r3, #8]
+
+	//  PC7		6		5		4		3		2		1		0
+	//   I		I		I		I		I		I		I		I
+	//   NC		NC		NC		NC		IISCLK	IISDI	IISDO	IISLRCK
+	//   00		00		00		00		11		11		11		11
+	rPDATC = 0xff00;
+ c0008e8:	e3a06cff 	mov	r6, #65280	; 0xff00
+ c0008ec:	e5836014 	str	r6, [r3, #20]
+	rPCONC = 0x0ff0ffff;
+ c0008f0:	e59f60d4 	ldr	r6, [pc, #212]	; c0009cc <sys_init+0x12c>
+ c0008f4:	e5836010 	str	r6, [r3, #16]
+	rPUPC  = 0x30ff;	//PULL UP RESISTOR should be enabled to I/O
+ c0008f8:	e59f60d0 	ldr	r6, [pc, #208]	; c0009d0 <sys_init+0x130>
+ c0008fc:	e5836018 	str	r6, [r3, #24]
+	// PORT D GROUP(I/O OR LCD)
+	// BIT7		6		5		4		3		2		1		0
+	//	VF		VM		VLINE	VCLK	VD3		VD2		VD1		VD0
+	//	00		00		00		00		00		00		00		00
+	rPDATD= 0xff;
+	rPCOND= 0xaaaa;
+ c000900:	e59f60cc 	ldr	r6, [pc, #204]	; c0009d4 <sys_init+0x134>
+	// PORT D GROUP
+	// PORT D GROUP(I/O OR LCD)
+	// BIT7		6		5		4		3		2		1		0
+	//	VF		VM		VLINE	VCLK	VD3		VD2		VD1		VD0
+	//	00		00		00		00		00		00		00		00
+	rPDATD= 0xff;
+ c000904:	e3a0e0ff 	mov	lr, #255	; 0xff
+ c000908:	e583e020 	str	lr, [r3, #32]
+	rPCOND= 0xaaaa;
+ c00090c:	e583601c 	str	r6, [r3, #28]
+	rPUPD = 0x0;
+ c000910:	e5831024 	str	r1, [r3, #36]	; 0x24
+
+	// PORT E GROUP
+	// Bit	8		7		6		5		4		3		2		1		0
+	//  	CODECLK	LED4	LED5	LED6	LED7	BEEP	RXD0	TXD0	LcdDisp
+	//  	10		01		01		01		01		01		10		10		01
+	rPDATE	= 0x1ff;
+ c000914:	e583502c 	str	r5, [r3, #44]	; 0x2c
+	rPCONE	= 0x25529;
+ c000918:	e2855a25 	add	r5, r5, #151552	; 0x25000
+ c00091c:	e2855fca 	add	r5, r5, #808	; 0x328
+ c000920:	e2855002 	add	r5, r5, #2
+ c000924:	e5835028 	str	r5, [r3, #40]	; 0x28
+	rPUPE	= 0x6;
+ c000928:	e3a05006 	mov	r5, #6
+ c00092c:	e5835030 	str	r5, [r3, #48]	; 0x30
+	// PORT F GROUP
+	// Bit8		7		6		5		 4		3		2		1		0
+	// IISCLK	IISDI	IISDO	IISLRCK	Input	Input	Input	IICSDA	IICSCL
+	// 100		100		100		100		00		00		00		10		10
+	rPDATF = 0x0;
+	rPCONF = 0x252a;
+ c000930:	e59f50a0 	ldr	r5, [pc, #160]	; c0009d8 <sys_init+0x138>
+	// BIT7		6		5		4		3		2		1		0
+	// 	INT7	INT6	INT5	INT4	INT3	INT2	INT1	INT0
+	//	S3		S4		S5		S6		NIC		EXT		IDE		USB
+	//	11      11      11      11      11      11      11      11
+	rPDATG = 0xff;
+	rPCONG = 0xffff;
+ c000934:	e59f00a0 	ldr	r0, [pc, #160]	; c0009dc <sys_init+0x13c>
+
+	// PORT F GROUP
+	// Bit8		7		6		5		 4		3		2		1		0
+	// IISCLK	IISDI	IISDO	IISLRCK	Input	Input	Input	IICSDA	IICSCL
+	// 100		100		100		100		00		00		00		10		10
+	rPDATF = 0x0;
+ c000938:	e5831038 	str	r1, [r3, #56]	; 0x38
+	rPCONF = 0x252a;
+ c00093c:	e5835034 	str	r5, [r3, #52]	; 0x34
+	//	S3		S4		S5		S6		NIC		EXT		IDE		USB
+	//	11      11      11      11      11      11      11      11
+	rPDATG = 0xff;
+	rPCONG = 0xffff;
+	rPUPG  = 0x0;		//pull-up portG enabled
+	rSPUCR = 0x7;  		//D15-D0 pull-up disable
+ c000940:	e3a05007 	mov	r5, #7
+	// Bit8		7		6		5		 4		3		2		1		0
+	// IISCLK	IISDI	IISDO	IISLRCK	Input	Input	Input	IICSDA	IICSCL
+	// 100		100		100		100		00		00		00		10		10
+	rPDATF = 0x0;
+	rPCONF = 0x252a;
+	rPUPF  = 0x0;
+ c000944:	e583103c 	str	r1, [r3, #60]	; 0x3c
+	// PORT G GROUP
+	// BIT7		6		5		4		3		2		1		0
+	// 	INT7	INT6	INT5	INT4	INT3	INT2	INT1	INT0
+	//	S3		S4		S5		S6		NIC		EXT		IDE		USB
+	//	11      11      11      11      11      11      11      11
+	rPDATG = 0xff;
+ c000948:	e583e044 	str	lr, [r3, #68]	; 0x44
+	rPCONG = 0xffff;
+ c00094c:	e5830040 	str	r0, [r3, #64]	; 0x40
+	rPUPG  = 0x0;		//pull-up portG enabled
+ c000950:	e5831048 	str	r1, [r3, #72]	; 0x48
+	rSPUCR = 0x7;  		//D15-D0 pull-up disable
+ c000954:	e583504c 	str	r5, [r3, #76]	; 0x4c
+
+	/* Non Cache area */
+	rNCACHBE0 = ((Non_Cache_End>>12)<<16) | (Non_Cache_Start>>12);
+ c000958:	e59f5080 	ldr	r5, [pc, #128]	; c0009e0 <sys_init+0x140>
+ c00095c:	e3a0e507 	mov	lr, #29360128	; 0x1c00000
+ c000960:	e58e5004 	str	r5, [lr, #4]
+	if (time == 0)
+	{
+		time = 200;
+		adjust = 1;
+		delayLoopCount = 400;
+		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
+ c000964:	e59f2078 	ldr	r2, [pc, #120]	; c0009e4 <sys_init+0x144>
+	mallocPt = pt;
+}
+
+//--------------------------------INIT---------------------------------//
+void sys_init()// Interrupt & Port
+{
+ c000968:	e24cb004 	sub	fp, ip, #4
+		adjust = 1;
+		delayLoopCount = 400;
+		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
+		rWTDAT = 0xffff;
+		rWTCNT = 0xffff;
+		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disable //
+ c00096c:	e59fe074 	ldr	lr, [pc, #116]	; c0009e8 <sys_init+0x148>
+	if (time == 0)
+	{
+		time = 200;
+		adjust = 1;
+		delayLoopCount = 400;
+		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
+ c000970:	e59fc074 	ldr	ip, [pc, #116]	; c0009ec <sys_init+0x14c>
+
+	/* Non Cache area */
+	rNCACHBE0 = ((Non_Cache_End>>12)<<16) | (Non_Cache_Start>>12);
+
+	/* Low level default */
+	rEXTINT = 0x0;
+ c000974:	e5831050 	str	r1, [r3, #80]	; 0x50
+	if (time == 0)
+	{
+		time = 200;
+		adjust = 1;
+		delayLoopCount = 400;
+		rWTCON = ((MCLK/1000000 - 1)<<8) | (2<<3);	// 1M/64,Watch-dog,nRESET,interrupt disable//
+ c000978:	e582c000 	str	ip, [r2]
+		rWTDAT = 0xffff;
+ c00097c:	e5820004 	str	r0, [r2, #4]
+		rWTCNT = 0xffff;
+ c000980:	e5820008 	str	r0, [r2, #8]
+		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3)|(1<<5); // 1M/64,Watch-dog enable,nRESET,interrupt disable //
+ c000984:	e582e000 	str	lr, [r2]
+	}
+	for (; time>0; time--)
+		for (i = 0; i < delayLoopCount; i++);
+	if (adjust == 1)
+	{
+		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3);
+ c000988:	e582c000 	str	ip, [r2]
+		i = 0xffff - rWTCNT;   //  1count/16us?????????//
+ c00098c:	e592c008 	ldr	ip, [r2, #8]
+ c000990:	e26c0cff 	rsb	r0, ip, #65280	; 0xff00
+ c000994:	e28020ff 	add	r2, r0, #255	; 0xff
+		delayLoopCount = 8000000/(i*64);	//400*100/(i*64/200)   //
+ c000998:	e1a01302 	lsl	r1, r2, #6
+ c00099c:	e59f004c 	ldr	r0, [pc, #76]	; c0009f0 <sys_init+0x150>
+ c0009a0:	eb000384 	bl	c0017b8 <__aeabi_idiv>
+ c0009a4:	e59f1048 	ldr	r1, [pc, #72]	; c0009f4 <sys_init+0x154>
+	rINTCON = 0x1;
+	rI_ISPC = 0xffffffff;			// clear all interrupt pend
+	rEXTINTPND = 0xf;				  // clear EXTINTPND reg
+	Port_Init();					    // Initial 44B0X's I/O port
+	Delay(0);						      // delay time				
+	rINTMSK = ~(BIT_GLOBAL);  //enable interrupt mask vector
+ c0009a8:	e3e03301 	mvn	r3, #67108864	; 0x4000000
+		for (i = 0; i < delayLoopCount; i++);
+	if (adjust == 1)
+	{
+		rWTCON = ((MCLK/1000000 - 1)<<8)|(2<<3);
+		i = 0xffff - rWTCNT;   //  1count/16us?????????//
+		delayLoopCount = 8000000/(i*64);	//400*100/(i*64/200)   //
+ c0009ac:	e5810000 	str	r0, [r1]
+	rINTCON = 0x1;
+	rI_ISPC = 0xffffffff;			// clear all interrupt pend
+	rEXTINTPND = 0xf;				  // clear EXTINTPND reg
+	Port_Init();					    // Initial 44B0X's I/O port
+	Delay(0);						      // delay time				
+	rINTMSK = ~(BIT_GLOBAL);  //enable interrupt mask vector
+ c0009b0:	e584300c 	str	r3, [r4, #12]
+}
+ c0009b4:	e24bd01c 	sub	sp, fp, #28
+ c0009b8:	e89d6878 	ldm	sp, {r3, r4, r5, r6, fp, sp, lr}
+ c0009bc:	e12fff1e 	bx	lr
+ c0009c0:	01d20000 	.word	0x01d20000
+ c0009c4:	000001ff 	.word	0x000001ff
+ c0009c8:	000001cf 	.word	0x000001cf
+ c0009cc:	0ff0ffff 	.word	0x0ff0ffff
+ c0009d0:	000030ff 	.word	0x000030ff
+ c0009d4:	0000aaaa 	.word	0x0000aaaa
+ c0009d8:	0000252a 	.word	0x0000252a
+ c0009dc:	0000ffff 	.word	0x0000ffff
+ c0009e0:	c0002000 	.word	0xc0002000
+ c0009e4:	01d30000 	.word	0x01d30000
+ c0009e8:	00003f30 	.word	0x00003f30
+ c0009ec:	00003f10 	.word	0x00003f10
+ c0009f0:	007a1200 	.word	0x007a1200
+ c0009f4:	0c001a0c 	.word	0x0c001a0c
+
+0c0009f8 <D8Led_init>:
 /*--- código de las funciones ---*/
 void D8Led_init(void)
 {
 	/* Estado inicial del display con todos los segmentos iluminados
 	   (buscar en los ficheros de cabecera la direccion implicada) */
 	LED8ADDR = (unsigned char) cero;
- c000990:	e3a02012 	mov	r2, #18
- c000994:	e3a03785 	mov	r3, #34865152	; 0x2140000
- c000998:	e5c32000 	strb	r2, [r3]
+ c0009f8:	e3a02012 	mov	r2, #18
+ c0009fc:	e3a03785 	mov	r3, #34865152	; 0x2140000
+ c000a00:	e5c32000 	strb	r2, [r3]
 }
- c00099c:	e12fff1e 	bx	lr
+ c000a04:	e12fff1e 	bx	lr
 
-0c0009a0 <D8Led_symbol>:
+0c000a08 <D8Led_symbol>:
 
 void D8Led_symbol(int value)
 {
 	/* muestra el Symbol[value] en el display (analogo al caso anterior) */
 	if ((value >= 0) && (value < size_8led)) {
- c0009a0:	e3500010 	cmp	r0, #16
+ c000a08:	e3500010 	cmp	r0, #16
 		LED8ADDR = (unsigned char) Symbol[value];
- c0009a4:	959f300c 	ldrls	r3, [pc, #12]	; c0009b8 <D8Led_symbol+0x18>
- c0009a8:	97d32100 	ldrbls	r2, [r3, r0, lsl #2]
- c0009ac:	93a03785 	movls	r3, #34865152	; 0x2140000
- c0009b0:	95c32000 	strbls	r2, [r3]
- c0009b4:	e12fff1e 	bx	lr
- c0009b8:	0c001770 	.word	0x0c001770
+ c000a0c:	959f300c 	ldrls	r3, [pc, #12]	; c000a20 <D8Led_symbol+0x18>
+ c000a10:	97d32100 	ldrbls	r2, [r3, r0, lsl #2]
+ c000a14:	93a03785 	movls	r3, #34865152	; 0x2140000
+ c000a18:	95c32000 	strbls	r2, [r3]
+ c000a1c:	e12fff1e 	bx	lr
+ c000a20:	0c001a18 	.word	0x0c001a18
 
-0c0009bc <Eint4567_ISR>:
+0c000a24 <Eint4567_ISR>:
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
 void Eint4567_ISR(void) __attribute__((interrupt("IRQ")));
 
 /*--- codigo de funciones ---*/
 void Eint4567_ISR(void)
 {
- c0009bc:	e52dc004 	push	{ip}		; (str ip, [sp, #-4]!)
- c0009c0:	e1a0c00d 	mov	ip, sp
- c0009c4:	e92dd80f 	push	{r0, r1, r2, r3, fp, ip, lr, pc}
- c0009c8:	e24cb004 	sub	fp, ip, #4
+ c000a24:	e52dc004 	push	{ip}		; (str ip, [sp, #-4]!)
+ c000a28:	e1a0c00d 	mov	ip, sp
+ c000a2c:	e92dd80f 	push	{r0, r1, r2, r3, fp, ip, lr, pc}
 	/* Identificar la interrupcion (hay dos pulsadores)*/
 	int which_int = rEXTINTPND;
- c0009cc:	e59f3074 	ldr	r3, [pc, #116]	; c000a48 <Eint4567_ISR+0x8c>
- c0009d0:	e5933054 	ldr	r3, [r3, #84]	; 0x54
+ c000a30:	e59f3078 	ldr	r3, [pc, #120]	; c000ab0 <Eint4567_ISR+0x8c>
+ c000a34:	e5933054 	ldr	r3, [r3, #84]	; 0x54
 	switch (which_int)
- c0009d4:	e3530004 	cmp	r3, #4
- c0009d8:	0a000002 	beq	c0009e8 <Eint4567_ISR+0x2c>
- c0009dc:	e3530008 	cmp	r3, #8
- c0009e0:	1a000009 	bne	c000a0c <Eint4567_ISR+0x50>
- c0009e4:	ea000004 	b	c0009fc <Eint4567_ISR+0x40>
-	{
-		case 4:
-			int_count++; // incrementamos el contador
- c0009e8:	e59f305c 	ldr	r3, [pc, #92]	; c000a4c <Eint4567_ISR+0x90>
- c0009ec:	e5932000 	ldr	r2, [r3]
- c0009f0:	e2822001 	add	r2, r2, #1
- c0009f4:	e5832000 	str	r2, [r3]
-			break;
- c0009f8:	ea000003 	b	c000a0c <Eint4567_ISR+0x50>
-		case 8:
-			int_count--; // decrementamos el contador
- c0009fc:	e59f3048 	ldr	r3, [pc, #72]	; c000a4c <Eint4567_ISR+0x90>
- c000a00:	e5932000 	ldr	r2, [r3]
- c000a04:	e2422001 	sub	r2, r2, #1
- c000a08:	e5832000 	str	r2, [r3]
+ c000a38:	e3530004 	cmp	r3, #4
+ * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
+void Eint4567_ISR(void) __attribute__((interrupt("IRQ")));
+
+/*--- codigo de funciones ---*/
+void Eint4567_ISR(void)
+{
+ c000a3c:	e24cb004 	sub	fp, ip, #4
+	/* Identificar la interrupcion (hay dos pulsadores)*/
+	int which_int = rEXTINTPND;
+	switch (which_int)
+ c000a40:	0a000010 	beq	c000a88 <Eint4567_ISR+0x64>
+ c000a44:	e3530008 	cmp	r3, #8
+ c000a48:	0a000013 	beq	c000a9c <Eint4567_ISR+0x78>
+ c000a4c:	e59f0060 	ldr	r0, [pc, #96]	; c000ab4 <Eint4567_ISR+0x90>
+ c000a50:	e5900000 	ldr	r0, [r0]
 			break;
 		default:
 			break;
 	}
 	// }
 	D8Led_symbol(int_count & 0x000f); // sacamos el valor por pantalla (módulo 16)
- c000a0c:	e59f3038 	ldr	r3, [pc, #56]	; c000a4c <Eint4567_ISR+0x90>
- c000a10:	e5930000 	ldr	r0, [r3]
- c000a14:	e200000f 	and	r0, r0, #15
- c000a18:	ebffffe0 	bl	c0009a0 <D8Led_symbol>
+ c000a54:	e200000f 	and	r0, r0, #15
+ c000a58:	ebffffea 	bl	c000a08 <D8Led_symbol>
 
 	/* Finalizar ISR */
 	rEXTINTPND = 0xf;				// borra los bits en EXTINTPND
- c000a1c:	e3a0200f 	mov	r2, #15
- c000a20:	e59f3020 	ldr	r3, [pc, #32]	; c000a48 <Eint4567_ISR+0x8c>
- c000a24:	e5832054 	str	r2, [r3, #84]	; 0x54
+ c000a5c:	e59fc04c 	ldr	ip, [pc, #76]	; c000ab0 <Eint4567_ISR+0x8c>
+ c000a60:	e3a0200f 	mov	r2, #15
+ c000a64:	e58c2054 	str	r2, [ip, #84]	; 0x54
 	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
- c000a28:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
- c000a2c:	e5932024 	ldr	r2, [r3, #36]	; 0x24
- c000a30:	e3822602 	orr	r2, r2, #2097152	; 0x200000
- c000a34:	e5832024 	str	r2, [r3, #36]	; 0x24
+ c000a68:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
+ c000a6c:	e5931024 	ldr	r1, [r3, #36]	; 0x24
+ c000a70:	e3810602 	orr	r0, r1, #2097152	; 0x200000
+ c000a74:	e5830024 	str	r0, [r3, #36]	; 0x24
 }
- c000a38:	e24bd01c 	sub	sp, fp, #28
- c000a3c:	e89d680f 	ldm	sp, {r0, r1, r2, r3, fp, sp, lr}
- c000a40:	e49dc004 	pop	{ip}		; (ldr ip, [sp], #4)
- c000a44:	e25ef004 	subs	pc, lr, #4
- c000a48:	01d20000 	.word	0x01d20000
- c000a4c:	0c001814 	.word	0x0c001814
+ c000a78:	e24bd01c 	sub	sp, fp, #28
+ c000a7c:	e89d680f 	ldm	sp, {r0, r1, r2, r3, fp, sp, lr}
+ c000a80:	e49dc004 	pop	{ip}		; (ldr ip, [sp], #4)
+ c000a84:	e25ef004 	subs	pc, lr, #4
+	/* Identificar la interrupcion (hay dos pulsadores)*/
+	int which_int = rEXTINTPND;
+	switch (which_int)
+	{
+		case 4:
+			int_count++; // incrementamos el contador
+ c000a88:	e59f1024 	ldr	r1, [pc, #36]	; c000ab4 <Eint4567_ISR+0x90>
+ c000a8c:	e5912000 	ldr	r2, [r1]
+ c000a90:	e2820001 	add	r0, r2, #1
+ c000a94:	e5810000 	str	r0, [r1]
+			break;
+ c000a98:	eaffffed 	b	c000a54 <Eint4567_ISR+0x30>
+		case 8:
+			int_count--; // decrementamos el contador
+ c000a9c:	e59fc010 	ldr	ip, [pc, #16]	; c000ab4 <Eint4567_ISR+0x90>
+ c000aa0:	e59ce000 	ldr	lr, [ip]
+ c000aa4:	e24e0001 	sub	r0, lr, #1
+ c000aa8:	e58c0000 	str	r0, [ip]
+			break;
+ c000aac:	eaffffe8 	b	c000a54 <Eint4567_ISR+0x30>
+ c000ab0:	01d20000 	.word	0x01d20000
+ c000ab4:	0c001abc 	.word	0x0c001abc
 
-0c000a50 <Eint4567_init>:
+0c000ab8 <Eint4567_init>:
 
 void Eint4567_init(void)
 {
- c000a50:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
 	/* Configuración del controlador de interrupciones. Estos registros están definidos en 44b.h */
 	rI_ISPC    = 0x3ffffff;	// Borra INTPND escribiendo 1s en I_ISPC
- c000a54:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
- c000a58:	e3e0233f 	mvn	r2, #-67108864	; 0xfc000000
- c000a5c:	e5832024 	str	r2, [r3, #36]	; 0x24
 	rEXTINTPND = 0xf;       // Borra EXTINTPND escribiendo 1s en el propio registro
- c000a60:	e59f2060 	ldr	r2, [pc, #96]	; c000ac8 <Eint4567_init+0x78>
- c000a64:	e3a0000f 	mov	r0, #15
- c000a68:	e5820054 	str	r0, [r2, #84]	; 0x54
+ c000ab8:	e59f2068 	ldr	r2, [pc, #104]	; c000b28 <Eint4567_init+0x70>
+}
+
+void Eint4567_init(void)
+{
+	/* Configuración del controlador de interrupciones. Estos registros están definidos en 44b.h */
+	rI_ISPC    = 0x3ffffff;	// Borra INTPND escribiendo 1s en I_ISPC
+ c000abc:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
+ c000ac0:	e3e0c33f 	mvn	ip, #-67108864	; 0xfc000000
+ c000ac4:	e583c024 	str	ip, [r3, #36]	; 0x24
+	rEXTINTPND = 0xf;       // Borra EXTINTPND escribiendo 1s en el propio registro
+ c000ac8:	e3a0000f 	mov	r0, #15
 	rINTMOD    = 0x0;		// Configura las linas como de tipo IRQ
- c000a6c:	e3a01000 	mov	r1, #0
- c000a70:	e5831008 	str	r1, [r3, #8]
+ c000acc:	e3a01000 	mov	r1, #0
 	rINTCON    = 0x1;	    // Habilita int. vectorizadas y la linea IRQ (FIQ no)
- c000a74:	e3a0c001 	mov	ip, #1
- c000a78:	e583c000 	str	ip, [r3]
+ c000ad0:	e3a0c001 	mov	ip, #1
+
+void Eint4567_init(void)
+{
+	/* Configuración del controlador de interrupciones. Estos registros están definidos en 44b.h */
+	rI_ISPC    = 0x3ffffff;	// Borra INTPND escribiendo 1s en I_ISPC
+	rEXTINTPND = 0xf;       // Borra EXTINTPND escribiendo 1s en el propio registro
+ c000ad4:	e5820054 	str	r0, [r2, #84]	; 0x54
+	rINTMOD    = 0x0;		// Configura las linas como de tipo IRQ
+ c000ad8:	e5831008 	str	r1, [r3, #8]
+	rINTCON    = 0x1;	    // Habilita int. vectorizadas y la linea IRQ (FIQ no)
+ c000adc:	e583c000 	str	ip, [r3]
 	rINTMSK    &= ~(BIT_EINT4567); // habilitamos interrupcion linea eint4567 en vector de mascaras
- c000a7c:	e593c00c 	ldr	ip, [r3, #12]
- c000a80:	e3ccc602 	bic	ip, ip, #2097152	; 0x200000
- c000a84:	e583c00c 	str	ip, [r3, #12]
+ c000ae0:	e593c00c 	ldr	ip, [r3, #12]
+ c000ae4:	e3ccc602 	bic	ip, ip, #2097152	; 0x200000
+ c000ae8:	e583c00c 	str	ip, [r3, #12]
 
 	/* Establece la rutina de servicio para Eint4567 */
 	pISR_EINT4567 = (int) Eint4567_ISR;
- c000a88:	e59f403c 	ldr	r4, [pc, #60]	; c000acc <Eint4567_init+0x7c>
- c000a8c:	e59fc03c 	ldr	ip, [pc, #60]	; c000ad0 <Eint4567_init+0x80>
- c000a90:	e50c408b 	str	r4, [ip, #-139]	; 0xffffff75
 
 	/* Configuracion del puerto G */
 	rPCONG  = 0xffff;        		// Establece la funcion de los pines (EINT0-7)
- c000a94:	e59fc038 	ldr	ip, [pc, #56]	; c000ad4 <Eint4567_init+0x84>
- c000a98:	e582c040 	str	ip, [r2, #64]	; 0x40
+ c000aec:	e59fc038 	ldr	ip, [pc, #56]	; c000b2c <Eint4567_init+0x74>
+ c000af0:	e582c040 	str	ip, [r2, #64]	; 0x40
 	rPUPG   = 0x0;                  // Habilita el "pull up" del puerto
- c000a9c:	e5821048 	str	r1, [r2, #72]	; 0x48
+ c000af4:	e5821048 	str	r1, [r2, #72]	; 0x48
 	rEXTINT = rEXTINT | 0x22222222;   // Configura las lineas de int. como de flanco de bajada
- c000aa0:	e592c050 	ldr	ip, [r2, #80]	; 0x50
- c000aa4:	e59f102c 	ldr	r1, [pc, #44]	; c000ad8 <Eint4567_init+0x88>
- c000aa8:	e18c1001 	orr	r1, ip, r1
- c000aac:	e5821050 	str	r1, [r2, #80]	; 0x50
+ c000af8:	e59f1030 	ldr	r1, [pc, #48]	; c000b30 <Eint4567_init+0x78>
+ c000afc:	e592c050 	ldr	ip, [r2, #80]	; 0x50
+ c000b00:	e18c1001 	orr	r1, ip, r1
+ c000b04:	e5821050 	str	r1, [r2, #80]	; 0x50
 
 	/* Por precaucion, se vuelven a borrar los bits de INTPND y EXTINTPND */
 	rEXTINTPND = 0xf;				// borra los bits en EXTINTPND
- c000ab0:	e5820054 	str	r0, [r2, #84]	; 0x54
+ c000b08:	e5820054 	str	r0, [r2, #84]	; 0x54
 	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
- c000ab4:	e5932024 	ldr	r2, [r3, #36]	; 0x24
- c000ab8:	e3822602 	orr	r2, r2, #2097152	; 0x200000
- c000abc:	e5832024 	str	r2, [r3, #36]	; 0x24
-}
- c000ac0:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
- c000ac4:	e12fff1e 	bx	lr
- c000ac8:	01d20000 	.word	0x01d20000
- c000acc:	0c0009bc 	.word	0x0c0009bc
- c000ad0:	0c7fffff 	.word	0x0c7fffff
- c000ad4:	0000ffff 	.word	0x0000ffff
- c000ad8:	22222222 	.word	0x22222222
+ c000b0c:	e593c024 	ldr	ip, [r3, #36]	; 0x24
+	rINTMOD    = 0x0;		// Configura las linas como de tipo IRQ
+	rINTCON    = 0x1;	    // Habilita int. vectorizadas y la linea IRQ (FIQ no)
+	rINTMSK    &= ~(BIT_EINT4567); // habilitamos interrupcion linea eint4567 en vector de mascaras
 
-0c000adc <Led_Display>:
+	/* Establece la rutina de servicio para Eint4567 */
+	pISR_EINT4567 = (int) Eint4567_ISR;
+ c000b10:	e59f001c 	ldr	r0, [pc, #28]	; c000b34 <Eint4567_init+0x7c>
+ c000b14:	e59f101c 	ldr	r1, [pc, #28]	; c000b38 <Eint4567_init+0x80>
+	rPUPG   = 0x0;                  // Habilita el "pull up" del puerto
+	rEXTINT = rEXTINT | 0x22222222;   // Configura las lineas de int. como de flanco de bajada
+
+	/* Por precaucion, se vuelven a borrar los bits de INTPND y EXTINTPND */
+	rEXTINTPND = 0xf;				// borra los bits en EXTINTPND
+	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
+ c000b18:	e38c2602 	orr	r2, ip, #2097152	; 0x200000
+	rINTMOD    = 0x0;		// Configura las linas como de tipo IRQ
+	rINTCON    = 0x1;	    // Habilita int. vectorizadas y la linea IRQ (FIQ no)
+	rINTMSK    &= ~(BIT_EINT4567); // habilitamos interrupcion linea eint4567 en vector de mascaras
+
+	/* Establece la rutina de servicio para Eint4567 */
+	pISR_EINT4567 = (int) Eint4567_ISR;
+ c000b1c:	e501008b 	str	r0, [r1, #-139]	; 0xffffff75
+	rPUPG   = 0x0;                  // Habilita el "pull up" del puerto
+	rEXTINT = rEXTINT | 0x22222222;   // Configura las lineas de int. como de flanco de bajada
+
+	/* Por precaucion, se vuelven a borrar los bits de INTPND y EXTINTPND */
+	rEXTINTPND = 0xf;				// borra los bits en EXTINTPND
+	rI_ISPC   |= BIT_EINT4567;		// borra el bit pendiente en INTPND
+ c000b20:	e5832024 	str	r2, [r3, #36]	; 0x24
+}
+ c000b24:	e12fff1e 	bx	lr
+ c000b28:	01d20000 	.word	0x01d20000
+ c000b2c:	0000ffff 	.word	0x0000ffff
+ c000b30:	22222222 	.word	0x22222222
+ c000b34:	0c000a24 	.word	0x0c000a24
+ c000b38:	0c7fffff 	.word	0x0c7fffff
+
+0c000b3c <leds_on>:
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000b3c:	e59f302c 	ldr	r3, [pc, #44]	; c000b70 <leds_on+0x34>
+ c000b40:	e59fc02c 	ldr	ip, [pc, #44]	; c000b74 <leds_on+0x38>
+ c000b44:	e593100c 	ldr	r1, [r3, #12]
+ c000b48:	e001000c 	and	r0, r1, ip
+ c000b4c:	e583000c 	str	r0, [r3, #12]
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000b50:	e593200c 	ldr	r2, [r3, #12]
 
 }
 
 void Led_Display(int LedStatus)
 {
 	led_state = LedStatus;
- c000adc:	e59f3048 	ldr	r3, [pc, #72]	; c000b2c <Led_Display+0x50>
- c000ae0:	e5830000 	str	r0, [r3]
-
-	if ((LedStatus & 0x01) == 0x01)
- c000ae4:	e3100001 	tst	r0, #1
+ c000b54:	e59f101c 	ldr	r1, [pc, #28]	; c000b78 <leds_on+0x3c>
 		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
- c000ae8:	159f2040 	ldrne	r2, [pc, #64]	; c000b30 <Led_Display+0x54>
- c000aec:	1592100c 	ldrne	r1, [r2, #12]
- c000af0:	159f303c 	ldrne	r3, [pc, #60]	; c000b34 <Led_Display+0x58>
- c000af4:	10013003 	andne	r3, r1, r3
- c000af8:	1582300c 	strne	r3, [r2, #12]
 	else
 		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
- c000afc:	059f302c 	ldreq	r3, [pc, #44]	; c000b30 <Led_Display+0x54>
- c000b00:	0593200c 	ldreq	r2, [r3, #12]
- c000b04:	03822c02 	orreq	r2, r2, #512	; 0x200
- c000b08:	0583200c 	streq	r2, [r3, #12]
 
 	if ((LedStatus & 0x02) == 0x02)
- c000b0c:	e3100002 	tst	r0, #2
 		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
- c000b10:	e59f3018 	ldr	r3, [pc, #24]	; c000b30 <Led_Display+0x54>
- c000b14:	e593200c 	ldr	r2, [r3, #12]
- c000b18:	11a02b02 	lslne	r2, r2, #22
- c000b1c:	11a02b22 	lsrne	r2, r2, #22
+ c000b58:	e1a0cb02 	lsl	ip, r2, #22
+ c000b5c:	e1a02b2c 	lsr	r2, ip, #22
+
+}
+
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+ c000b60:	e3a00003 	mov	r0, #3
+ c000b64:	e5810000 	str	r0, [r1]
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000b68:	e583200c 	str	r2, [r3, #12]
+
+/*--- código de las funciones públicas ---*/
+void leds_on()
+{
+	Led_Display(0x3);
+}
+ c000b6c:	e12fff1e 	bx	lr
+ c000b70:	01d20000 	.word	0x01d20000
+ c000b74:	000005ff 	.word	0x000005ff
+ c000b78:	0c001ac0 	.word	0x0c001ac0
+
+0c000b7c <leds_off>:
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000b7c:	e59f3024 	ldr	r3, [pc, #36]	; c000ba8 <leds_off+0x2c>
+ c000b80:	e593000c 	ldr	r0, [r3, #12]
+ c000b84:	e3802c02 	orr	r2, r0, #512	; 0x200
+ c000b88:	e583200c 	str	r2, [r3, #12]
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
 	else
 		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
- c000b20:	03822b01 	orreq	r2, r2, #1024	; 0x400
- c000b24:	e583200c 	str	r2, [r3, #12]
- c000b28:	e12fff1e 	bx	lr
- c000b2c:	0c001818 	.word	0x0c001818
- c000b30:	01d20000 	.word	0x01d20000
- c000b34:	000005ff 	.word	0x000005ff
+ c000b8c:	e593c00c 	ldr	ip, [r3, #12]
 
-0c000b38 <leds_switch>:
-	led_state = led_state & 0xfd;
-	Led_Display(led_state);
 }
 
-void leds_switch()
+void Led_Display(int LedStatus)
 {
- c000b38:	e1a0c00d 	mov	ip, sp
- c000b3c:	e92dd800 	push	{fp, ip, lr, pc}
- c000b40:	e24cb004 	sub	fp, ip, #4
-	led_state ^= 0x03;
- c000b44:	e59f3018 	ldr	r3, [pc, #24]	; c000b64 <leds_switch+0x2c>
- c000b48:	e5930000 	ldr	r0, [r3]
- c000b4c:	e2200003 	eor	r0, r0, #3
- c000b50:	e5830000 	str	r0, [r3]
-	Led_Display(led_state);
- c000b54:	ebffffe0 	bl	c000adc <Led_Display>
+	led_state = LedStatus;
+ c000b90:	e59f1014 	ldr	r1, [pc, #20]	; c000bac <leds_off+0x30>
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+	else
+		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
+ c000b94:	e38c2b01 	orr	r2, ip, #1024	; 0x400
 
 }
- c000b58:	e24bd00c 	sub	sp, fp, #12
- c000b5c:	e89d6800 	ldm	sp, {fp, sp, lr}
- c000b60:	e12fff1e 	bx	lr
- c000b64:	0c001818 	.word	0x0c001818
 
-0c000b68 <led2_off>:
-	led_state = led_state | 0x2;
-	Led_Display(led_state);
-}
-
-void led2_off()
+void Led_Display(int LedStatus)
 {
- c000b68:	e1a0c00d 	mov	ip, sp
- c000b6c:	e92dd800 	push	{fp, ip, lr, pc}
- c000b70:	e24cb004 	sub	fp, ip, #4
-	led_state = led_state & 0xfd;
- c000b74:	e59f3018 	ldr	r3, [pc, #24]	; c000b94 <led2_off+0x2c>
- c000b78:	e5930000 	ldr	r0, [r3]
- c000b7c:	e20000fd 	and	r0, r0, #253	; 0xfd
- c000b80:	e5830000 	str	r0, [r3]
-	Led_Display(led_state);
- c000b84:	ebffffd4 	bl	c000adc <Led_Display>
-}
- c000b88:	e24bd00c 	sub	sp, fp, #12
- c000b8c:	e89d6800 	ldm	sp, {fp, sp, lr}
- c000b90:	e12fff1e 	bx	lr
- c000b94:	0c001818 	.word	0x0c001818
+	led_state = LedStatus;
+ c000b98:	e3a00000 	mov	r0, #0
+ c000b9c:	e5810000 	str	r0, [r1]
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
 
-0c000b98 <led2_on>:
-	led_state = led_state & 0xfe;
-	Led_Display(led_state);
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+	else
+		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
+ c000ba0:	e583200c 	str	r2, [r3, #12]
 }
 
-void led2_on()
+void leds_off()
 {
- c000b98:	e1a0c00d 	mov	ip, sp
- c000b9c:	e92dd800 	push	{fp, ip, lr, pc}
- c000ba0:	e24cb004 	sub	fp, ip, #4
-	led_state = led_state | 0x2;
- c000ba4:	e59f3018 	ldr	r3, [pc, #24]	; c000bc4 <led2_on+0x2c>
- c000ba8:	e5930000 	ldr	r0, [r3]
- c000bac:	e3800002 	orr	r0, r0, #2
- c000bb0:	e5830000 	str	r0, [r3]
-	Led_Display(led_state);
- c000bb4:	ebffffc8 	bl	c000adc <Led_Display>
+	Led_Display(0x0);
 }
- c000bb8:	e24bd00c 	sub	sp, fp, #12
- c000bbc:	e89d6800 	ldm	sp, {fp, sp, lr}
- c000bc0:	e12fff1e 	bx	lr
- c000bc4:	0c001818 	.word	0x0c001818
+ c000ba4:	e12fff1e 	bx	lr
+ c000ba8:	01d20000 	.word	0x01d20000
+ c000bac:	0c001ac0 	.word	0x0c001ac0
 
-0c000bc8 <led1_off>:
-	led_state = led_state | 0x1;
-	Led_Display(led_state);
-}
-
-void led1_off()
+0c000bb0 <led1_on>:
+void Led_Display(int LedStatus)
 {
- c000bc8:	e1a0c00d 	mov	ip, sp
- c000bcc:	e92dd800 	push	{fp, ip, lr, pc}
- c000bd0:	e24cb004 	sub	fp, ip, #4
-	led_state = led_state & 0xfe;
- c000bd4:	e59f3018 	ldr	r3, [pc, #24]	; c000bf4 <led1_off+0x2c>
- c000bd8:	e5930000 	ldr	r0, [r3]
- c000bdc:	e20000fe 	and	r0, r0, #254	; 0xfe
- c000be0:	e5830000 	str	r0, [r3]
-	Led_Display(led_state);
- c000be4:	ebffffbc 	bl	c000adc <Led_Display>
-}
- c000be8:	e24bd00c 	sub	sp, fp, #12
- c000bec:	e89d6800 	ldm	sp, {fp, sp, lr}
- c000bf0:	e12fff1e 	bx	lr
- c000bf4:	0c001818 	.word	0x0c001818
+	led_state = LedStatus;
 
-0c000bf8 <led1_on>:
-{
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000bb0:	e59f3038 	ldr	r3, [pc, #56]	; c000bf0 <led1_on+0x40>
 	Led_Display(0x0);
 }
 
 void led1_on()
 {
- c000bf8:	e1a0c00d 	mov	ip, sp
- c000bfc:	e92dd800 	push	{fp, ip, lr, pc}
- c000c00:	e24cb004 	sub	fp, ip, #4
 	led_state = led_state | 0x1;
- c000c04:	e59f3018 	ldr	r3, [pc, #24]	; c000c24 <led1_on+0x2c>
- c000c08:	e5930000 	ldr	r0, [r3]
- c000c0c:	e3800001 	orr	r0, r0, #1
- c000c10:	e5830000 	str	r0, [r3]
-	Led_Display(led_state);
- c000c14:	ebffffb0 	bl	c000adc <Led_Display>
-}
- c000c18:	e24bd00c 	sub	sp, fp, #12
- c000c1c:	e89d6800 	ldm	sp, {fp, sp, lr}
- c000c20:	e12fff1e 	bx	lr
- c000c24:	0c001818 	.word	0x0c001818
-
-0c000c28 <leds_off>:
+ c000bb4:	e59f1038 	ldr	r1, [pc, #56]	; c000bf4 <led1_on+0x44>
+void Led_Display(int LedStatus)
 {
-	Led_Display(0x3);
-}
+	led_state = LedStatus;
 
-void leds_off()
-{
- c000c28:	e1a0c00d 	mov	ip, sp
- c000c2c:	e92dd800 	push	{fp, ip, lr, pc}
- c000c30:	e24cb004 	sub	fp, ip, #4
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000bb8:	e593c00c 	ldr	ip, [r3, #12]
 	Led_Display(0x0);
- c000c34:	e3a00000 	mov	r0, #0
- c000c38:	ebffffa7 	bl	c000adc <Led_Display>
 }
- c000c3c:	e24bd00c 	sub	sp, fp, #12
- c000c40:	e89d6800 	ldm	sp, {fp, sp, lr}
- c000c44:	e12fff1e 	bx	lr
 
-0c000c48 <leds_on>:
-/*--- variables globales del módulo ---*/
-static int led_state = 0;		/* estado del LED */
-
-/*--- código de las funciones públicas ---*/
-void leds_on()
+void led1_on()
 {
- c000c48:	e1a0c00d 	mov	ip, sp
- c000c4c:	e92dd800 	push	{fp, ip, lr, pc}
- c000c50:	e24cb004 	sub	fp, ip, #4
-	Led_Display(0x3);
- c000c54:	e3a00003 	mov	r0, #3
- c000c58:	ebffff9f 	bl	c000adc <Led_Display>
-}
- c000c5c:	e24bd00c 	sub	sp, fp, #12
- c000c60:	e89d6800 	ldm	sp, {fp, sp, lr}
- c000c64:	e12fff1e 	bx	lr
+	led_state = led_state | 0x1;
+ c000bbc:	e5910000 	ldr	r0, [r1]
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
 
-0c000c68 <Main>:
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000bc0:	e59f2030 	ldr	r2, [pc, #48]	; c000bf8 <led1_on+0x48>
+	Led_Display(0x0);
+}
+
+void led1_on()
+{
+	led_state = led_state | 0x1;
+ c000bc4:	e3800001 	orr	r0, r0, #1
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000bc8:	e00cc002 	and	ip, ip, r2
+	Led_Display(0x0);
+}
+
+void led1_on()
+{
+	led_state = led_state | 0x1;
+ c000bcc:	e5810000 	str	r0, [r1]
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000bd0:	e583c00c 	str	ip, [r3, #12]
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000bd4:	e593200c 	ldr	r2, [r3, #12]
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+
+	if ((LedStatus & 0x02) == 0x02)
+ c000bd8:	e3100002 	tst	r0, #2
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000bdc:	11a02b02 	lslne	r2, r2, #22
+ c000be0:	11a02b22 	lsrne	r2, r2, #22
+	else
+		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
+ c000be4:	03822b01 	orreq	r2, r2, #1024	; 0x400
+ c000be8:	e583200c 	str	r2, [r3, #12]
+ c000bec:	e12fff1e 	bx	lr
+ c000bf0:	01d20000 	.word	0x01d20000
+ c000bf4:	0c001ac0 	.word	0x0c001ac0
+ c000bf8:	000005ff 	.word	0x000005ff
+
+0c000bfc <led1_off>:
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000bfc:	e59f3034 	ldr	r3, [pc, #52]	; c000c38 <led1_off+0x3c>
+	Led_Display(led_state);
+}
+
+void led1_off()
+{
+	led_state = led_state & 0xfe;
+ c000c00:	e59f2034 	ldr	r2, [pc, #52]	; c000c3c <led1_off+0x40>
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000c04:	e593000c 	ldr	r0, [r3, #12]
+	Led_Display(led_state);
+}
+
+void led1_off()
+{
+	led_state = led_state & 0xfe;
+ c000c08:	e5921000 	ldr	r1, [r2]
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000c0c:	e3800c02 	orr	r0, r0, #512	; 0x200
+	Led_Display(led_state);
+}
+
+void led1_off()
+{
+	led_state = led_state & 0xfe;
+ c000c10:	e201c0fe 	and	ip, r1, #254	; 0xfe
+ c000c14:	e582c000 	str	ip, [r2]
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000c18:	e583000c 	str	r0, [r3, #12]
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000c1c:	e593200c 	ldr	r2, [r3, #12]
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+
+	if ((LedStatus & 0x02) == 0x02)
+ c000c20:	e3110002 	tst	r1, #2
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000c24:	11a02b02 	lslne	r2, r2, #22
+ c000c28:	11a02b22 	lsrne	r2, r2, #22
+	else
+		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
+ c000c2c:	03822b01 	orreq	r2, r2, #1024	; 0x400
+ c000c30:	e583200c 	str	r2, [r3, #12]
+ c000c34:	e12fff1e 	bx	lr
+ c000c38:	01d20000 	.word	0x01d20000
+ c000c3c:	0c001ac0 	.word	0x0c001ac0
+
+0c000c40 <led2_on>:
+	Led_Display(led_state);
+}
+
+void led2_on()
+{
+	led_state = led_state | 0x2;
+ c000c40:	e59f3048 	ldr	r3, [pc, #72]	; c000c90 <led2_on+0x50>
+ c000c44:	e5932000 	ldr	r2, [r3]
+ c000c48:	e382c002 	orr	ip, r2, #2
+
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+ c000c4c:	e31c0001 	tst	ip, #1
+	Led_Display(led_state);
+}
+
+void led2_on()
+{
+	led_state = led_state | 0x2;
+ c000c50:	e583c000 	str	ip, [r3]
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000c54:	059f3038 	ldreq	r3, [pc, #56]	; c000c94 <led2_on+0x54>
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000c58:	159fc034 	ldrne	ip, [pc, #52]	; c000c94 <led2_on+0x54>
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000c5c:	0593c00c 	ldreq	ip, [r3, #12]
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000c60:	159c100c 	ldrne	r1, [ip, #12]
+ c000c64:	159f302c 	ldrne	r3, [pc, #44]	; c000c98 <led2_on+0x58>
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000c68:	038ccc02 	orreq	ip, ip, #512	; 0x200
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000c6c:	10013003 	andne	r3, r1, r3
+ c000c70:	158c300c 	strne	r3, [ip, #12]
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000c74:	0583c00c 	streq	ip, [r3, #12]
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000c78:	e59f3014 	ldr	r3, [pc, #20]	; c000c94 <led2_on+0x54>
+ c000c7c:	e593100c 	ldr	r1, [r3, #12]
+ c000c80:	e1a00b01 	lsl	r0, r1, #22
+ c000c84:	e1a02b20 	lsr	r2, r0, #22
+ c000c88:	e583200c 	str	r2, [r3, #12]
+
+void led2_on()
+{
+	led_state = led_state | 0x2;
+	Led_Display(led_state);
+}
+ c000c8c:	e12fff1e 	bx	lr
+ c000c90:	0c001ac0 	.word	0x0c001ac0
+ c000c94:	01d20000 	.word	0x01d20000
+ c000c98:	000005ff 	.word	0x000005ff
+
+0c000c9c <led2_off>:
+
+void led2_off()
+{
+	led_state = led_state & 0xfd;
+ c000c9c:	e59f2044 	ldr	r2, [pc, #68]	; c000ce8 <led2_off+0x4c>
+ c000ca0:	e592c000 	ldr	ip, [r2]
+
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+ c000ca4:	e31c0001 	tst	ip, #1
+	Led_Display(led_state);
+}
+
+void led2_off()
+{
+	led_state = led_state & 0xfd;
+ c000ca8:	e20c10fd 	and	r1, ip, #253	; 0xfd
+ c000cac:	e5821000 	str	r1, [r2]
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000cb0:	159fc034 	ldrne	ip, [pc, #52]	; c000cec <led2_off+0x50>
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000cb4:	059f2030 	ldreq	r2, [pc, #48]	; c000cec <led2_off+0x50>
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000cb8:	159c100c 	ldrne	r1, [ip, #12]
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000cbc:	0592c00c 	ldreq	ip, [r2, #12]
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000cc0:	159f2028 	ldrne	r2, [pc, #40]	; c000cf0 <led2_off+0x54>
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000cc4:	038ccc02 	orreq	ip, ip, #512	; 0x200
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000cc8:	10012002 	andne	r2, r1, r2
+ c000ccc:	158c200c 	strne	r2, [ip, #12]
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000cd0:	0582c00c 	streq	ip, [r2, #12]
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+	else
+		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
+ c000cd4:	e59f3010 	ldr	r3, [pc, #16]	; c000cec <led2_off+0x50>
+ c000cd8:	e593000c 	ldr	r0, [r3, #12]
+ c000cdc:	e3802b01 	orr	r2, r0, #1024	; 0x400
+ c000ce0:	e583200c 	str	r2, [r3, #12]
+
+void led2_off()
+{
+	led_state = led_state & 0xfd;
+	Led_Display(led_state);
+}
+ c000ce4:	e12fff1e 	bx	lr
+ c000ce8:	0c001ac0 	.word	0x0c001ac0
+ c000cec:	01d20000 	.word	0x01d20000
+ c000cf0:	000005ff 	.word	0x000005ff
+
+0c000cf4 <leds_switch>:
+
+void leds_switch()
+{
+	led_state ^= 0x03;
+ c000cf4:	e59f2050 	ldr	r2, [pc, #80]	; c000d4c <leds_switch+0x58>
+ c000cf8:	e5923000 	ldr	r3, [r2]
+ c000cfc:	e223c003 	eor	ip, r3, #3
+
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+ c000d00:	e31c0001 	tst	ip, #1
+	Led_Display(led_state);
+}
+
+void leds_switch()
+{
+	led_state ^= 0x03;
+ c000d04:	e582c000 	str	ip, [r2]
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000d08:	159f1040 	ldrne	r1, [pc, #64]	; c000d50 <leds_switch+0x5c>
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000d0c:	059f203c 	ldreq	r2, [pc, #60]	; c000d50 <leds_switch+0x5c>
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000d10:	1591000c 	ldrne	r0, [r1, #12]
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000d14:	0592100c 	ldreq	r1, [r2, #12]
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000d18:	159f2034 	ldrne	r2, [pc, #52]	; c000d54 <leds_switch+0x60>
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000d1c:	03811c02 	orreq	r1, r1, #512	; 0x200
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000d20:	10002002 	andne	r2, r0, r2
+ c000d24:	1581200c 	strne	r2, [r1, #12]
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000d28:	0582100c 	streq	r1, [r2, #12]
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000d2c:	e59f301c 	ldr	r3, [pc, #28]	; c000d50 <leds_switch+0x5c>
+ c000d30:	e593200c 	ldr	r2, [r3, #12]
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+
+	if ((LedStatus & 0x02) == 0x02)
+ c000d34:	e31c0002 	tst	ip, #2
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000d38:	11a02b02 	lslne	r2, r2, #22
+ c000d3c:	11a02b22 	lsrne	r2, r2, #22
+	else
+		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
+ c000d40:	03822b01 	orreq	r2, r2, #1024	; 0x400
+ c000d44:	e583200c 	str	r2, [r3, #12]
+ c000d48:	e12fff1e 	bx	lr
+ c000d4c:	0c001ac0 	.word	0x0c001ac0
+ c000d50:	01d20000 	.word	0x01d20000
+ c000d54:	000005ff 	.word	0x000005ff
+
+0c000d58 <Led_Display>:
+
+}
+
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+ c000d58:	e59fc048 	ldr	ip, [pc, #72]	; c000da8 <Led_Display+0x50>
+
+	if ((LedStatus & 0x01) == 0x01)
+ c000d5c:	e3100001 	tst	r0, #1
+
+}
+
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+ c000d60:	e58c0000 	str	r0, [ip]
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000d64:	159f2040 	ldrne	r2, [pc, #64]	; c000dac <Led_Display+0x54>
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000d68:	059fc03c 	ldreq	ip, [pc, #60]	; c000dac <Led_Display+0x54>
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000d6c:	1592100c 	ldrne	r1, [r2, #12]
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000d70:	059c200c 	ldreq	r2, [ip, #12]
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000d74:	159fc034 	ldrne	ip, [pc, #52]	; c000db0 <Led_Display+0x58>
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000d78:	03822c02 	orreq	r2, r2, #512	; 0x200
+void Led_Display(int LedStatus)
+{
+	led_state = LedStatus;
+
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+ c000d7c:	1001c00c 	andne	ip, r1, ip
+ c000d80:	1582c00c 	strne	ip, [r2, #12]
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+ c000d84:	058c200c 	streq	r2, [ip, #12]
+
+	if ((LedStatus & 0x02) == 0x02)
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000d88:	e59f301c 	ldr	r3, [pc, #28]	; c000dac <Led_Display+0x54>
+ c000d8c:	e593200c 	ldr	r2, [r3, #12]
+	if ((LedStatus & 0x01) == 0x01)
+		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+	else
+		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+
+	if ((LedStatus & 0x02) == 0x02)
+ c000d90:	e3100002 	tst	r0, #2
+		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+ c000d94:	11a02b02 	lslne	r2, r2, #22
+ c000d98:	11a02b22 	lsrne	r2, r2, #22
+	else
+		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
+ c000d9c:	03822b01 	orreq	r2, r2, #1024	; 0x400
+ c000da0:	e583200c 	str	r2, [r3, #12]
+ c000da4:	e12fff1e 	bx	lr
+ c000da8:	0c001ac0 	.word	0x0c001ac0
+ c000dac:	01d20000 	.word	0x01d20000
+ c000db0:	000005ff 	.word	0x000005ff
+
+0c000db4 <Main>:
 	}
 }
 #endif
 
 void Main(void)
 {
- c000c68:	e1a0c00d 	mov	ip, sp
- c000c6c:	e92dd800 	push	{fp, ip, lr, pc}
- c000c70:	e24cb004 	sub	fp, ip, #4
+ c000db4:	e1a0c00d 	mov	ip, sp
+ c000db8:	e92dd800 	push	{fp, ip, lr, pc}
+ c000dbc:	e24cb004 	sub	fp, ip, #4
 	/* Inicializa controladores */
 	sys_init();         // Inicializacion de la placa, interrupciones y puertos
- c000c74:	ebffff2f 	bl	c000938 <sys_init>
+ c000dc0:	ebfffeb6 	bl	c0008a0 <sys_init>
 	timer2_inicializar();
- c000c78:	eb0001e0 	bl	c001400 <timer2_inicializar>
+ c000dc4:	eb000232 	bl	c001694 <timer2_inicializar>
 
 #if CALIBRAR_TIMER2
 	calibrar_timer2();
 #endif
 
 	reversi8();
- c000c7c:	eb0000b4 	bl	c000f54 <reversi8>
+ c000dc8:	eb0000e8 	bl	c001170 <reversi8>
 }
- c000c80:	e24bd00c 	sub	sp, fp, #12
- c000c84:	e89d6800 	ldm	sp, {fp, sp, lr}
- c000c88:	e12fff1e 	bx	lr
+ c000dcc:	e24bd00c 	sub	sp, fp, #12
+ c000dd0:	e89d6800 	ldm	sp, {fp, sp, lr}
+ c000dd4:	e12fff1e 	bx	lr
 
-0c000c8c <actualizar_candidatas>:
+0c000dd8 <actualizar_candidatas>:
+
+static void actualizar_candidatas(char candidatas[][DIM], char f, char c)
+{
+    // donde ya se ha colocado no se puede volver a colocar
+    // En las posiciones alrededor sí
+    candidatas[f][c] = CASILLA_OCUPADA;
+ c000dd8:	e0803181 	add	r3, r0, r1, lsl #3
+ c000ddc:	e3a0c002 	mov	ip, #2
+    if (f > 0)
+ c000de0:	e3510000 	cmp	r1, #0
         }
     }
 }
 
 static void actualizar_candidatas(char candidatas[][DIM], char f, char c)
 {
- c000c8c:	e92d0030 	push	{r4, r5}
+ c000de4:	e92d0030 	push	{r4, r5}
     // donde ya se ha colocado no se puede volver a colocar
     // En las posiciones alrededor sí
     candidatas[f][c] = CASILLA_OCUPADA;
- c000c90:	e0803181 	add	r3, r0, r1, lsl #3
- c000c94:	e3a0c002 	mov	ip, #2
- c000c98:	e7c3c002 	strb	ip, [r3, r2]
+ c000de8:	e7c3c002 	strb	ip, [r3, r2]
     if (f > 0)
- c000c9c:	e3510000 	cmp	r1, #0
- c000ca0:	0a000015 	beq	c000cfc <actualizar_candidatas+0x70>
+ c000dec:	0a00000e 	beq	c000e2c <actualizar_candidatas+0x54>
     {
         if (candidatas[f-1][c] != CASILLA_OCUPADA)
- c000ca4:	e241c001 	sub	ip, r1, #1
- c000ca8:	e080c18c 	add	ip, r0, ip, lsl #3
- c000cac:	e7dc4002 	ldrb	r4, [ip, r2]
- c000cb0:	e3540002 	cmp	r4, #2
+ c000df0:	e2415001 	sub	r5, r1, #1
+ c000df4:	e080c185 	add	ip, r0, r5, lsl #3
+ c000df8:	e7dc4002 	ldrb	r4, [ip, r2]
+ c000dfc:	e3540002 	cmp	r4, #2
             candidatas[f-1][c] = SI;
- c000cb4:	13a04001 	movne	r4, #1
- c000cb8:	17cc4002 	strbne	r4, [ip, r2]
+ c000e00:	13a04001 	movne	r4, #1
+ c000e04:	17cc4002 	strbne	r4, [ip, r2]
 
         if ((c > 0) && (candidatas[f-1][c-1] != CASILLA_OCUPADA))
- c000cbc:	e3520000 	cmp	r2, #0
- c000cc0:	0a000006 	beq	c000ce0 <actualizar_candidatas+0x54>
- c000cc4:	e2424001 	sub	r4, r2, #1
- c000cc8:	e7dc5004 	ldrb	r5, [ip, r4]
- c000ccc:	e3550002 	cmp	r5, #2
+ c000e08:	e3520000 	cmp	r2, #0
+ c000e0c:	1a00002a 	bne	c000ebc <actualizar_candidatas+0xe4>
             candidatas[f-1][c-1] = SI;
- c000cd0:	13a05001 	movne	r5, #1
- c000cd4:	17cc5004 	strbne	r5, [ip, r4]
 
         if ((c < 7) && (candidatas[f-1][c+1] != CASILLA_OCUPADA))
- c000cd8:	e3520006 	cmp	r2, #6
- c000cdc:	8a000004 	bhi	c000cf4 <actualizar_candidatas+0x68>
- c000ce0:	e2824001 	add	r4, r2, #1
- c000ce4:	e7dc5004 	ldrb	r5, [ip, r4]
- c000ce8:	e3550002 	cmp	r5, #2
+ c000e10:	e2824001 	add	r4, r2, #1
+ c000e14:	e7dc5004 	ldrb	r5, [ip, r4]
+ c000e18:	e3550002 	cmp	r5, #2
             candidatas[f-1][c+1] = SI;
- c000cec:	13a05001 	movne	r5, #1
- c000cf0:	17cc5004 	strbne	r5, [ip, r4]
+ c000e1c:	13a05001 	movne	r5, #1
+ c000e20:	17cc5004 	strbne	r5, [ip, r4]
     }
     if (f < 7)
- c000cf4:	e3510006 	cmp	r1, #6
- c000cf8:	8a000013 	bhi	c000d4c <actualizar_candidatas+0xc0>
+ c000e24:	e3510006 	cmp	r1, #6
+ c000e28:	8a00000c 	bhi	c000e60 <actualizar_candidatas+0x88>
     {
         if (candidatas[f+1][c] != CASILLA_OCUPADA)
- c000cfc:	e2811001 	add	r1, r1, #1
- c000d00:	e0800181 	add	r0, r0, r1, lsl #3
- c000d04:	e7d01002 	ldrb	r1, [r0, r2]
- c000d08:	e3510002 	cmp	r1, #2
+ c000e2c:	e281c001 	add	ip, r1, #1
+ c000e30:	e080018c 	add	r0, r0, ip, lsl #3
+ c000e34:	e7d01002 	ldrb	r1, [r0, r2]
+ c000e38:	e3510002 	cmp	r1, #2
             candidatas[f+1][c] = SI;
- c000d0c:	13a01001 	movne	r1, #1
- c000d10:	17c01002 	strbne	r1, [r0, r2]
+ c000e3c:	13a01001 	movne	r1, #1
+ c000e40:	17c01002 	strbne	r1, [r0, r2]
 
         if ((c > 0) && (candidatas[f+1][c-1] != CASILLA_OCUPADA))
- c000d14:	e3520000 	cmp	r2, #0
- c000d18:	0a000006 	beq	c000d38 <actualizar_candidatas+0xac>
- c000d1c:	e2421001 	sub	r1, r2, #1
- c000d20:	e7d0c001 	ldrb	ip, [r0, r1]
- c000d24:	e35c0002 	cmp	ip, #2
+ c000e44:	e3520000 	cmp	r2, #0
+ c000e48:	1a00000d 	bne	c000e84 <actualizar_candidatas+0xac>
             candidatas[f+1][c-1] = SI;
- c000d28:	13a0c001 	movne	ip, #1
- c000d2c:	17c0c001 	strbne	ip, [r0, r1]
 
         if ((c < 7) && (candidatas[f+1][c+1] != CASILLA_OCUPADA))
- c000d30:	e3520006 	cmp	r2, #6
- c000d34:	8a000006 	bhi	c000d54 <actualizar_candidatas+0xc8>
- c000d38:	e2821001 	add	r1, r2, #1
- c000d3c:	e7d0c001 	ldrb	ip, [r0, r1]
- c000d40:	e35c0002 	cmp	ip, #2
+ c000e4c:	e2821001 	add	r1, r2, #1
+ c000e50:	e7d0c001 	ldrb	ip, [r0, r1]
+ c000e54:	e35c0002 	cmp	ip, #2
             candidatas[f+1][c+1] = SI;
- c000d44:	13a0c001 	movne	ip, #1
- c000d48:	17c0c001 	strbne	ip, [r0, r1]
+ c000e58:	13a0c001 	movne	ip, #1
+ c000e5c:	17c0c001 	strbne	ip, [r0, r1]
     }
     if ((c > 0) && (candidatas[f][c-1] != CASILLA_OCUPADA))
- c000d4c:	e3520000 	cmp	r2, #0
- c000d50:	0a000006 	beq	c000d70 <actualizar_candidatas+0xe4>
- c000d54:	e2421001 	sub	r1, r2, #1
- c000d58:	e7d30001 	ldrb	r0, [r3, r1]
- c000d5c:	e3500002 	cmp	r0, #2
+ c000e60:	e3520000 	cmp	r2, #0
+ c000e64:	1a00001c 	bne	c000edc <actualizar_candidatas+0x104>
         candidatas[f][c-1] = SI;
- c000d60:	13a00001 	movne	r0, #1
- c000d64:	17c30001 	strbne	r0, [r3, r1]
 
     if ((c < 7) && (candidatas[f][c+1] != CASILLA_OCUPADA))
- c000d68:	e3520006 	cmp	r2, #6
- c000d6c:	8a000004 	bhi	c000d84 <actualizar_candidatas+0xf8>
- c000d70:	e2822001 	add	r2, r2, #1
- c000d74:	e7d31002 	ldrb	r1, [r3, r2]
- c000d78:	e3510002 	cmp	r1, #2
+ c000e68:	e2822001 	add	r2, r2, #1
+ c000e6c:	e7d31002 	ldrb	r1, [r3, r2]
+ c000e70:	e3510002 	cmp	r1, #2
         candidatas[f][c+1] = SI;
- c000d7c:	13a01001 	movne	r1, #1
- c000d80:	17c31002 	strbne	r1, [r3, r2]
+ c000e74:	13a01001 	movne	r1, #1
+ c000e78:	17c31002 	strbne	r1, [r3, r2]
 }
- c000d84:	e8bd0030 	pop	{r4, r5}
- c000d88:	e12fff1e 	bx	lr
+ c000e7c:	e8bd0030 	pop	{r4, r5}
+ c000e80:	e12fff1e 	bx	lr
+    if (f < 7)
+    {
+        if (candidatas[f+1][c] != CASILLA_OCUPADA)
+            candidatas[f+1][c] = SI;
 
-0c000d8c <color_ficha>:
+        if ((c > 0) && (candidatas[f+1][c-1] != CASILLA_OCUPADA))
+ c000e84:	e2421001 	sub	r1, r2, #1
+ c000e88:	e7d0c001 	ldrb	ip, [r0, r1]
+ c000e8c:	e35c0002 	cmp	ip, #2
+            candidatas[f+1][c-1] = SI;
+ c000e90:	13a0c001 	movne	ip, #1
+ c000e94:	17c0c001 	strbne	ip, [r0, r1]
+
+        if ((c < 7) && (candidatas[f+1][c+1] != CASILLA_OCUPADA))
+ c000e98:	e3520006 	cmp	r2, #6
+ c000e9c:	9affffea 	bls	c000e4c <actualizar_candidatas+0x74>
+            candidatas[f+1][c+1] = SI;
+    }
+    if ((c > 0) && (candidatas[f][c-1] != CASILLA_OCUPADA))
+ c000ea0:	e7d30001 	ldrb	r0, [r3, r1]
+ c000ea4:	e3500002 	cmp	r0, #2
+        candidatas[f][c-1] = SI;
+ c000ea8:	13a00001 	movne	r0, #1
+ c000eac:	17c30001 	strbne	r0, [r3, r1]
+
+    if ((c < 7) && (candidatas[f][c+1] != CASILLA_OCUPADA))
+ c000eb0:	e3520006 	cmp	r2, #6
+ c000eb4:	8afffff0 	bhi	c000e7c <actualizar_candidatas+0xa4>
+ c000eb8:	eaffffea 	b	c000e68 <actualizar_candidatas+0x90>
+    if (f > 0)
+    {
+        if (candidatas[f-1][c] != CASILLA_OCUPADA)
+            candidatas[f-1][c] = SI;
+
+        if ((c > 0) && (candidatas[f-1][c-1] != CASILLA_OCUPADA))
+ c000ebc:	e2424001 	sub	r4, r2, #1
+ c000ec0:	e7dc5004 	ldrb	r5, [ip, r4]
+ c000ec4:	e3550002 	cmp	r5, #2
+            candidatas[f-1][c-1] = SI;
+ c000ec8:	13a05001 	movne	r5, #1
+ c000ecc:	17cc5004 	strbne	r5, [ip, r4]
+
+        if ((c < 7) && (candidatas[f-1][c+1] != CASILLA_OCUPADA))
+ c000ed0:	e3520006 	cmp	r2, #6
+ c000ed4:	8affffd2 	bhi	c000e24 <actualizar_candidatas+0x4c>
+ c000ed8:	eaffffcc 	b	c000e10 <actualizar_candidatas+0x38>
+            candidatas[f+1][c-1] = SI;
+
+        if ((c < 7) && (candidatas[f+1][c+1] != CASILLA_OCUPADA))
+            candidatas[f+1][c+1] = SI;
+    }
+    if ((c > 0) && (candidatas[f][c-1] != CASILLA_OCUPADA))
+ c000edc:	e2421001 	sub	r1, r2, #1
+ c000ee0:	eaffffee 	b	c000ea0 <actualizar_candidatas+0xc8>
+
+0c000ee4 <actualizar_tablero.clone.0>:
+// no comprueba que el movimiento realizado sea válido
+// f y c son la fila y columna a analizar
+// char vSF[DIM] = {-1,-1, 0, 1, 1, 1, 0,-1};
+// char vSC[DIM] = { 0, 1, 1, 1, 0,-1,-1,-1};
+
+static int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
+ c000ee4:	e92d07f0 	push	{r4, r5, r6, r7, r8, r9, sl}
+ c000ee8:	e24dd02c 	sub	sp, sp, #44	; 0x2c
 
     // ficha = tablero[f][c];
     // no puede accederse a tablero[f][c]
     // ya que algún índice puede ser negativo
 
     if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
- c000d8c:	e3510007 	cmp	r1, #7
- c000d90:	93520007 	cmpls	r2, #7
- c000d94:	8a000007 	bhi	c000db8 <color_ficha+0x2c>
- c000d98:	e0800181 	add	r0, r0, r1, lsl #3
- c000d9c:	e7d01002 	ldrb	r1, [r0, r2]
- c000da0:	e3510000 	cmp	r1, #0
- c000da4:	0a000003 	beq	c000db8 <color_ficha+0x2c>
-    {
-        *es_posicion_correcta = 1;
- c000da8:	e3a01001 	mov	r1, #1
- c000dac:	e5831000 	str	r1, [r3]
-        ficha = tablero[f][c];
- c000db0:	e7d00002 	ldrb	r0, [r0, r2]
- c000db4:	e12fff1e 	bx	lr
-    }
-    else
-    {
-        *es_posicion_correcta = 0;
- c000db8:	e3a00000 	mov	r0, #0
- c000dbc:	e5830000 	str	r0, [r3]
-        ficha = CASILLA_VACIA;
-    }
-    return ficha;
-}
- c000dc0:	e12fff1e 	bx	lr
-
-0c000dc4 <patron_volteo>:
-// FA y CA son la fila y columna a analizar
-// longitud es un parámetro por referencia. Sirve para saber la longitud del patrón que se está analizando.
-//          Se usa para saber cuantas fichas habría que voltear
-
-static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
-{
- c000dc4:	e1a0c00d 	mov	ip, sp
- c000dc8:	e92ddff0 	push	{r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
- c000dcc:	e24cb004 	sub	fp, ip, #4
- c000dd0:	e24dd00c 	sub	sp, sp, #12
- c000dd4:	e1a09000 	mov	r9, r0
- c000dd8:	e1a06001 	mov	r6, r1
- c000ddc:	e5dba004 	ldrb	sl, [fp, #4]
- c000de0:	e5db8008 	ldrb	r8, [fp, #8]
- c000de4:	e5db700c 	ldrb	r7, [fp, #12]
-	int es_posicion_correcta; // indica si la posición es correcta y contiene una ficha de algún jugador
-	char casilla;   // casilla es la casilla que se lee del tablero
-
-	FA = FA + SF;
- c000de8:	e08a2002 	add	r2, sl, r2
- c000dec:	e20250ff 	and	r5, r2, #255	; 0xff
-	CA = CA + SC;
- c000df0:	e0883003 	add	r3, r8, r3
- c000df4:	e20340ff 	and	r4, r3, #255	; 0xff
-	casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
- c000df8:	e1a01005 	mov	r1, r5
- c000dfc:	e1a02004 	mov	r2, r4
- c000e00:	e24b3030 	sub	r3, fp, #48	; 0x30
- c000e04:	ebffffe0 	bl	c000d8c <color_ficha>
-	while ((es_posicion_correcta == 1) && (casilla != color))
- c000e08:	e51b3030 	ldr	r3, [fp, #-48]	; 0xffffffd0
- c000e0c:	e3530001 	cmp	r3, #1
- c000e10:	13a03000 	movne	r3, #0
- c000e14:	03a03001 	moveq	r3, #1
- c000e18:	e1500007 	cmp	r0, r7
- c000e1c:	03a02000 	moveq	r2, #0
- c000e20:	12032001 	andne	r2, r3, #1
- c000e24:	e3520000 	cmp	r2, #0
- c000e28:	0a000014 	beq	c000e80 <patron_volteo+0xbc>
-	// mientras la casilla está en el tablero, no está vacía,
-	// y es del color rival seguimos buscando el modelo de volteo
-	{
-		FA = FA + SF;
- c000e2c:	e085500a 	add	r5, r5, sl
- c000e30:	e20550ff 	and	r5, r5, #255	; 0xff
-		CA = CA + SC;
- c000e34:	e0844008 	add	r4, r4, r8
- c000e38:	e20440ff 	and	r4, r4, #255	; 0xff
-		*longitud = *longitud + 1;
- c000e3c:	e5963000 	ldr	r3, [r6]
- c000e40:	e2833001 	add	r3, r3, #1
- c000e44:	e5863000 	str	r3, [r6]
-		casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
- c000e48:	e1a00009 	mov	r0, r9
- c000e4c:	e1a01005 	mov	r1, r5
- c000e50:	e1a02004 	mov	r2, r4
- c000e54:	e24b3030 	sub	r3, fp, #48	; 0x30
- c000e58:	ebffffcb 	bl	c000d8c <color_ficha>
-	char casilla;   // casilla es la casilla que se lee del tablero
-
-	FA = FA + SF;
-	CA = CA + SC;
-	casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
-	while ((es_posicion_correcta == 1) && (casilla != color))
- c000e5c:	e51b3030 	ldr	r3, [fp, #-48]	; 0xffffffd0
- c000e60:	e3530001 	cmp	r3, #1
- c000e64:	13a03000 	movne	r3, #0
- c000e68:	03a03001 	moveq	r3, #1
- c000e6c:	e1570000 	cmp	r7, r0
- c000e70:	03a02000 	moveq	r2, #0
- c000e74:	12032001 	andne	r2, r3, #1
- c000e78:	e3520000 	cmp	r2, #0
- c000e7c:	1affffea 	bne	c000e2c <patron_volteo+0x68>
-    // entonces hemos encontrado el patrón
-	if ((es_posicion_correcta == 1) && (casilla == color))
-		return MODELO_ENCONTRADO; // si hay que voltear una ficha o más hemos encontrado el patrón
-	else
-		return NO_HAY_MODELO; // si no hay que voltear no hay patrón
-}
- c000e80:	e1500007 	cmp	r0, r7
- c000e84:	13a00000 	movne	r0, #0
- c000e88:	02030001 	andeq	r0, r3, #1
- c000e8c:	e24bd028 	sub	sp, fp, #40	; 0x28
- c000e90:	e89d6ff0 	ldm	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, lr}
- c000e94:	e12fff1e 	bx	lr
-
-0c000e98 <actualizar_tablero>:
+ c000eec:	e59f323c 	ldr	r3, [pc, #572]	; c001130 <actualizar_tablero.clone.0+0x24c>
+// no comprueba que el movimiento realizado sea válido
 // f y c son la fila y columna a analizar
 // char vSF[DIM] = {-1,-1, 0, 1, 1, 1, 0,-1};
 // char vSC[DIM] = { 0, 1, 1, 1, 0,-1,-1,-1};
 
 static int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
+ c000ef0:	e58d0018 	str	r0, [sp, #24]
+ c000ef4:	e58d101c 	str	r1, [sp, #28]
 {
- c000e98:	e1a0c00d 	mov	ip, sp
- c000e9c:	e92ddff0 	push	{r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
- c000ea0:	e24cb004 	sub	fp, ip, #4
- c000ea4:	e24dd024 	sub	sp, sp, #36	; 0x24
- c000ea8:	e1a07000 	mov	r7, r0
- c000eac:	e1a09001 	mov	r9, r1
- c000eb0:	e50b2038 	str	r2, [fp, #-56]	; 0xffffffc8
- c000eb4:	e1a08003 	mov	r8, r3
     char SF, SC; // cantidades a sumar para movernos en la dirección que toque
     int i, flip, modelo;
 
     for (i = 0; i < DIM; i++) // 0 es Norte, 1 NE, 2 E ...
- c000eb8:	e3a04000 	mov	r4, #0
+ c000ef8:	e3a04000 	mov	r4, #0
     {
         SF = vSF[i];
- c000ebc:	e59fa08c 	ldr	sl, [pc, #140]	; c000f50 <actualizar_tablero+0xb8>
- c000ec0:	e7da6004 	ldrb	r6, [sl, r4]
+ c000efc:	e59f1230 	ldr	r1, [pc, #560]	; c001134 <actualizar_tablero.clone.0+0x250>
         SC = vSC[i];
- c000ec4:	e28a3008 	add	r3, sl, #8
- c000ec8:	e7d35004 	ldrb	r5, [r3, r4]
-        // flip: numero de fichas a voltear
-        flip = 0;
- c000ecc:	e3a03000 	mov	r3, #0
- c000ed0:	e50b3030 	str	r3, [fp, #-48]	; 0xffffffd0
-        modelo = PATRON_VOLTEO(tablero, &flip, f, c, SF, SC, color);
- c000ed4:	e58d6000 	str	r6, [sp]
- c000ed8:	e98d0120 	stmib	sp, {r5, r8}
- c000edc:	e1a00007 	mov	r0, r7
- c000ee0:	e24b1030 	sub	r1, fp, #48	; 0x30
- c000ee4:	e1a02009 	mov	r2, r9
- c000ee8:	e51b3038 	ldr	r3, [fp, #-56]	; 0xffffffc8
- c000eec:	ebffffb4 	bl	c000dc4 <patron_volteo>
-        //printf("Flip: %d \n", flip);
-        if (modelo == MODELO_ENCONTRADO )
- c000ef0:	e3500001 	cmp	r0, #1
- c000ef4:	1a00000e 	bne	c000f34 <actualizar_tablero+0x9c>
-        {
-            voltear(tablero, f, c, SF, SC, flip, color);
- c000ef8:	e51bc030 	ldr	ip, [fp, #-48]	; 0xffffffd0
-
-static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+ c000f00:	e2810008 	add	r0, r1, #8
+static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
 {
-    int i;
+	int es_posicion_correcta; // indica si la posición es correcta y contiene una ficha de algún jugador
+	char casilla;   // casilla es la casilla que se lee del tablero
 
-    for (i = 0; i < n; i++)
- c000efc:	e35c0000 	cmp	ip, #0
- c000f00:	da00000b 	ble	c000f34 <actualizar_tablero+0x9c>
- c000f04:	e51b1038 	ldr	r1, [fp, #-56]	; 0xffffffc8
- c000f08:	e1a02009 	mov	r2, r9
- c000f0c:	e3a03000 	mov	r3, #0
+	FA = FA + SF;
+ c000f04:	e59d7018 	ldr	r7, [sp, #24]
+    char SF, SC; // cantidades a sumar para movernos en la dirección que toque
+    int i, flip, modelo;
+
+    for (i = 0; i < DIM; i++) // 0 es Norte, 1 NE, 2 E ...
     {
-        FA = FA + SF;
- c000f10:	e0822006 	add	r2, r2, r6
- c000f14:	e20220ff 	and	r2, r2, #255	; 0xff
-        CA = CA + SC;
- c000f18:	e0811005 	add	r1, r1, r5
- c000f1c:	e20110ff 	and	r1, r1, #255	; 0xff
-        tablero[FA][CA] = color;
- c000f20:	e0870182 	add	r0, r7, r2, lsl #3
- c000f24:	e7c08001 	strb	r8, [r0, r1]
-
-static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+        SF = vSF[i];
+ c000f08:	e7d1c004 	ldrb	ip, [r1, r4]
+        SC = vSC[i];
+ c000f0c:	e7d00004 	ldrb	r0, [r0, r4]
 {
-    int i;
+	int es_posicion_correcta; // indica si la posición es correcta y contiene una ficha de algún jugador
+	char casilla;   // casilla es la casilla que se lee del tablero
 
-    for (i = 0; i < n; i++)
- c000f28:	e2833001 	add	r3, r3, #1
- c000f2c:	e153000c 	cmp	r3, ip
- c000f30:	1afffff6 	bne	c000f10 <actualizar_tablero+0x78>
+	FA = FA + SF;
+	CA = CA + SC;
+ c000f10:	e59da01c 	ldr	sl, [sp, #28]
+static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
+{
+	int es_posicion_correcta; // indica si la posición es correcta y contiene una ficha de algún jugador
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+ c000f14:	e087600c 	add	r6, r7, ip
+	CA = CA + SC;
+ c000f18:	e08a5000 	add	r5, sl, r0
+static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
+{
+	int es_posicion_correcta; // indica si la posición es correcta y contiene una ficha de algún jugador
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+ c000f1c:	e20660ff 	and	r6, r6, #255	; 0xff
+	CA = CA + SC;
+ c000f20:	e20550ff 	and	r5, r5, #255	; 0xff
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c000f24:	e3550007 	cmp	r5, #7
+ c000f28:	93560007 	cmpls	r6, #7
+ c000f2c:	83a08000 	movhi	r8, #0
+ c000f30:	93a08001 	movls	r8, #1
+        ficha = tablero[f][c];
+    }
+    else
+    {
+        *es_posicion_correcta = 0;
+        ficha = CASILLA_VACIA;
+ c000f34:	81a07008 	movhi	r7, r8
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c000f38:	8a000004 	bhi	c000f50 <actualizar_tablero.clone.0+0x6c>
+ c000f3c:	e0857186 	add	r7, r5, r6, lsl #3
+ c000f40:	e7d37007 	ldrb	r7, [r3, r7]
+    {
+        *es_posicion_correcta = 1;
+ c000f44:	e3570000 	cmp	r7, #0
+ c000f48:	01a08007 	moveq	r8, r7
+ c000f4c:	13a08001 	movne	r8, #1
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c000f50:	e086600c 	add	r6, r6, ip
+ c000f54:	e0855000 	add	r5, r5, r0
+ c000f58:	e20660ff 	and	r6, r6, #255	; 0xff
+ c000f5c:	e20550ff 	and	r5, r5, #255	; 0xff
+    {
+        *es_posicion_correcta = 1;
+ c000f60:	e3a01000 	mov	r1, #0
+ c000f64:	ea00000f 	b	c000fa8 <actualizar_tablero.clone.0+0xc4>
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c000f68:	e3550007 	cmp	r5, #7
+ c000f6c:	93560007 	cmpls	r6, #7
+ c000f70:	83a08000 	movhi	r8, #0
+ c000f74:	93a08001 	movls	r8, #1
+	// mientras la casilla está en el tablero, no está vacía,
+	// y es del color rival seguimos buscando el modelo de volteo
+	{
+		FA = FA + SF;
+		CA = CA + SC;
+		*longitud = *longitud + 1;
+ c000f78:	e2811001 	add	r1, r1, #1
+        ficha = tablero[f][c];
+    }
+    else
+    {
+        *es_posicion_correcta = 0;
+        ficha = CASILLA_VACIA;
+ c000f7c:	81a07008 	movhi	r7, r8
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c000f80:	8a000004 	bhi	c000f98 <actualizar_tablero.clone.0+0xb4>
+ c000f84:	e0858186 	add	r8, r5, r6, lsl #3
+ c000f88:	e7d37008 	ldrb	r7, [r3, r8]
+    {
+        *es_posicion_correcta = 1;
+ c000f8c:	e3570000 	cmp	r7, #0
+ c000f90:	01a08007 	moveq	r8, r7
+ c000f94:	13a08001 	movne	r8, #1
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c000f98:	e086600c 	add	r6, r6, ip
+ c000f9c:	e085a000 	add	sl, r5, r0
+ c000fa0:	e20660ff 	and	r6, r6, #255	; 0xff
+ c000fa4:	e20a50ff 	and	r5, sl, #255	; 0xff
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+	CA = CA + SC;
+	casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
+	while ((es_posicion_correcta == 1) && (casilla != color))
+ c000fa8:	e20880ff 	and	r8, r8, #255	; 0xff
+ c000fac:	e1520007 	cmp	r2, r7
+ c000fb0:	03a0a000 	moveq	sl, #0
+ c000fb4:	1208a001 	andne	sl, r8, #1
+ c000fb8:	e35a0000 	cmp	sl, #0
+ c000fbc:	1affffe9 	bne	c000f68 <actualizar_tablero.clone.0+0x84>
+		*longitud = *longitud + 1;
+		casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
+	}
+    // si la ultima posición era válida y la ficha es del jugador actual,
+    // entonces hemos encontrado el patrón
+	if ((es_posicion_correcta == 1) && (casilla == color))
+ c000fc0:	e1520007 	cmp	r2, r7
+ c000fc4:	13a08000 	movne	r8, #0
+ c000fc8:	02088001 	andeq	r8, r8, #1
+ c000fcc:	e3580000 	cmp	r8, #0
+ c000fd0:	1a000006 	bne	c000ff0 <actualizar_tablero.clone.0+0x10c>
 static int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
 {
     char SF, SC; // cantidades a sumar para movernos en la dirección que toque
     int i, flip, modelo;
 
     for (i = 0; i < DIM; i++) // 0 es Norte, 1 NE, 2 E ...
- c000f34:	e2844001 	add	r4, r4, #1
- c000f38:	e3540008 	cmp	r4, #8
- c000f3c:	1affffdf 	bne	c000ec0 <actualizar_tablero+0x28>
+ c000fd4:	e2844001 	add	r4, r4, #1
+ c000fd8:	e3540008 	cmp	r4, #8
+ c000fdc:	1affffc6 	bne	c000efc <actualizar_tablero.clone.0+0x18>
         {
             voltear(tablero, f, c, SF, SC, flip, color);
         }
     }
     return 0;
 }
- c000f40:	e3a00000 	mov	r0, #0
- c000f44:	e24bd028 	sub	sp, fp, #40	; 0x28
- c000f48:	e89d6ff0 	ldm	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, lr}
- c000f4c:	e12fff1e 	bx	lr
- c000f50:	0c0017b8 	.word	0x0c0017b8
+ c000fe0:	e3a00000 	mov	r0, #0
+ c000fe4:	e28dd02c 	add	sp, sp, #44	; 0x2c
+ c000fe8:	e8bd07f0 	pop	{r4, r5, r6, r7, r8, r9, sl}
+ c000fec:	e12fff1e 	bx	lr
 
-0c000f54 <reversi8>:
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c000ff0:	e3510000 	cmp	r1, #0
+ c000ff4:	0afffff6 	beq	c000fd4 <actualizar_tablero.clone.0+0xf0>
+    {
+        FA = FA + SF;
+ c000ff8:	e28d6018 	add	r6, sp, #24
+ c000ffc:	e8960440 	ldm	r6, {r6, sl}
+ c001000:	e086500c 	add	r5, r6, ip
+        CA = CA + SC;
+ c001004:	e08a7000 	add	r7, sl, r0
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        FA = FA + SF;
+ c001008:	e20560ff 	and	r6, r5, #255	; 0xff
+        CA = CA + SC;
+ c00100c:	e20750ff 	and	r5, r7, #255	; 0xff
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c001010:	e3a07001 	mov	r7, #1
+ c001014:	e2418001 	sub	r8, r1, #1
+    {
+        FA = FA + SF;
+        CA = CA + SC;
+        tablero[FA][CA] = color;
+ c001018:	e085a186 	add	sl, r5, r6, lsl #3
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c00101c:	e1570001 	cmp	r7, r1
+ c001020:	e2088003 	and	r8, r8, #3
+    {
+        FA = FA + SF;
+        CA = CA + SC;
+        tablero[FA][CA] = color;
+ c001024:	e7c3200a 	strb	r2, [r3, sl]
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c001028:	0affffe9 	beq	c000fd4 <actualizar_tablero.clone.0+0xf0>
+ c00102c:	e3580000 	cmp	r8, #0
+ c001030:	0a00001a 	beq	c0010a0 <actualizar_tablero.clone.0+0x1bc>
+ c001034:	e3580001 	cmp	r8, #1
+ c001038:	0a00000f 	beq	c00107c <actualizar_tablero.clone.0+0x198>
+ c00103c:	e3580002 	cmp	r8, #2
+ c001040:	0a000006 	beq	c001060 <actualizar_tablero.clone.0+0x17c>
+    {
+        FA = FA + SF;
+ c001044:	e086600c 	add	r6, r6, ip
+        CA = CA + SC;
+ c001048:	e0855000 	add	r5, r5, r0
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        FA = FA + SF;
+ c00104c:	e20660ff 	and	r6, r6, #255	; 0xff
+        CA = CA + SC;
+ c001050:	e20550ff 	and	r5, r5, #255	; 0xff
+        tablero[FA][CA] = color;
+ c001054:	e0857186 	add	r7, r5, r6, lsl #3
+ c001058:	e7c32007 	strb	r2, [r3, r7]
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c00105c:	e3a07002 	mov	r7, #2
+    {
+        FA = FA + SF;
+ c001060:	e086600c 	add	r6, r6, ip
+        CA = CA + SC;
+ c001064:	e0855000 	add	r5, r5, r0
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        FA = FA + SF;
+ c001068:	e20660ff 	and	r6, r6, #255	; 0xff
+        CA = CA + SC;
+ c00106c:	e20550ff 	and	r5, r5, #255	; 0xff
+        tablero[FA][CA] = color;
+ c001070:	e0858186 	add	r8, r5, r6, lsl #3
+ c001074:	e7c32008 	strb	r2, [r3, r8]
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c001078:	e2877001 	add	r7, r7, #1
+    {
+        FA = FA + SF;
+        CA = CA + SC;
+ c00107c:	e0858000 	add	r8, r5, r0
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        FA = FA + SF;
+ c001080:	e086600c 	add	r6, r6, ip
+ c001084:	e20660ff 	and	r6, r6, #255	; 0xff
+        CA = CA + SC;
+ c001088:	e20850ff 	and	r5, r8, #255	; 0xff
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c00108c:	e2877001 	add	r7, r7, #1
+    {
+        FA = FA + SF;
+        CA = CA + SC;
+        tablero[FA][CA] = color;
+ c001090:	e0858186 	add	r8, r5, r6, lsl #3
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c001094:	e1570001 	cmp	r7, r1
+    {
+        FA = FA + SF;
+        CA = CA + SC;
+        tablero[FA][CA] = color;
+ c001098:	e7c32008 	strb	r2, [r3, r8]
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c00109c:	0affffcc 	beq	c000fd4 <actualizar_tablero.clone.0+0xf0>
+ c0010a0:	e58d4024 	str	r4, [sp, #36]	; 0x24
+ c0010a4:	e58d1020 	str	r1, [sp, #32]
+    {
+        FA = FA + SF;
+        CA = CA + SC;
+ c0010a8:	e0858000 	add	r8, r5, r0
+ c0010ac:	e20880ff 	and	r8, r8, #255	; 0xff
+ c0010b0:	e0881000 	add	r1, r8, r0
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        FA = FA + SF;
+ c0010b4:	e086a00c 	add	sl, r6, ip
+        CA = CA + SC;
+ c0010b8:	e20110ff 	and	r1, r1, #255	; 0xff
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        FA = FA + SF;
+ c0010bc:	e20a60ff 	and	r6, sl, #255	; 0xff
+        CA = CA + SC;
+ c0010c0:	e0815000 	add	r5, r1, r0
+ c0010c4:	e205a0ff 	and	sl, r5, #255	; 0xff
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        FA = FA + SF;
+ c0010c8:	e58d6004 	str	r6, [sp, #4]
+ c0010cc:	e086400c 	add	r4, r6, ip
+        CA = CA + SC;
+ c0010d0:	e58da014 	str	sl, [sp, #20]
+ c0010d4:	e08a5000 	add	r5, sl, r0
+        tablero[FA][CA] = color;
+ c0010d8:	e59da004 	ldr	sl, [sp, #4]
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        FA = FA + SF;
+ c0010dc:	e20440ff 	and	r4, r4, #255	; 0xff
+ c0010e0:	e084900c 	add	r9, r4, ip
+        CA = CA + SC;
+        tablero[FA][CA] = color;
+ c0010e4:	e088818a 	add	r8, r8, sl, lsl #3
+ c0010e8:	e59da014 	ldr	sl, [sp, #20]
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        FA = FA + SF;
+ c0010ec:	e20990ff 	and	r9, r9, #255	; 0xff
+ c0010f0:	e089600c 	add	r6, r9, ip
+        CA = CA + SC;
+        tablero[FA][CA] = color;
+ c0010f4:	e08a9189 	add	r9, sl, r9, lsl #3
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c0010f8:	e59da020 	ldr	sl, [sp, #32]
+    {
+        FA = FA + SF;
+ c0010fc:	e20660ff 	and	r6, r6, #255	; 0xff
+        CA = CA + SC;
+ c001100:	e20550ff 	and	r5, r5, #255	; 0xff
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c001104:	e2877004 	add	r7, r7, #4
+    {
+        FA = FA + SF;
+        CA = CA + SC;
+        tablero[FA][CA] = color;
+ c001108:	e0811184 	add	r1, r1, r4, lsl #3
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c00110c:	e157000a 	cmp	r7, sl
+    {
+        FA = FA + SF;
+        CA = CA + SC;
+        tablero[FA][CA] = color;
+ c001110:	e0854186 	add	r4, r5, r6, lsl #3
+ c001114:	e7c32008 	strb	r2, [r3, r8]
+ c001118:	e7c32001 	strb	r2, [r3, r1]
+ c00111c:	e7c32009 	strb	r2, [r3, r9]
+ c001120:	e7c32004 	strb	r2, [r3, r4]
+
+static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+{
+    int i;
+
+    for (i = 0; i < n; i++)
+ c001124:	1affffdf 	bne	c0010a8 <actualizar_tablero.clone.0+0x1c4>
+ c001128:	e59d4024 	ldr	r4, [sp, #36]	; 0x24
+ c00112c:	eaffffa8 	b	c000fd4 <actualizar_tablero.clone.0+0xf0>
+ c001130:	0c001ac8 	.word	0x0c001ac8
+ c001134:	0c001a60 	.word	0x0c001a60
+
+0c001138 <color_ficha>:
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c001138:	e3520007 	cmp	r2, #7
+ c00113c:	93510007 	cmpls	r1, #7
+ c001140:	8a000003 	bhi	c001154 <color_ficha+0x1c>
+ c001144:	e0801181 	add	r1, r0, r1, lsl #3
+ c001148:	e7d10002 	ldrb	r0, [r1, r2]
+ c00114c:	e3500000 	cmp	r0, #0
+ c001150:	1a000002 	bne	c001160 <color_ficha+0x28>
+        *es_posicion_correcta = 1;
+        ficha = tablero[f][c];
+    }
+    else
+    {
+        *es_posicion_correcta = 0;
+ c001154:	e3a00000 	mov	r0, #0
+ c001158:	e5830000 	str	r0, [r3]
+        ficha = CASILLA_VACIA;
+    }
+    return ficha;
+}
+ c00115c:	e12fff1e 	bx	lr
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+    {
+        *es_posicion_correcta = 1;
+ c001160:	e3a0c001 	mov	ip, #1
+ c001164:	e583c000 	str	ip, [r3]
+        ficha = tablero[f][c];
+ c001168:	e7d10002 	ldrb	r0, [r1, r2]
+ c00116c:	e12fff1e 	bx	lr
+
+0c001170 <reversi8>:
 // en esta versión el humano lleva negras y la máquina blancas
 // no se comprueba que el humano mueva correctamente.
 // Sólo que la máquina realice un movimiento correcto.
 
 void reversi8()
 {
- c000f54:	e1a0c00d 	mov	ip, sp
- c000f58:	e92ddff0 	push	{r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
- c000f5c:	e24cb004 	sub	fp, ip, #4
- c000f60:	e24dd07c 	sub	sp, sp, #124	; 0x7c
+ c001170:	e1a0c00d 	mov	ip, sp
+ c001174:	e92ddff0 	push	{r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
+ c001178:	e24cb004 	sub	fp, ip, #4
 
 	 ////////////////////////////////////////////////////////////////////
 	 // Tablero candidatas: se usa para no explorar todas las posiciones del tablero
 	// sólo se exploran las que están alrededor de las fichas colocadas
 	 ////////////////////////////////////////////////////////////////////
 	char __attribute__ ((aligned (8))) candidatas[DIM][DIM] =
- c000f64:	e24b006c 	sub	r0, fp, #108	; 0x6c
- c000f68:	e3a01000 	mov	r1, #0
- c000f6c:	e3a02040 	mov	r2, #64	; 0x40
- c000f70:	eb0001b8 	bl	c001658 <memset>
- c000f74:	e59f32a4 	ldr	r3, [pc, #676]	; c001220 <reversi8+0x2cc>
-// la razón es que al meterlas en la pila no las pone juntas, y así jugar es más complicado.
+ c00117c:	e59f4330 	ldr	r4, [pc, #816]	; c0014b4 <reversi8+0x344>
 // en esta versión el humano lleva negras y la máquina blancas
 // no se comprueba que el humano mueva correctamente.
 // Sólo que la máquina realice un movimiento correcto.
 
 void reversi8()
- c000f78:	e2831040 	add	r1, r3, #64	; 0x40
+{
+ c001180:	e24dd064 	sub	sp, sp, #100	; 0x64
+
+	 ////////////////////////////////////////////////////////////////////
+	 // Tablero candidatas: se usa para no explorar todas las posiciones del tablero
+	// sólo se exploran las que están alrededor de las fichas colocadas
+	 ////////////////////////////////////////////////////////////////////
+	char __attribute__ ((aligned (8))) candidatas[DIM][DIM] =
+ c001184:	e3a01000 	mov	r1, #0
+ c001188:	e3a02040 	mov	r2, #64	; 0x40
+ c00118c:	e24b006c 	sub	r0, fp, #108	; 0x6c
+ c001190:	eb0001db 	bl	c001904 <memset>
     int i, j;
 
     for (i = 0; i < DIM; i++)
     {
         for (j = 0; j < DIM; j++)
             tablero[i][j] = CASILLA_VACIA;
- c000f7c:	e3a02000 	mov	r2, #0
- c000f80:	e5c32000 	strb	r2, [r3]
- c000f84:	e5c32001 	strb	r2, [r3, #1]
- c000f88:	e5c32002 	strb	r2, [r3, #2]
- c000f8c:	e5c32003 	strb	r2, [r3, #3]
- c000f90:	e5c32004 	strb	r2, [r3, #4]
- c000f94:	e5c32005 	strb	r2, [r3, #5]
- c000f98:	e5c32006 	strb	r2, [r3, #6]
- c000f9c:	e5c32007 	strb	r2, [r3, #7]
- c000fa0:	e2833008 	add	r3, r3, #8
-
-static void init_table(char tablero[][DIM], char candidatas[][DIM])
-{
-    int i, j;
-
-    for (i = 0; i < DIM; i++)
- c000fa4:	e1530001 	cmp	r3, r1
- c000fa8:	1afffff4 	bne	c000f80 <reversi8+0x2c>
+ c001194:	e3a03000 	mov	r3, #0
+ c001198:	e1a00004 	mov	r0, r4
+ c00119c:	e4803004 	str	r3, [r0], #4
 	    }
 	}
     }
 #endif
     // arriba hay versión alternativa
     tablero[3][3] = FICHA_BLANCA;
- c000fac:	e59f126c 	ldr	r1, [pc, #620]	; c001220 <reversi8+0x2cc>
- c000fb0:	e3a03001 	mov	r3, #1
- c000fb4:	e5c1301b 	strb	r3, [r1, #27]
+ c0011a0:	e3a02001 	mov	r2, #1
     tablero[4][4] = FICHA_BLANCA;
- c000fb8:	e5c13024 	strb	r3, [r1, #36]	; 0x24
     tablero[3][4] = FICHA_NEGRA;
- c000fbc:	e3a02002 	mov	r2, #2
- c000fc0:	e5c1201c 	strb	r2, [r1, #28]
+ c0011a4:	e3a01002 	mov	r1, #2
+    int i, j;
+
+    for (i = 0; i < DIM; i++)
+    {
+        for (j = 0; j < DIM; j++)
+            tablero[i][j] = CASILLA_VACIA;
+ c0011a8:	e5843004 	str	r3, [r4, #4]
+    tablero[3][3] = FICHA_BLANCA;
+    tablero[4][4] = FICHA_BLANCA;
+    tablero[3][4] = FICHA_NEGRA;
     tablero[4][3] = FICHA_NEGRA;
- c000fc4:	e5c12023 	strb	r2, [r1, #35]	; 0x23
 
     candidatas[3][3] = CASILLA_OCUPADA;
- c000fc8:	e54b2051 	strb	r2, [fp, #-81]	; 0xffffffaf
+ c0011ac:	e54b1051 	strb	r1, [fp, #-81]	; 0xffffffaf
+    int i, j;
+
+    for (i = 0; i < DIM; i++)
+    {
+        for (j = 0; j < DIM; j++)
+            tablero[i][j] = CASILLA_VACIA;
+ c0011b0:	e5803004 	str	r3, [r0, #4]
+ c0011b4:	e5843018 	str	r3, [r4, #24]
+ c0011b8:	e584301c 	str	r3, [r4, #28]
+ c0011bc:	e5843020 	str	r3, [r4, #32]
+ c0011c0:	e5843024 	str	r3, [r4, #36]	; 0x24
+    tablero[4][4] = FICHA_BLANCA;
+    tablero[3][4] = FICHA_NEGRA;
+    tablero[4][3] = FICHA_NEGRA;
+
+    candidatas[3][3] = CASILLA_OCUPADA;
     candidatas[4][4] = CASILLA_OCUPADA;
- c000fcc:	e54b2048 	strb	r2, [fp, #-72]	; 0xffffffb8
+ c0011c4:	e54b1048 	strb	r1, [fp, #-72]	; 0xffffffb8
+    int i, j;
+
+    for (i = 0; i < DIM; i++)
+    {
+        for (j = 0; j < DIM; j++)
+            tablero[i][j] = CASILLA_VACIA;
+ c0011c8:	e584300c 	str	r3, [r4, #12]
+ c0011cc:	e5843010 	str	r3, [r4, #16]
+ c0011d0:	e5843014 	str	r3, [r4, #20]
+ c0011d4:	e5843028 	str	r3, [r4, #40]	; 0x28
+ c0011d8:	e584302c 	str	r3, [r4, #44]	; 0x2c
+ c0011dc:	e5843030 	str	r3, [r4, #48]	; 0x30
+ c0011e0:	e5843034 	str	r3, [r4, #52]	; 0x34
+ c0011e4:	e5843038 	str	r3, [r4, #56]	; 0x38
+ c0011e8:	e584303c 	str	r3, [r4, #60]	; 0x3c
+	    }
+	}
+    }
+#endif
+    // arriba hay versión alternativa
+    tablero[3][3] = FICHA_BLANCA;
+ c0011ec:	e5c4201b 	strb	r2, [r4, #27]
+    tablero[4][4] = FICHA_BLANCA;
+ c0011f0:	e5c42024 	strb	r2, [r4, #36]	; 0x24
+    tablero[3][4] = FICHA_NEGRA;
+ c0011f4:	e5c4101c 	strb	r1, [r4, #28]
+    tablero[4][3] = FICHA_NEGRA;
+ c0011f8:	e5c41023 	strb	r1, [r4, #35]	; 0x23
+
+    candidatas[3][3] = CASILLA_OCUPADA;
+    candidatas[4][4] = CASILLA_OCUPADA;
     candidatas[3][4] = CASILLA_OCUPADA;
- c000fd0:	e54b2050 	strb	r2, [fp, #-80]	; 0xffffffb0
+ c0011fc:	e54b1050 	strb	r1, [fp, #-80]	; 0xffffffb0
     candidatas[4][3] = CASILLA_OCUPADA;
- c000fd4:	e54b2049 	strb	r2, [fp, #-73]	; 0xffffffb7
+ c001200:	e54b1049 	strb	r1, [fp, #-73]	; 0xffffffb7
 
     // casillas a explorar:
     candidatas[2][2] = SI;
- c000fd8:	e54b305a 	strb	r3, [fp, #-90]	; 0xffffffa6
+ c001204:	e54b205a 	strb	r2, [fp, #-90]	; 0xffffffa6
     candidatas[2][3] = SI;
- c000fdc:	e54b3059 	strb	r3, [fp, #-89]	; 0xffffffa7
+ c001208:	e54b2059 	strb	r2, [fp, #-89]	; 0xffffffa7
     candidatas[2][4] = SI;
- c000fe0:	e54b3058 	strb	r3, [fp, #-88]	; 0xffffffa8
+ c00120c:	e54b2058 	strb	r2, [fp, #-88]	; 0xffffffa8
     candidatas[2][5] = SI;
- c000fe4:	e54b3057 	strb	r3, [fp, #-87]	; 0xffffffa9
+ c001210:	e54b2057 	strb	r2, [fp, #-87]	; 0xffffffa9
     candidatas[3][2] = SI;
- c000fe8:	e54b3052 	strb	r3, [fp, #-82]	; 0xffffffae
+ c001214:	e54b2052 	strb	r2, [fp, #-82]	; 0xffffffae
     candidatas[3][5] = SI;
- c000fec:	e54b304f 	strb	r3, [fp, #-79]	; 0xffffffb1
+ c001218:	e54b204f 	strb	r2, [fp, #-79]	; 0xffffffb1
     candidatas[4][2] = SI;
- c000ff0:	e54b304a 	strb	r3, [fp, #-74]	; 0xffffffb6
+ c00121c:	e54b204a 	strb	r2, [fp, #-74]	; 0xffffffb6
     candidatas[4][5] = SI;
- c000ff4:	e54b3047 	strb	r3, [fp, #-71]	; 0xffffffb9
+ c001220:	e54b2047 	strb	r2, [fp, #-71]	; 0xffffffb9
     candidatas[5][2] = SI;
- c000ff8:	e54b3042 	strb	r3, [fp, #-66]	; 0xffffffbe
+ c001224:	e54b2042 	strb	r2, [fp, #-66]	; 0xffffffbe
     candidatas[5][3] = SI;
- c000ffc:	e54b3041 	strb	r3, [fp, #-65]	; 0xffffffbf
+ c001228:	e54b2041 	strb	r2, [fp, #-65]	; 0xffffffbf
     candidatas[5][4] = SI;
- c001000:	e54b3040 	strb	r3, [fp, #-64]	; 0xffffffc0
+ c00122c:	e54b2040 	strb	r2, [fp, #-64]	; 0xffffffc0
     candidatas[5][5] = SI;
- c001004:	e54b303f 	strb	r3, [fp, #-63]	; 0xffffffc1
-        {
-            tablero[fila][columna] = FICHA_NEGRA;
-            timer2_empezar();
-            actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
-            tiempo_volteo_us = timer2_parar();
-            actualizar_candidatas(candidatas, fila, columna);
- c001008:	e59f6214 	ldr	r6, [pc, #532]	; c001224 <reversi8+0x2d0>
-            move = 1;
-        }
-
-        // escribe el movimiento en las variables globales fila columna
-        done = elegir_mov(candidatas, tablero, &f, &c);
- c00100c:	e50b1090 	str	r1, [fp, #-144]	; 0xffffff70
- c001010:	e1a0a001 	mov	sl, r1
+ c001230:	e54b203f 	strb	r2, [fp, #-63]	; 0xffffffc1
 // CUIDADO: si el compilador coloca esta variable en un registro, no funcionará.
 // Hay que definirla como "volatile" para forzar a que antes de cada uso la cargue de memoria
 
 static void esperar_mov(volatile char *ready)
 {
     while (*ready == 0) {};  // bucle de espera de respuestas hasta que el se modifique el valor de ready (hay que hacerlo manualmente)
- c001014:	e59f2204 	ldr	r2, [pc, #516]	; c001220 <reversi8+0x2cc>
- c001018:	e5d23040 	ldrb	r3, [r2, #64]	; 0x40
- c00101c:	e3530000 	cmp	r3, #0
- c001020:	0afffffb 	beq	c001014 <reversi8+0xc0>
+ c001234:	e5d47040 	ldrb	r7, [r4, #64]	; 0x40
+ c001238:	e3570000 	cmp	r7, #0
+ c00123c:	0afffffc 	beq	c001234 <reversi8+0xc4>
 
     *ready = 0;  //una vez que pasemos el bucle volvemos a fijar ready a 0;
- c001024:	e3a03000 	mov	r3, #0
- c001028:	e5c23040 	strb	r3, [r2, #64]	; 0x40
+ c001240:	e59f226c 	ldr	r2, [pc, #620]	; c0014b4 <reversi8+0x344>
+ c001244:	e3a08000 	mov	r8, #0
+ c001248:	e5c28040 	strb	r8, [r2, #64]	; 0x40
     while (fin == 0)
     {
         move = 0;
         esperar_mov(&ready);
         // si la fila o columna son 8 asumimos que el jugador no puede mover
         if (((fila) != DIM) && ((columna) != DIM))
- c00102c:	e5d23041 	ldrb	r3, [r2, #65]	; 0x41
- c001030:	e3530008 	cmp	r3, #8
+ c00124c:	e5d29041 	ldrb	r9, [r2, #65]	; 0x41
+ c001250:	e3590008 	cmp	r9, #8
 
     init_table(tablero, candidatas);
 
     while (fin == 0)
     {
         move = 0;
- c001034:	03a02000 	moveq	r2, #0
- c001038:	050b208c 	streq	r2, [fp, #-140]	; 0xffffff74
+ c001254:	03a08000 	moveq	r8, #0
+ c001258:	050b808c 	streq	r8, [fp, #-140]	; 0xffffff74
         esperar_mov(&ready);
         // si la fila o columna son 8 asumimos que el jugador no puede mover
         if (((fila) != DIM) && ((columna) != DIM))
- c00103c:	0a00001a 	beq	c0010ac <reversi8+0x158>
- c001040:	e5d23042 	ldrb	r3, [r2, #66]	; 0x42
- c001044:	e3530008 	cmp	r3, #8
+ c00125c:	0a00001a 	beq	c0012cc <reversi8+0x15c>
+ c001260:	e5d2c042 	ldrb	ip, [r2, #66]	; 0x42
+ c001264:	e35c0008 	cmp	ip, #8
 
     init_table(tablero, candidatas);
 
     while (fin == 0)
     {
         move = 0;
- c001048:	03a03000 	moveq	r3, #0
- c00104c:	050b308c 	streq	r3, [fp, #-140]	; 0xffffff74
+ c001268:	03a02000 	moveq	r2, #0
+ c00126c:	050b208c 	streq	r2, [fp, #-140]	; 0xffffff74
         esperar_mov(&ready);
         // si la fila o columna son 8 asumimos que el jugador no puede mover
         if (((fila) != DIM) && ((columna) != DIM))
- c001050:	0a000015 	beq	c0010ac <reversi8+0x158>
+ c001270:	0a000015 	beq	c0012cc <reversi8+0x15c>
         {
             tablero[fila][columna] = FICHA_NEGRA;
- c001054:	e5d22041 	ldrb	r2, [r2, #65]	; 0x41
- c001058:	e59f11c0 	ldr	r1, [pc, #448]	; c001220 <reversi8+0x2cc>
- c00105c:	e5d13042 	ldrb	r3, [r1, #66]	; 0x42
- c001060:	e0833182 	add	r3, r3, r2, lsl #3
- c001064:	e3a04002 	mov	r4, #2
- c001068:	e7c14003 	strb	r4, [r1, r3]
+ c001274:	e59fe238 	ldr	lr, [pc, #568]	; c0014b4 <reversi8+0x344>
+ c001278:	e5d29041 	ldrb	r9, [r2, #65]	; 0x41
+ c00127c:	e5de8042 	ldrb	r8, [lr, #66]	; 0x42
+ c001280:	e3a05002 	mov	r5, #2
+ c001284:	e0880189 	add	r0, r8, r9, lsl #3
+ c001288:	e7ce5000 	strb	r5, [lr, r0]
             timer2_empezar();
- c00106c:	eb0000fd 	bl	c001468 <timer2_empezar>
+ c00128c:	eb00011a 	bl	c0016fc <timer2_empezar>
             actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
- c001070:	e59f21a8 	ldr	r2, [pc, #424]	; c001220 <reversi8+0x2cc>
- c001074:	e5d21041 	ldrb	r1, [r2, #65]	; 0x41
- c001078:	e5d22042 	ldrb	r2, [r2, #66]	; 0x42
- c00107c:	e51b0090 	ldr	r0, [fp, #-144]	; 0xffffff70
- c001080:	e1a03004 	mov	r3, r4
- c001084:	ebffff83 	bl	c000e98 <actualizar_tablero>
+ c001290:	e59f121c 	ldr	r1, [pc, #540]	; c0014b4 <reversi8+0x344>
+ c001294:	e1a02005 	mov	r2, r5
+ c001298:	e5d10041 	ldrb	r0, [r1, #65]	; 0x41
+ c00129c:	e5d11042 	ldrb	r1, [r1, #66]	; 0x42
+ c0012a0:	ebffff0f 	bl	c000ee4 <actualizar_tablero.clone.0>
             tiempo_volteo_us = timer2_parar();
- c001088:	eb000113 	bl	c0014dc <timer2_parar>
- c00108c:	e59f318c 	ldr	r3, [pc, #396]	; c001220 <reversi8+0x2cc>
- c001090:	e5830044 	str	r0, [r3, #68]	; 0x44
+ c0012a4:	eb000131 	bl	c001770 <timer2_parar>
             actualizar_candidatas(candidatas, fila, columna);
- c001094:	e5d31041 	ldrb	r1, [r3, #65]	; 0x41
- c001098:	e5d32042 	ldrb	r2, [r3, #66]	; 0x42
- c00109c:	e24b006c 	sub	r0, fp, #108	; 0x6c
- c0010a0:	ebfffef9 	bl	c000c8c <actualizar_candidatas>
+ c0012a8:	e59f7204 	ldr	r7, [pc, #516]	; c0014b4 <reversi8+0x344>
+        if (((fila) != DIM) && ((columna) != DIM))
+        {
+            tablero[fila][columna] = FICHA_NEGRA;
+            timer2_empezar();
+            actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
+            tiempo_volteo_us = timer2_parar();
+ c0012ac:	e59f3200 	ldr	r3, [pc, #512]	; c0014b4 <reversi8+0x344>
+            actualizar_candidatas(candidatas, fila, columna);
+ c0012b0:	e5d71041 	ldrb	r1, [r7, #65]	; 0x41
+        if (((fila) != DIM) && ((columna) != DIM))
+        {
+            tablero[fila][columna] = FICHA_NEGRA;
+            timer2_empezar();
+            actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
+            tiempo_volteo_us = timer2_parar();
+ c0012b4:	e5830044 	str	r0, [r3, #68]	; 0x44
+            actualizar_candidatas(candidatas, fila, columna);
+ c0012b8:	e5d72042 	ldrb	r2, [r7, #66]	; 0x42
+ c0012bc:	e24b006c 	sub	r0, fp, #108	; 0x6c
+ c0012c0:	ebfffec4 	bl	c000dd8 <actualizar_candidatas>
             move = 1;
- c0010a4:	e3a01001 	mov	r1, #1
- c0010a8:	e50b108c 	str	r1, [fp, #-140]	; 0xffffff74
+ c0012c4:	e3a02001 	mov	r2, #1
+ c0012c8:	e50b208c 	str	r2, [fp, #-140]	; 0xffffff74
         {
             tablero[fila][columna] = FICHA_NEGRA;
             timer2_empezar();
             actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
             tiempo_volteo_us = timer2_parar();
             actualizar_candidatas(candidatas, fila, columna);
- c0010ac:	e2861010 	add	r1, r6, #16
- c0010b0:	e50b107c 	str	r1, [fp, #-124]	; 0xffffff84
-    {
-        for (j=0; j<DIM; j++)
-        {   // indica en qué casillas quizá se pueda mover
-            if (candidatas[i][j] == SI)
-            {
-                if (tablero[i][j] == CASILLA_VACIA)
- c0010b4:	e59f2164 	ldr	r2, [pc, #356]	; c001220 <reversi8+0x2cc>
- c0010b8:	e50b2080 	str	r2, [fp, #-128]	; 0xffffff80
- c0010bc:	e3a03000 	mov	r3, #0
- c0010c0:	e50b3088 	str	r3, [fp, #-136]	; 0xffffff78
+ c0012cc:	e59f31e4 	ldr	r3, [pc, #484]	; c0014b8 <reversi8+0x348>
     int modelo, longitud;
     char SF, SC; // cantidades a sumar para movernos en la dirección que toque
 
     // Recorremos todo el tablero comprobando dónde podemos mover
     // Comparamos la puntuación de los movimientos encontrados y nos quedamos con el mejor
     for (i=0; i<DIM; i++)
- c0010c4:	e1a08003 	mov	r8, r3
-static int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char *c)
-{
-    int i, j, k, found;
-    int mf = -1; // almacena la fila del mejor movimiento encontrado
-    int mc;      // almacena la columna del mejor movimiento encontrado
-    char mejor = 0; // almacena el mejor valor encontrado
- c0010c8:	e1a09003 	mov	r9, r3
+ c0012d0:	e3a02000 	mov	r2, #0
 // CASILLA_OCUPADA 2
 
 static int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char *c)
 {
     int i, j, k, found;
     int mf = -1; // almacena la fila del mejor movimiento encontrado
- c0010cc:	e3e01000 	mvn	r1, #0
- c0010d0:	e50b1084 	str	r1, [fp, #-132]	; 0xffffff7c
- c0010d4:	ea00002e 	b	c001194 <reversi8+0x240>
-    // Comparamos la puntuación de los movimientos encontrados y nos quedamos con el mejor
-    for (i=0; i<DIM; i++)
-    {
-        for (j=0; j<DIM; j++)
-        {   // indica en qué casillas quizá se pueda mover
-            if (candidatas[i][j] == SI)
- c0010d8:	e5f73001 	ldrb	r3, [r7, #1]!
- c0010dc:	e3530001 	cmp	r3, #1
- c0010e0:	1a00001f 	bne	c001164 <reversi8+0x210>
-// la razón es que al meterlas en la pila no las pone juntas, y así jugar es más complicado.
-// en esta versión el humano lleva negras y la máquina blancas
-// no se comprueba que el humano mueva correctamente.
-// Sólo que la máquina realice un movimiento correcto.
-
-void reversi8()
- c0010e4:	e50b4078 	str	r4, [fp, #-120]	; 0xffffff88
-    {
-        for (j=0; j<DIM; j++)
-        {   // indica en qué casillas quizá se pueda mover
-            if (candidatas[i][j] == SI)
-            {
-                if (tablero[i][j] == CASILLA_VACIA)
- c0010e8:	e51b2080 	ldr	r2, [fp, #-128]	; 0xffffff80
- c0010ec:	e7d23004 	ldrb	r3, [r2, r4]
- c0010f0:	e3530000 	cmp	r3, #0
- c0010f4:	1a00001a 	bne	c001164 <reversi8+0x210>
- c0010f8:	e3a05000 	mov	r5, #0
-
-                    // en este bucle comprobamos si es un movimiento válido
-                    // (es decir si implica voltear en alguna dirección)
-                    while ((found == 0) && (k < DIM))
-                    {
-                        SF = vSF[k];    // k representa la dirección que miramos
- c0010fc:	e7d60005 	ldrb	r0, [r6, r5]
-                        SC = vSC[k];    // 1 es norte, 2 NE, 3 E ...
- c001100:	e2863008 	add	r3, r6, #8
- c001104:	e7d31005 	ldrb	r1, [r3, r5]
-
-                        // nos dice qué hay que voltear en cada dirección
-                        longitud = 0;
- c001108:	e3a03000 	mov	r3, #0
- c00110c:	e50b3070 	str	r3, [fp, #-112]	; 0xffffff90
-                        modelo = PATRON_VOLTEO(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
- c001110:	e20820ff 	and	r2, r8, #255	; 0xff
- c001114:	e20430ff 	and	r3, r4, #255	; 0xff
- c001118:	e88d0003 	stm	sp, {r0, r1}
- c00111c:	e3a01001 	mov	r1, #1
- c001120:	e58d1008 	str	r1, [sp, #8]
- c001124:	e1a0000a 	mov	r0, sl
- c001128:	e24b1070 	sub	r1, fp, #112	; 0x70
- c00112c:	ebffff24 	bl	c000dc4 <patron_volteo>
-                        //  //printf("%d ", modelo);
-                        if (modelo == MODELO_ENCONTRADO)
- c001130:	e3500001 	cmp	r0, #1
- c001134:	1a000007 	bne	c001158 <reversi8+0x204>
-                        {
-                            found = 1;
-                            if (tabla_valor[i][j] > mejor)
- c001138:	e51b207c 	ldr	r2, [fp, #-124]	; 0xffffff84
- c00113c:	e51b1078 	ldr	r1, [fp, #-120]	; 0xffffff88
- c001140:	e7d23001 	ldrb	r3, [r2, r1]
- c001144:	e1590003 	cmp	r9, r3
- c001148:	350b4088 	strcc	r4, [fp, #-136]	; 0xffffff78
- c00114c:	350b8084 	strcc	r8, [fp, #-132]	; 0xffffff7c
- c001150:	3a00002d 	bcc	c00120c <reversi8+0x2b8>
- c001154:	ea00002b 	b	c001208 <reversi8+0x2b4>
-                                mf = i;
-                                mc = j;
-                                mejor = tabla_valor[i][j];
-                            }
-                        }
-                        k++;
- c001158:	e2855001 	add	r5, r5, #1
-                    found = 0;
-                    k = 0;
-
-                    // en este bucle comprobamos si es un movimiento válido
-                    // (es decir si implica voltear en alguna dirección)
-                    while ((found == 0) && (k < DIM))
- c00115c:	e3550007 	cmp	r5, #7
- c001160:	daffffe5 	ble	c0010fc <reversi8+0x1a8>
-
-    // Recorremos todo el tablero comprobando dónde podemos mover
-    // Comparamos la puntuación de los movimientos encontrados y nos quedamos con el mejor
-    for (i=0; i<DIM; i++)
-    {
-        for (j=0; j<DIM; j++)
- c001164:	e2844001 	add	r4, r4, #1
- c001168:	e3540008 	cmp	r4, #8
- c00116c:	1affffd9 	bne	c0010d8 <reversi8+0x184>
+ c0012d4:	e3e0c000 	mvn	ip, #0
     int modelo, longitud;
     char SF, SC; // cantidades a sumar para movernos en la dirección que toque
 
     // Recorremos todo el tablero comprobando dónde podemos mover
     // Comparamos la puntuación de los movimientos encontrados y nos quedamos con el mejor
     for (i=0; i<DIM; i++)
- c001170:	e2888001 	add	r8, r8, #1
- c001174:	e51b3080 	ldr	r3, [fp, #-128]	; 0xffffff80
- c001178:	e2833008 	add	r3, r3, #8
- c00117c:	e50b3080 	str	r3, [fp, #-128]	; 0xffffff80
- c001180:	e51b107c 	ldr	r1, [fp, #-124]	; 0xffffff84
- c001184:	e2811008 	add	r1, r1, #8
- c001188:	e50b107c 	str	r1, [fp, #-124]	; 0xffffff84
- c00118c:	e3580008 	cmp	r8, #8
- c001190:	0a000004 	beq	c0011a8 <reversi8+0x254>
+ c0012d8:	e50b2078 	str	r2, [fp, #-120]	; 0xffffff88
+        {
+            tablero[fila][columna] = FICHA_NEGRA;
+            timer2_empezar();
+            actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
+            tiempo_volteo_us = timer2_parar();
+            actualizar_candidatas(candidatas, fila, columna);
+ c0012dc:	e50b307c 	str	r3, [fp, #-124]	; 0xffffff84
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+    {
+        *es_posicion_correcta = 1;
+ c0012e0:	e50b2088 	str	r2, [fp, #-136]	; 0xffffff78
+static int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char *c)
+{
+    int i, j, k, found;
+    int mf = -1; // almacena la fila del mejor movimiento encontrado
+    int mc;      // almacena la columna del mejor movimiento encontrado
+    char mejor = 0; // almacena el mejor valor encontrado
+ c0012e4:	e50b2080 	str	r2, [fp, #-128]	; 0xffffff80
+// CASILLA_OCUPADA 2
+
+static int elegir_mov(char candidatas[][DIM], char tablero[][DIM], char *f, char *c)
+{
+    int i, j, k, found;
+    int mf = -1; // almacena la fila del mejor movimiento encontrado
+ c0012e8:	e50bc084 	str	ip, [fp, #-132]	; 0xffffff7c
 // la razón es que al meterlas en la pila no las pone juntas, y así jugar es más complicado.
 // en esta versión el humano lleva negras y la máquina blancas
 // no se comprueba que el humano mueva correctamente.
 // Sólo que la máquina realice un movimiento correcto.
 
 void reversi8()
- c001194:	e24b202c 	sub	r2, fp, #44	; 0x2c
- c001198:	e0827188 	add	r7, r2, r8, lsl #3
- c00119c:	e2477041 	sub	r7, r7, #65	; 0x41
- c0011a0:	e3a04000 	mov	r4, #0
- c0011a4:	eaffffcb 	b	c0010d8 <reversi8+0x184>
-            move = 1;
-        }
-
-        // escribe el movimiento en las variables globales fila columna
-        done = elegir_mov(candidatas, tablero, &f, &c);
-        if (done == -1)
- c0011a8:	e51b3084 	ldr	r3, [fp, #-132]	; 0xffffff7c
- c0011ac:	e3730001 	cmn	r3, #1
- c0011b0:	1a000003 	bne	c0011c4 <reversi8+0x270>
-        {
-            if (move == 0)
- c0011b4:	e51b108c 	ldr	r1, [fp, #-140]	; 0xffffff74
- c0011b8:	e3510000 	cmp	r1, #0
- c0011bc:	1affff94 	bne	c001014 <reversi8+0xc0>
- c0011c0:	ea000013 	b	c001214 <reversi8+0x2c0>
-                    }
-                }
-            }
-        }
-    }
-    *f = (char) mf;
- c0011c4:	e51b2084 	ldr	r2, [fp, #-132]	; 0xffffff7c
- c0011c8:	e20250ff 	and	r5, r2, #255	; 0xff
-    *c = (char) mc;
- c0011cc:	e51b3088 	ldr	r3, [fp, #-136]	; 0xffffff78
- c0011d0:	e20340ff 	and	r4, r3, #255	; 0xff
-            if (move == 0)
-                fin = 1;
-        }
-        else
-        {
-            tablero[f][c] = FICHA_BLANCA;
- c0011d4:	e0842185 	add	r2, r4, r5, lsl #3
- c0011d8:	e3a03001 	mov	r3, #1
- c0011dc:	e59f103c 	ldr	r1, [pc, #60]	; c001220 <reversi8+0x2cc>
- c0011e0:	e7c13002 	strb	r3, [r1, r2]
-            actualizar_tablero(tablero, f, c, FICHA_BLANCA);
- c0011e4:	e51b0090 	ldr	r0, [fp, #-144]	; 0xffffff70
- c0011e8:	e1a01005 	mov	r1, r5
- c0011ec:	e1a02004 	mov	r2, r4
- c0011f0:	ebffff28 	bl	c000e98 <actualizar_tablero>
-            actualizar_candidatas(candidatas, f, c);
- c0011f4:	e24b006c 	sub	r0, fp, #108	; 0x6c
- c0011f8:	e1a01005 	mov	r1, r5
- c0011fc:	e1a02004 	mov	r2, r4
- c001200:	ebfffea1 	bl	c000c8c <actualizar_candidatas>
- c001204:	eaffff82 	b	c001014 <reversi8+0xc0>
-                        modelo = PATRON_VOLTEO(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
-                        //  //printf("%d ", modelo);
-                        if (modelo == MODELO_ENCONTRADO)
-                        {
-                            found = 1;
-                            if (tabla_valor[i][j] > mejor)
- c001208:	e1a03009 	mov	r3, r9
+ c0012ec:	e51bc078 	ldr	ip, [fp, #-120]	; 0xffffff88
+ c0012f0:	e1a0718c 	lsl	r7, ip, #3
+ c0012f4:	e2478001 	sub	r8, r7, #1
+ c0012f8:	e24b906c 	sub	r9, fp, #108	; 0x6c
     {
         for (j=0; j<DIM; j++)
         {   // indica en qué casillas quizá se pueda mover
             if (candidatas[i][j] == SI)
             {
                 if (tablero[i][j] == CASILLA_VACIA)
- c00120c:	e1a09003 	mov	r9, r3
- c001210:	eaffffd3 	b	c001164 <reversi8+0x210>
+ c0012fc:	e20c20ff 	and	r2, ip, #255	; 0xff
+// la razón es que al meterlas en la pila no las pone juntas, y así jugar es más complicado.
+// en esta versión el humano lleva negras y la máquina blancas
+// no se comprueba que el humano mueva correctamente.
+// Sólo que la máquina realice un movimiento correcto.
+
+void reversi8()
+ c001300:	e0899008 	add	r9, r9, r8
+    {
+        for (j=0; j<DIM; j++)
+        {   // indica en qué casillas quizá se pueda mover
+            if (candidatas[i][j] == SI)
+            {
+                if (tablero[i][j] == CASILLA_VACIA)
+ c001304:	e50b2074 	str	r2, [fp, #-116]	; 0xffffff8c
+// la razón es que al meterlas en la pila no las pone juntas, y así jugar es más complicado.
+// en esta versión el humano lleva negras y la máquina blancas
+// no se comprueba que el humano mueva correctamente.
+// Sólo que la máquina realice un movimiento correcto.
+
+void reversi8()
+ c001308:	e0848007 	add	r8, r4, r7
+ c00130c:	e3a07000 	mov	r7, #0
+ c001310:	ea000003 	b	c001324 <reversi8+0x1b4>
+
+    // Recorremos todo el tablero comprobando dónde podemos mover
+    // Comparamos la puntuación de los movimientos encontrados y nos quedamos con el mejor
+    for (i=0; i<DIM; i++)
+    {
+        for (j=0; j<DIM; j++)
+ c001314:	e2877001 	add	r7, r7, #1
+ c001318:	e3570008 	cmp	r7, #8
+ c00131c:	e2888001 	add	r8, r8, #1
+ c001320:	0a000042 	beq	c001430 <reversi8+0x2c0>
+        {   // indica en qué casillas quizá se pueda mover
+            if (candidatas[i][j] == SI)
+ c001324:	e5f91001 	ldrb	r1, [r9, #1]!
+ c001328:	e3510001 	cmp	r1, #1
+ c00132c:	1afffff8 	bne	c001314 <reversi8+0x1a4>
+            {
+                if (tablero[i][j] == CASILLA_VACIA)
+ c001330:	e5d86000 	ldrb	r6, [r8]
+ c001334:	e3560000 	cmp	r6, #0
+ c001338:	1afffff5 	bne	c001314 <reversi8+0x1a4>
+ c00133c:	e20750ff 	and	r5, r7, #255	; 0xff
+ c001340:	e50b5070 	str	r5, [fp, #-112]	; 0xffffff90
+
+                    // en este bucle comprobamos si es un movimiento válido
+                    // (es decir si implica voltear en alguna dirección)
+                    while ((found == 0) && (k < DIM))
+                    {
+                        SF = vSF[k];    // k representa la dirección que miramos
+ c001344:	e59f3170 	ldr	r3, [pc, #368]	; c0014bc <reversi8+0x34c>
+                        SC = vSC[k];    // 1 es norte, 2 NE, 3 E ...
+ c001348:	e283c008 	add	ip, r3, #8
+
+                    // en este bucle comprobamos si es un movimiento válido
+                    // (es decir si implica voltear en alguna dirección)
+                    while ((found == 0) && (k < DIM))
+                    {
+                        SF = vSF[k];    // k representa la dirección que miramos
+ c00134c:	e7d35006 	ldrb	r5, [r3, r6]
+static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
+{
+	int es_posicion_correcta; // indica si la posición es correcta y contiene una ficha de algún jugador
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+ c001350:	e51b2074 	ldr	r2, [fp, #-116]	; 0xffffff8c
+	CA = CA + SC;
+ c001354:	e51b0070 	ldr	r0, [fp, #-112]	; 0xffffff90
+                    // en este bucle comprobamos si es un movimiento válido
+                    // (es decir si implica voltear en alguna dirección)
+                    while ((found == 0) && (k < DIM))
+                    {
+                        SF = vSF[k];    // k representa la dirección que miramos
+                        SC = vSC[k];    // 1 es norte, 2 NE, 3 E ...
+ c001358:	e7dcc006 	ldrb	ip, [ip, r6]
+static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
+{
+	int es_posicion_correcta; // indica si la posición es correcta y contiene una ficha de algún jugador
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+ c00135c:	e085e002 	add	lr, r5, r2
+	CA = CA + SC;
+ c001360:	e08ca000 	add	sl, ip, r0
+static int patron_volteo(char tablero[][DIM], int *longitud, char FA, char CA, char SF, char SC, char color)
+{
+	int es_posicion_correcta; // indica si la posición es correcta y contiene una ficha de algún jugador
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+ c001364:	e20e20ff 	and	r2, lr, #255	; 0xff
+	CA = CA + SC;
+ c001368:	e20a30ff 	and	r3, sl, #255	; 0xff
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c00136c:	e3530007 	cmp	r3, #7
+ c001370:	93520007 	cmpls	r2, #7
+ c001374:	83a00000 	movhi	r0, #0
+ c001378:	93a00001 	movls	r0, #1
+ c00137c:	8a000013 	bhi	c0013d0 <reversi8+0x260>
+ c001380:	e0831182 	add	r1, r3, r2, lsl #3
+ c001384:	e7d41001 	ldrb	r1, [r4, r1]
+    {
+        *es_posicion_correcta = 1;
+ c001388:	e3510000 	cmp	r1, #0
+ c00138c:	01a00001 	moveq	r0, r1
+ c001390:	13a00001 	movne	r0, #1
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c001394:	e083a00c 	add	sl, r3, ip
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+	CA = CA + SC;
+	casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
+	while ((es_posicion_correcta == 1) && (casilla != color))
+ c001398:	e20000ff 	and	r0, r0, #255	; 0xff
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c00139c:	e20a30ff 	and	r3, sl, #255	; 0xff
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+	CA = CA + SC;
+	casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
+	while ((es_posicion_correcta == 1) && (casilla != color))
+ c0013a0:	e3510001 	cmp	r1, #1
+ c0013a4:	03a0a000 	moveq	sl, #0
+ c0013a8:	1200a001 	andne	sl, r0, #1
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c0013ac:	e082e005 	add	lr, r2, r5
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+	CA = CA + SC;
+	casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
+	while ((es_posicion_correcta == 1) && (casilla != color))
+ c0013b0:	e35a0000 	cmp	sl, #0
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c0013b4:	e20e20ff 	and	r2, lr, #255	; 0xff
+	char casilla;   // casilla es la casilla que se lee del tablero
+
+	FA = FA + SF;
+	CA = CA + SC;
+	casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
+	while ((es_posicion_correcta == 1) && (casilla != color))
+ c0013b8:	0a000006 	beq	c0013d8 <reversi8+0x268>
+
+    // ficha = tablero[f][c];
+    // no puede accederse a tablero[f][c]
+    // ya que algún índice puede ser negativo
+
+    if ((f < DIM) && (f >= 0) && (c < DIM) && (c >= 0) && (tablero[f][c] != CASILLA_VACIA))
+ c0013bc:	e3530007 	cmp	r3, #7
+ c0013c0:	93520007 	cmpls	r2, #7
+ c0013c4:	83a00000 	movhi	r0, #0
+ c0013c8:	93a00001 	movls	r0, #1
+ c0013cc:	9affffeb 	bls	c001380 <reversi8+0x210>
+        ficha = tablero[f][c];
+    }
+    else
+    {
+        *es_posicion_correcta = 0;
+        ficha = CASILLA_VACIA;
+ c0013d0:	e1a01000 	mov	r1, r0
+ c0013d4:	eaffffee 	b	c001394 <reversi8+0x224>
+		*longitud = *longitud + 1;
+		casilla = COLOR_FICHA(tablero, FA, CA, &es_posicion_correcta);
+	}
+    // si la ultima posición era válida y la ficha es del jugador actual,
+    // entonces hemos encontrado el patrón
+	if ((es_posicion_correcta == 1) && (casilla == color))
+ c0013d8:	e3510001 	cmp	r1, #1
+ c0013dc:	13a00000 	movne	r0, #0
+ c0013e0:	02000001 	andeq	r0, r0, #1
+ c0013e4:	e3500000 	cmp	r0, #0
+ c0013e8:	1a000003 	bne	c0013fc <reversi8+0x28c>
+                                mf = i;
+                                mc = j;
+                                mejor = tabla_valor[i][j];
+                            }
+                        }
+                        k++;
+ c0013ec:	e2866001 	add	r6, r6, #1
+                    found = 0;
+                    k = 0;
+
+                    // en este bucle comprobamos si es un movimiento válido
+                    // (es decir si implica voltear en alguna dirección)
+                    while ((found == 0) && (k < DIM))
+ c0013f0:	e3560008 	cmp	r6, #8
+ c0013f4:	1affffd2 	bne	c001344 <reversi8+0x1d4>
+ c0013f8:	eaffffc5 	b	c001314 <reversi8+0x1a4>
+                        modelo = PATRON_VOLTEO(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
+                        //  //printf("%d ", modelo);
+                        if (modelo == MODELO_ENCONTRADO)
+                        {
+                            found = 1;
+                            if (tabla_valor[i][j] > mejor)
+ c0013fc:	e24b0080 	sub	r0, fp, #128	; 0x80
+ c001400:	e8900005 	ldm	r0, {r0, r2}
+ c001404:	e7d23007 	ldrb	r3, [r2, r7]
+ c001408:	e1530000 	cmp	r3, r0
+ c00140c:	9affffc0 	bls	c001314 <reversi8+0x1a4>
+ c001410:	e50b7088 	str	r7, [fp, #-136]	; 0xffffff78
+ c001414:	e51bc078 	ldr	ip, [fp, #-120]	; 0xffffff88
+
+    // Recorremos todo el tablero comprobando dónde podemos mover
+    // Comparamos la puntuación de los movimientos encontrados y nos quedamos con el mejor
+    for (i=0; i<DIM; i++)
+    {
+        for (j=0; j<DIM; j++)
+ c001418:	e2877001 	add	r7, r7, #1
+ c00141c:	e3570008 	cmp	r7, #8
+                        modelo = PATRON_VOLTEO(tablero, &longitud, i, j, SF, SC, FICHA_BLANCA);
+                        //  //printf("%d ", modelo);
+                        if (modelo == MODELO_ENCONTRADO)
+                        {
+                            found = 1;
+                            if (tabla_valor[i][j] > mejor)
+ c001420:	e50b3080 	str	r3, [fp, #-128]	; 0xffffff80
+ c001424:	e50bc084 	str	ip, [fp, #-132]	; 0xffffff7c
+
+    // Recorremos todo el tablero comprobando dónde podemos mover
+    // Comparamos la puntuación de los movimientos encontrados y nos quedamos con el mejor
+    for (i=0; i<DIM; i++)
+    {
+        for (j=0; j<DIM; j++)
+ c001428:	e2888001 	add	r8, r8, #1
+ c00142c:	1affffbc 	bne	c001324 <reversi8+0x1b4>
+    int modelo, longitud;
+    char SF, SC; // cantidades a sumar para movernos en la dirección que toque
+
+    // Recorremos todo el tablero comprobando dónde podemos mover
+    // Comparamos la puntuación de los movimientos encontrados y nos quedamos con el mejor
+    for (i=0; i<DIM; i++)
+ c001430:	e51b0078 	ldr	r0, [fp, #-120]	; 0xffffff88
+ c001434:	e51b107c 	ldr	r1, [fp, #-124]	; 0xffffff84
+ c001438:	e280e001 	add	lr, r0, #1
+ c00143c:	e2813008 	add	r3, r1, #8
+ c001440:	e35e0008 	cmp	lr, #8
+ c001444:	e50be078 	str	lr, [fp, #-120]	; 0xffffff88
+ c001448:	e50b307c 	str	r3, [fp, #-124]	; 0xffffff84
+ c00144c:	1affffa6 	bne	c0012ec <reversi8+0x17c>
+            move = 1;
+        }
+
+        // escribe el movimiento en las variables globales fila columna
+        done = elegir_mov(candidatas, tablero, &f, &c);
+        if (done == -1)
+ c001450:	e51b3084 	ldr	r3, [fp, #-132]	; 0xffffff7c
+ c001454:	e3730001 	cmn	r3, #1
+ c001458:	1a000005 	bne	c001474 <reversi8+0x304>
+        {
+            if (move == 0)
+ c00145c:	e51b108c 	ldr	r1, [fp, #-140]	; 0xffffff74
+ c001460:	e3510000 	cmp	r1, #0
+ c001464:	1affff72 	bne	c001234 <reversi8+0xc4>
             actualizar_tablero(tablero, f, c, FICHA_BLANCA);
             actualizar_candidatas(candidatas, f, c);
         }
     }
     contar(tablero, &blancas, &negras);
 }
- c001214:	e24bd028 	sub	sp, fp, #40	; 0x28
- c001218:	e89d6ff0 	ldm	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, lr}
- c00121c:	e12fff1e 	bx	lr
- c001220:	0c001820 	.word	0x0c001820
- c001224:	0c0017b8 	.word	0x0c0017b8
+ c001468:	e24bd028 	sub	sp, fp, #40	; 0x28
+ c00146c:	e89d6ff0 	ldm	sp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, lr}
+ c001470:	e12fff1e 	bx	lr
+                    }
+                }
+            }
+        }
+    }
+    *f = (char) mf;
+ c001474:	e24b5088 	sub	r5, fp, #136	; 0x88
+ c001478:	e8950060 	ldm	r5, {r5, r6}
+ c00147c:	e20660ff 	and	r6, r6, #255	; 0xff
+    *c = (char) mc;
+ c001480:	e20550ff 	and	r5, r5, #255	; 0xff
+            if (move == 0)
+                fin = 1;
+        }
+        else
+        {
+            tablero[f][c] = FICHA_BLANCA;
+ c001484:	e3a0e001 	mov	lr, #1
+ c001488:	e085c186 	add	ip, r5, r6, lsl #3
+            actualizar_tablero(tablero, f, c, FICHA_BLANCA);
+ c00148c:	e1a01005 	mov	r1, r5
+ c001490:	e1a0200e 	mov	r2, lr
+ c001494:	e1a00006 	mov	r0, r6
+            if (move == 0)
+                fin = 1;
+        }
+        else
+        {
+            tablero[f][c] = FICHA_BLANCA;
+ c001498:	e7c4e00c 	strb	lr, [r4, ip]
+            actualizar_tablero(tablero, f, c, FICHA_BLANCA);
+ c00149c:	ebfffe90 	bl	c000ee4 <actualizar_tablero.clone.0>
+            actualizar_candidatas(candidatas, f, c);
+ c0014a0:	e24b006c 	sub	r0, fp, #108	; 0x6c
+ c0014a4:	e1a01006 	mov	r1, r6
+ c0014a8:	e1a02005 	mov	r2, r5
+ c0014ac:	ebfffe49 	bl	c000dd8 <actualizar_candidatas>
+ c0014b0:	eaffff5f 	b	c001234 <reversi8+0xc4>
+ c0014b4:	0c001ac8 	.word	0x0c001ac8
+ c0014b8:	0c001a70 	.word	0x0c001a70
+ c0014bc:	0c001a60 	.word	0x0c001a60
 
-0c001228 <color_ficha_arm>:
+0c0014c0 <color_ficha_arm>:
 * 	[fp, #-8]	sp (ip)
 * 	[fp, #-12]	fp anterior
 *******************************************************************************************/
 .global color_ficha_arm
 color_ficha_arm:
 		mov		ip, sp
- c001228:	e1a0c00d 	mov	ip, sp
+ c0014c0:	e1a0c00d 	mov	ip, sp
 		stmdb	sp!, {fp, ip, lr, pc}
- c00122c:	e92dd800 	push	{fp, ip, lr, pc}
+ c0014c4:	e92dd800 	push	{fp, ip, lr, pc}
 		sub		fp, ip, #4
- c001230:	e24cb004 	sub	fp, ip, #4
+ c0014c8:	e24cb004 	sub	fp, ip, #4
 
 		cmp		r1, #DIM				/* sin signo: cubre f < DIM y f >= 0 */
- c001234:	e3510008 	cmp	r1, #8
+ c0014cc:	e3510008 	cmp	r1, #8
 		bhs		cf_else
- c001238:	2a000008 	bcs	c001260 <cf_else>
+ c0014d0:	2a000008 	bcs	c0014f8 <cf_else>
 		cmp		r2, #DIM				/* sin signo: cubre c < DIM y c >= 0 */
- c00123c:	e3520008 	cmp	r2, #8
+ c0014d4:	e3520008 	cmp	r2, #8
 		bhs		cf_else
- c001240:	2a000006 	bcs	c001260 <cf_else>
+ c0014d8:	2a000006 	bcs	c0014f8 <cf_else>
 		add		r0, r0, r1, lsl #3		/* r0 = &tablero[f][0] (fila de DIM = 8 = 2^3 bytes) */
- c001244:	e0800181 	add	r0, r0, r1, lsl #3
+ c0014dc:	e0800181 	add	r0, r0, r1, lsl #3
 		ldrb	r0, [r0, r2]			/* ficha = tablero[f][c] */
- c001248:	e7d00002 	ldrb	r0, [r0, r2]
+ c0014e0:	e7d00002 	ldrb	r0, [r0, r2]
 		cmp		r0, #CASILLA_VACIA
- c00124c:	e3500000 	cmp	r0, #0
+ c0014e4:	e3500000 	cmp	r0, #0
 		beq		cf_else
- c001250:	0a000002 	beq	c001260 <cf_else>
+ c0014e8:	0a000002 	beq	c0014f8 <cf_else>
 
 		mov		r1, #1
- c001254:	e3a01001 	mov	r1, #1
+ c0014ec:	e3a01001 	mov	r1, #1
 		str		r1, [r3]
- c001258:	e5831000 	str	r1, [r3]
+ c0014f0:	e5831000 	str	r1, [r3]
 		ldmdb	fp, {fp, sp, pc}
- c00125c:	e91ba800 	ldmdb	fp, {fp, sp, pc}
+ c0014f4:	e91ba800 	ldmdb	fp, {fp, sp, pc}
 
-0c001260 <cf_else>:
+0c0014f8 <cf_else>:
 
 cf_else:
 		mov		r1, #0
- c001260:	e3a01000 	mov	r1, #0
+ c0014f8:	e3a01000 	mov	r1, #0
 		str		r1, [r3]
- c001264:	e5831000 	str	r1, [r3]
+ c0014fc:	e5831000 	str	r1, [r3]
 		mov		r0, #CASILLA_VACIA
- c001268:	e3a00000 	mov	r0, #0
+ c001500:	e3a00000 	mov	r0, #0
 		ldmdb	fp, {fp, sp, pc}
- c00126c:	e91ba800 	ldmdb	fp, {fp, sp, pc}
+ c001504:	e91ba800 	ldmdb	fp, {fp, sp, pc}
 
-0c001270 <patron_volteo_arm>:
+0c001508 <patron_volteo_arm>:
 * 	[fp, #-44] = [sp]	es_posicion_correcta: va en pila porque se pasa su direccion a color_ficha
 *******************************************************************************************/
 .global patron_volteo_arm
 .extern color_ficha
 patron_volteo_arm:
 		mov		ip, sp
- c001270:	e1a0c00d 	mov	ip, sp
+ c001508:	e1a0c00d 	mov	ip, sp
 		stmdb	sp!, {r4-r10, fp, ip, lr, pc}
- c001274:	e92ddff0 	push	{r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
+ c00150c:	e92ddff0 	push	{r4, r5, r6, r7, r8, r9, sl, fp, ip, lr, pc}
 		sub		fp, ip, #4
- c001278:	e24cb004 	sub	fp, ip, #4
+ c001510:	e24cb004 	sub	fp, ip, #4
 		sub		sp, sp, #4				/* int es_posicion_correcta -> [sp] */
- c00127c:	e24dd004 	sub	sp, sp, #4
+ c001514:	e24dd004 	sub	sp, sp, #4
 
 		mov		r4, r0					/* r4 = tablero */
- c001280:	e1a04000 	mov	r4, r0
+ c001518:	e1a04000 	mov	r4, r0
 		mov		r5, r1					/* r5 = longitud */
- c001284:	e1a05001 	mov	r5, r1
+ c00151c:	e1a05001 	mov	r5, r1
 		ldrb	r8, [fp, #4]			/* r8 = SF */
- c001288:	e5db8004 	ldrb	r8, [fp, #4]
+ c001520:	e5db8004 	ldrb	r8, [fp, #4]
 		ldrb	r9, [fp, #8]			/* r9 = SC */
- c00128c:	e5db9008 	ldrb	r9, [fp, #8]
+ c001524:	e5db9008 	ldrb	r9, [fp, #8]
 		ldrb	r10, [fp, #12]			/* r10 = color */
- c001290:	e5dba00c 	ldrb	sl, [fp, #12]
+ c001528:	e5dba00c 	ldrb	sl, [fp, #12]
 
 		add		r6, r2, r8
- c001294:	e0826008 	add	r6, r2, r8
+ c00152c:	e0826008 	add	r6, r2, r8
 		and		r6, r6, #0xFF			/* FA es char: truncar a 8 bits */
- c001298:	e20660ff 	and	r6, r6, #255	; 0xff
+ c001530:	e20660ff 	and	r6, r6, #255	; 0xff
 		add		r7, r3, r9
- c00129c:	e0837009 	add	r7, r3, r9
+ c001534:	e0837009 	add	r7, r3, r9
 		and		r7, r7, #0xFF
- c0012a0:	e20770ff 	and	r7, r7, #255	; 0xff
+ c001538:	e20770ff 	and	r7, r7, #255	; 0xff
 		mov		r0, r4
- c0012a4:	e1a00004 	mov	r0, r4
+ c00153c:	e1a00004 	mov	r0, r4
 		mov		r1, r6
- c0012a8:	e1a01006 	mov	r1, r6
+ c001540:	e1a01006 	mov	r1, r6
 		mov		r2, r7
- c0012ac:	e1a02007 	mov	r2, r7
+ c001544:	e1a02007 	mov	r2, r7
 		mov		r3, sp
- c0012b0:	e1a0300d 	mov	r3, sp
+ c001548:	e1a0300d 	mov	r3, sp
 		bl		COLOR_FICHA
- c0012b4:	ebfffeb4 	bl	c000d8c <color_ficha>
+ c00154c:	ebfffef9 	bl	c001138 <color_ficha>
 
-0c0012b8 <pv_while>:
+0c001550 <pv_while>:
 
 pv_while:
 		ldr		r1, [sp]
- c0012b8:	e59d1000 	ldr	r1, [sp]
+ c001550:	e59d1000 	ldr	r1, [sp]
 		cmp		r1, #1
- c0012bc:	e3510001 	cmp	r1, #1
+ c001554:	e3510001 	cmp	r1, #1
 		bne		pv_fin_while
- c0012c0:	1a00000e 	bne	c001300 <pv_fin_while>
+ c001558:	1a00000e 	bne	c001598 <pv_fin_while>
 		cmp		r0, r10
- c0012c4:	e150000a 	cmp	r0, sl
+ c00155c:	e150000a 	cmp	r0, sl
 		beq		pv_fin_while
- c0012c8:	0a00000c 	beq	c001300 <pv_fin_while>
+ c001560:	0a00000c 	beq	c001598 <pv_fin_while>
 
 		add		r6, r6, r8
- c0012cc:	e0866008 	add	r6, r6, r8
+ c001564:	e0866008 	add	r6, r6, r8
 		and		r6, r6, #0xFF
- c0012d0:	e20660ff 	and	r6, r6, #255	; 0xff
+ c001568:	e20660ff 	and	r6, r6, #255	; 0xff
 		add		r7, r7, r9
- c0012d4:	e0877009 	add	r7, r7, r9
+ c00156c:	e0877009 	add	r7, r7, r9
 		and		r7, r7, #0xFF
- c0012d8:	e20770ff 	and	r7, r7, #255	; 0xff
+ c001570:	e20770ff 	and	r7, r7, #255	; 0xff
 		ldr		r1, [r5]
- c0012dc:	e5951000 	ldr	r1, [r5]
+ c001574:	e5951000 	ldr	r1, [r5]
 		add		r1, r1, #1
- c0012e0:	e2811001 	add	r1, r1, #1
+ c001578:	e2811001 	add	r1, r1, #1
 		str		r1, [r5]
- c0012e4:	e5851000 	str	r1, [r5]
+ c00157c:	e5851000 	str	r1, [r5]
 		mov		r0, r4
- c0012e8:	e1a00004 	mov	r0, r4
+ c001580:	e1a00004 	mov	r0, r4
 		mov		r1, r6
- c0012ec:	e1a01006 	mov	r1, r6
+ c001584:	e1a01006 	mov	r1, r6
 		mov		r2, r7
- c0012f0:	e1a02007 	mov	r2, r7
+ c001588:	e1a02007 	mov	r2, r7
 		mov		r3, sp
- c0012f4:	e1a0300d 	mov	r3, sp
+ c00158c:	e1a0300d 	mov	r3, sp
 		bl		COLOR_FICHA
- c0012f8:	ebfffea3 	bl	c000d8c <color_ficha>
+ c001590:	ebfffee8 	bl	c001138 <color_ficha>
 		b		pv_while
- c0012fc:	eaffffed 	b	c0012b8 <pv_while>
+ c001594:	eaffffed 	b	c001550 <pv_while>
 
-0c001300 <pv_fin_while>:
+0c001598 <pv_fin_while>:
 
 pv_fin_while:
 		ldr		r1, [sp]
- c001300:	e59d1000 	ldr	r1, [sp]
+ c001598:	e59d1000 	ldr	r1, [sp]
 		cmp		r1, #1
- c001304:	e3510001 	cmp	r1, #1
+ c00159c:	e3510001 	cmp	r1, #1
 		cmpeq	r0, r10
- c001308:	0150000a 	cmpeq	r0, sl
+ c0015a0:	0150000a 	cmpeq	r0, sl
 		moveq	r0, #MODELO_ENCONTRADO
- c00130c:	03a00001 	moveq	r0, #1
+ c0015a4:	03a00001 	moveq	r0, #1
 		movne	r0, #NO_HAY_MODELO
- c001310:	13a00000 	movne	r0, #0
+ c0015a8:	13a00000 	movne	r0, #0
 		ldmdb	fp, {r4-r10, fp, sp, pc}
- c001314:	e91baff0 	ldmdb	fp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
+ c0015ac:	e91baff0 	ldmdb	fp, {r4, r5, r6, r7, r8, r9, sl, fp, sp, pc}
 
-0c001318 <color_ficha_thumb>:
+0c0015b0 <color_ficha_thumb>:
 *******************************************************************************************/
 .global color_ficha_thumb
 .type	color_ficha_thumb, %function
 .thumb_func
 color_ficha_thumb:
 		cmp		r1, #DIM				/* sin signo: cubre f < DIM y f >= 0 */
- c001318:	2908      	cmp	r1, #8
+ c0015b0:	2908      	cmp	r1, #8
 		bhs		cft_else
- c00131a:	d209      	bcs.n	c001330 <cft_else>
+ c0015b2:	d209      	bcs.n	c0015c8 <cft_else>
 		cmp		r2, #DIM				/* sin signo: cubre c < DIM y c >= 0 */
- c00131c:	2a08      	cmp	r2, #8
+ c0015b4:	2a08      	cmp	r2, #8
 		bhs		cft_else
- c00131e:	d207      	bcs.n	c001330 <cft_else>
+ c0015b6:	d207      	bcs.n	c0015c8 <cft_else>
 		lsl		r1, r1, #3				/* Thumb no tiene desplazamiento integrado en add */
- c001320:	00c9      	lsls	r1, r1, #3
+ c0015b8:	00c9      	lsls	r1, r1, #3
 		add		r0, r0, r1				/* r0 = &tablero[f][0] */
- c001322:	1840      	adds	r0, r0, r1
+ c0015ba:	1840      	adds	r0, r0, r1
 		ldrb	r0, [r0, r2]			/* ficha = tablero[f][c] */
- c001324:	5c80      	ldrb	r0, [r0, r2]
+ c0015bc:	5c80      	ldrb	r0, [r0, r2]
 		cmp		r0, #CASILLA_VACIA
- c001326:	2800      	cmp	r0, #0
+ c0015be:	2800      	cmp	r0, #0
 		beq		cft_else
- c001328:	d002      	beq.n	c001330 <cft_else>
+ c0015c0:	d002      	beq.n	c0015c8 <cft_else>
 
 		mov		r1, #1
- c00132a:	2101      	movs	r1, #1
+ c0015c2:	2101      	movs	r1, #1
 		str		r1, [r3]				/* *es_posicion_correcta = 1 */
- c00132c:	6019      	str	r1, [r3, #0]
+ c0015c4:	6019      	str	r1, [r3, #0]
 		bx		lr
- c00132e:	4770      	bx	lr
+ c0015c6:	4770      	bx	lr
 
-0c001330 <cft_else>:
+0c0015c8 <cft_else>:
 
 cft_else:
 		mov		r0, #CASILLA_VACIA		/* ficha = CASILLA_VACIA (= 0) */
- c001330:	2000      	movs	r0, #0
+ c0015c8:	2000      	movs	r0, #0
 		str		r0, [r3]				/* *es_posicion_correcta = 0 (reutiliza el 0 de r0) */
- c001332:	6018      	str	r0, [r3, #0]
+ c0015ca:	6018      	str	r0, [r3, #0]
 		bx		lr
- c001334:	4770      	bx	lr
+ c0015cc:	4770      	bx	lr
 	...
 
-0c001338 <timer_ISR>:
+0c0015d0 <timer_ISR>:
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
 void timer_ISR(void) __attribute__((interrupt("IRQ")));
 
 /*--- codigo de las funciones ---*/
 void timer_ISR(void)
 {
- c001338:	e92d000c 	push	{r2, r3}
+ c0015d0:	e92d000f 	push	{r0, r1, r2, r3}
 	switch_leds = 1;
- c00133c:	e3a02001 	mov	r2, #1
- c001340:	e59f3018 	ldr	r3, [pc, #24]	; c001360 <timer_ISR+0x28>
- c001344:	e5832000 	str	r2, [r3]
 
 	/* borrar bit en I_ISPC para desactivar la solicitud de interrupción*/
 	rI_ISPC |= BIT_TIMER0; // BIT_TIMER0 está definido en 44b.h y pone un uno en el bit 13 que corresponde al Timer0
- c001348:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
- c00134c:	e5932024 	ldr	r2, [r3, #36]	; 0x24
- c001350:	e3822a02 	orr	r2, r2, #8192	; 0x2000
- c001354:	e5832024 	str	r2, [r3, #36]	; 0x24
-}
- c001358:	e8bd000c 	pop	{r2, r3}
- c00135c:	e25ef004 	subs	pc, lr, #4
- c001360:	0c001868 	.word	0x0c001868
+ c0015d4:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
+ c0015d8:	e5932024 	ldr	r2, [r3, #36]	; 0x24
+void timer_ISR(void) __attribute__((interrupt("IRQ")));
 
-0c001364 <timer_init>:
+/*--- codigo de las funciones ---*/
+void timer_ISR(void)
+{
+	switch_leds = 1;
+ c0015dc:	e59f1014 	ldr	r1, [pc, #20]	; c0015f8 <timer_ISR+0x28>
+
+	/* borrar bit en I_ISPC para desactivar la solicitud de interrupción*/
+	rI_ISPC |= BIT_TIMER0; // BIT_TIMER0 está definido en 44b.h y pone un uno en el bit 13 que corresponde al Timer0
+ c0015e0:	e3822a02 	orr	r2, r2, #8192	; 0x2000
+void timer_ISR(void) __attribute__((interrupt("IRQ")));
+
+/*--- codigo de las funciones ---*/
+void timer_ISR(void)
+{
+	switch_leds = 1;
+ c0015e4:	e3a00001 	mov	r0, #1
+ c0015e8:	e5810000 	str	r0, [r1]
+
+	/* borrar bit en I_ISPC para desactivar la solicitud de interrupción*/
+	rI_ISPC |= BIT_TIMER0; // BIT_TIMER0 está definido en 44b.h y pone un uno en el bit 13 que corresponde al Timer0
+ c0015ec:	e5832024 	str	r2, [r3, #36]	; 0x24
+}
+ c0015f0:	e8bd000f 	pop	{r0, r1, r2, r3}
+ c0015f4:	e25ef004 	subs	pc, lr, #4
+ c0015f8:	0c001b10 	.word	0x0c001b10
+
+0c0015fc <timer_init>:
 
 void timer_init(void)
 {
 	/* Configuraion controlador de interrupciones */
 	rINTMOD = 0x0; // Configura las linas como de tipo IRQ
- c001364:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
- c001368:	e3a02000 	mov	r2, #0
- c00136c:	e5832008 	str	r2, [r3, #8]
+ c0015fc:	e3a0261e 	mov	r2, #31457280	; 0x1e00000
+ c001600:	e3a01000 	mov	r1, #0
 	rINTCON = 0x1; // Habilita int. vectorizadas y la linea IRQ (FIQ no)
- c001370:	e3a01001 	mov	r1, #1
- c001374:	e5831000 	str	r1, [r3]
+ c001604:	e3a03001 	mov	r3, #1
+}
+
+void timer_init(void)
+{
+	/* Configuraion controlador de interrupciones */
+	rINTMOD = 0x0; // Configura las linas como de tipo IRQ
+ c001608:	e5821008 	str	r1, [r2, #8]
+	rINTCON = 0x1; // Habilita int. vectorizadas y la linea IRQ (FIQ no)
+ c00160c:	e5823000 	str	r3, [r2]
 	rINTMSK &= ~(BIT_TIMER0); // habilitamos en vector de máscaras de interrupción el Timer0 (bits 26 y 13, BIT_GLOBAL y BIT_TIMER0 están definidos en 44b.h)
- c001378:	e593100c 	ldr	r1, [r3, #12]
- c00137c:	e3c11a02 	bic	r1, r1, #8192	; 0x2000
- c001380:	e583100c 	str	r1, [r3, #12]
+ c001610:	e592c00c 	ldr	ip, [r2, #12]
+ c001614:	e3cc0a02 	bic	r0, ip, #8192	; 0x2000
+ c001618:	e582000c 	str	r0, [r2, #12]
 
 	/* Establece la rutina de servicio para TIMER0 */
 	pISR_TIMER0 = (unsigned) timer_ISR;
- c001384:	e59f1038 	ldr	r1, [pc, #56]	; c0013c4 <timer_init+0x60>
- c001388:	e59f3038 	ldr	r3, [pc, #56]	; c0013c8 <timer_init+0x64>
- c00138c:	e50310ab 	str	r1, [r3, #-171]	; 0xffffff55
 
 	/* Configura el Timer0 */
 	rTCFG0 = 255; // ajusta el preescalado
- c001390:	e59f3034 	ldr	r3, [pc, #52]	; c0013cc <timer_init+0x68>
- c001394:	e3a010ff 	mov	r1, #255	; 0xff
- c001398:	e5831000 	str	r1, [r3]
+ c00161c:	e59f3038 	ldr	r3, [pc, #56]	; c00165c <timer_init+0x60>
+	rINTMOD = 0x0; // Configura las linas como de tipo IRQ
+	rINTCON = 0x1; // Habilita int. vectorizadas y la linea IRQ (FIQ no)
+	rINTMSK &= ~(BIT_TIMER0); // habilitamos en vector de máscaras de interrupción el Timer0 (bits 26 y 13, BIT_GLOBAL y BIT_TIMER0 están definidos en 44b.h)
+
+	/* Establece la rutina de servicio para TIMER0 */
+	pISR_TIMER0 = (unsigned) timer_ISR;
+ c001620:	e59f0038 	ldr	r0, [pc, #56]	; c001660 <timer_init+0x64>
+ c001624:	e59fc038 	ldr	ip, [pc, #56]	; c001664 <timer_init+0x68>
+
+	/* Configura el Timer0 */
+	rTCFG0 = 255; // ajusta el preescalado
+ c001628:	e3a020ff 	mov	r2, #255	; 0xff
+	rINTMOD = 0x0; // Configura las linas como de tipo IRQ
+	rINTCON = 0x1; // Habilita int. vectorizadas y la linea IRQ (FIQ no)
+	rINTMSK &= ~(BIT_TIMER0); // habilitamos en vector de máscaras de interrupción el Timer0 (bits 26 y 13, BIT_GLOBAL y BIT_TIMER0 están definidos en 44b.h)
+
+	/* Establece la rutina de servicio para TIMER0 */
+	pISR_TIMER0 = (unsigned) timer_ISR;
+ c00162c:	e50c00ab 	str	r0, [ip, #-171]	; 0xffffff55
+
+	/* Configura el Timer0 */
+	rTCFG0 = 255; // ajusta el preescalado
+ c001630:	e5832000 	str	r2, [r3]
 	rTCFG1 = 0x0; // selecciona la entrada del mux que proporciona el reloj. La 00 corresponde a un divisor de 1/2.
- c00139c:	e5832004 	str	r2, [r3, #4]
 	rTCNTB0 = 65535;// valor inicial de cuenta (la cuenta es descendente)
- c0013a0:	e59f2028 	ldr	r2, [pc, #40]	; c0013d0 <timer_init+0x6c>
- c0013a4:	e583200c 	str	r2, [r3, #12]
+ c001634:	e282ccff 	add	ip, r2, #65280	; 0xff00
+	/* Establece la rutina de servicio para TIMER0 */
+	pISR_TIMER0 = (unsigned) timer_ISR;
+
+	/* Configura el Timer0 */
+	rTCFG0 = 255; // ajusta el preescalado
+	rTCFG1 = 0x0; // selecciona la entrada del mux que proporciona el reloj. La 00 corresponde a un divisor de 1/2.
+ c001638:	e5831004 	str	r1, [r3, #4]
+	rTCNTB0 = 65535;// valor inicial de cuenta (la cuenta es descendente)
 	rTCMPB0 = 12800;// valor de comparación
- c0013a8:	e3a02c32 	mov	r2, #12800	; 0x3200
- c0013ac:	e5832010 	str	r2, [r3, #16]
 	/* establecer update=manual (bit 1) + inverter=on (¿? será inverter off un cero en el bit 2 pone el inverter en off)*/
 	rTCON = 0x2;
- c0013b0:	e3a02002 	mov	r2, #2
- c0013b4:	e5832008 	str	r2, [r3, #8]
+ c00163c:	e3a00002 	mov	r0, #2
+
+	/* Configura el Timer0 */
+	rTCFG0 = 255; // ajusta el preescalado
+	rTCFG1 = 0x0; // selecciona la entrada del mux que proporciona el reloj. La 00 corresponde a un divisor de 1/2.
+	rTCNTB0 = 65535;// valor inicial de cuenta (la cuenta es descendente)
+	rTCMPB0 = 12800;// valor de comparación
+ c001640:	e3a01c32 	mov	r1, #12800	; 0x3200
+	/* establecer update=manual (bit 1) + inverter=on (¿? será inverter off un cero en el bit 2 pone el inverter en off)*/
+	rTCON = 0x2;
 	/* iniciar timer (bit 0) con auto-reload (bit 3)*/
 	rTCON = 0x09;
- c0013b8:	e3a02009 	mov	r2, #9
- c0013bc:	e5832008 	str	r2, [r3, #8]
-}
- c0013c0:	e12fff1e 	bx	lr
- c0013c4:	0c001338 	.word	0x0c001338
- c0013c8:	0c7fffff 	.word	0x0c7fffff
- c0013cc:	01d50000 	.word	0x01d50000
- c0013d0:	0000ffff 	.word	0x0000ffff
+ c001644:	e3a02009 	mov	r2, #9
+	pISR_TIMER0 = (unsigned) timer_ISR;
 
-0c0013d4 <timer2_ISR>:
+	/* Configura el Timer0 */
+	rTCFG0 = 255; // ajusta el preescalado
+	rTCFG1 = 0x0; // selecciona la entrada del mux que proporciona el reloj. La 00 corresponde a un divisor de 1/2.
+	rTCNTB0 = 65535;// valor inicial de cuenta (la cuenta es descendente)
+ c001648:	e583c00c 	str	ip, [r3, #12]
+	rTCMPB0 = 12800;// valor de comparación
+ c00164c:	e5831010 	str	r1, [r3, #16]
+	/* establecer update=manual (bit 1) + inverter=on (¿? será inverter off un cero en el bit 2 pone el inverter en off)*/
+	rTCON = 0x2;
+ c001650:	e5830008 	str	r0, [r3, #8]
+	/* iniciar timer (bit 0) con auto-reload (bit 3)*/
+	rTCON = 0x09;
+ c001654:	e5832008 	str	r2, [r3, #8]
+}
+ c001658:	e12fff1e 	bx	lr
+ c00165c:	01d50000 	.word	0x01d50000
+ c001660:	0c0015d0 	.word	0x0c0015d0
+ c001664:	0c7fffff 	.word	0x0c7fffff
+
+0c001668 <timer2_ISR>:
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
 static void timer2_ISR(void) __attribute__((interrupt("IRQ")));
 
 /*--- codigo de las funciones ---*/
 static void timer2_ISR(void)
 {
- c0013d4:	e92d000c 	push	{r2, r3}
+ c001668:	e92d000c 	push	{r2, r3}
 	timer2_num_int++;
- c0013d8:	e59f301c 	ldr	r3, [pc, #28]	; c0013fc <timer2_ISR+0x28>
- c0013dc:	e5932000 	ldr	r2, [r3]
- c0013e0:	e2822001 	add	r2, r2, #1
- c0013e4:	e5832000 	str	r2, [r3]
+ c00166c:	e59f301c 	ldr	r3, [pc, #28]	; c001690 <timer2_ISR+0x28>
+ c001670:	e5932000 	ldr	r2, [r3]
+ c001674:	e2822001 	add	r2, r2, #1
+ c001678:	e5832000 	str	r2, [r3]
 
 	/* borrar bit en I_ISPC para desactivar la solicitud de interrupción */
 	rI_ISPC = BIT_TIMER2;	// I_ISPC es de solo escritura: con |= se leería basura
- c0013e8:	e3a02b02 	mov	r2, #2048	; 0x800
- c0013ec:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
- c0013f0:	e5832024 	str	r2, [r3, #36]	; 0x24
+ c00167c:	e3a02b02 	mov	r2, #2048	; 0x800
+ c001680:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
+ c001684:	e5832024 	str	r2, [r3, #36]	; 0x24
 }
- c0013f4:	e8bd000c 	pop	{r2, r3}
- c0013f8:	e25ef004 	subs	pc, lr, #4
- c0013fc:	0c00186c 	.word	0x0c00186c
+ c001688:	e8bd000c 	pop	{r2, r3}
+ c00168c:	e25ef004 	subs	pc, lr, #4
+ c001690:	0c001b14 	.word	0x0c001b14
 
-0c001400 <timer2_inicializar>:
+0c001694 <timer2_inicializar>:
 
 void timer2_inicializar(void)
 {
 	/* sys_init() ya deja INTMOD en IRQ, INTCON vectorizado y BIT_GLOBAL desenmascarado */
 	pISR_TIMER2 = (unsigned) timer2_ISR;
- c001400:	e59f2050 	ldr	r2, [pc, #80]	; c001458 <timer2_inicializar+0x58>
- c001404:	e59f3050 	ldr	r3, [pc, #80]	; c00145c <timer2_inicializar+0x5c>
- c001408:	e50320b3 	str	r2, [r3, #-179]	; 0xffffff4d
 	rINTMSK &= ~(BIT_TIMER2);
- c00140c:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
- c001410:	e593200c 	ldr	r2, [r3, #12]
- c001414:	e3c22b02 	bic	r2, r2, #2048	; 0x800
- c001418:	e583200c 	str	r2, [r3, #12]
+ c001694:	e3a0361e 	mov	r3, #31457280	; 0x1e00000
+ c001698:	e593c00c 	ldr	ip, [r3, #12]
+ c00169c:	e3cc1b02 	bic	r1, ip, #2048	; 0x800
+ c0016a0:	e583100c 	str	r1, [r3, #12]
 
 	/* preescalado 1 (timers 2 y 3, bits 8-15 de TCFG0) = 0, sin tocar el del timer0 */
 	rTCFG0 &= ~(0xFF << 8);
- c00141c:	e59f303c 	ldr	r3, [pc, #60]	; c001460 <timer2_inicializar+0x60>
- c001420:	e5932000 	ldr	r2, [r3]
- c001424:	e3c22cff 	bic	r2, r2, #65280	; 0xff00
- c001428:	e5832000 	str	r2, [r3]
+ c0016a4:	e59f3040 	ldr	r3, [pc, #64]	; c0016ec <timer2_inicializar+0x58>
+ c0016a8:	e5930000 	ldr	r0, [r3]
+ c0016ac:	e3c02cff 	bic	r2, r0, #65280	; 0xff00
+ c0016b0:	e5832000 	str	r2, [r3]
 	/* mux del timer2 (bits 8-11 de TCFG1) = 0000 -> divisor 1/2 */
 	rTCFG1 &= ~(0xF << 8);
- c00142c:	e5932004 	ldr	r2, [r3, #4]
- c001430:	e3c22c0f 	bic	r2, r2, #3840	; 0xf00
- c001434:	e5832004 	str	r2, [r3, #4]
+ c0016b4:	e593c004 	ldr	ip, [r3, #4]
 
 	rTCNTB2 = CUENTA_MAX;
- c001438:	e59f2024 	ldr	r2, [pc, #36]	; c001464 <timer2_inicializar+0x64>
- c00143c:	e5832024 	str	r2, [r3, #36]	; 0x24
+ c0016b8:	e59f0030 	ldr	r0, [pc, #48]	; c0016f0 <timer2_inicializar+0x5c>
+	rINTMSK &= ~(BIT_TIMER2);
+
+	/* preescalado 1 (timers 2 y 3, bits 8-15 de TCFG0) = 0, sin tocar el del timer0 */
+	rTCFG0 &= ~(0xFF << 8);
+	/* mux del timer2 (bits 8-11 de TCFG1) = 0000 -> divisor 1/2 */
+	rTCFG1 &= ~(0xF << 8);
+ c0016bc:	e3cc1c0f 	bic	r1, ip, #3840	; 0xf00
+
+	rTCNTB2 = CUENTA_MAX;
 	rTCMPB2 = 0;
- c001440:	e3a02000 	mov	r2, #0
- c001444:	e5832028 	str	r2, [r3, #40]	; 0x28
+ c0016c0:	e3a02000 	mov	r2, #0
+	rINTMSK &= ~(BIT_TIMER2);
+
+	/* preescalado 1 (timers 2 y 3, bits 8-15 de TCFG0) = 0, sin tocar el del timer0 */
+	rTCFG0 &= ~(0xFF << 8);
+	/* mux del timer2 (bits 8-11 de TCFG1) = 0000 -> divisor 1/2 */
+	rTCFG1 &= ~(0xF << 8);
+ c0016c4:	e5831004 	str	r1, [r3, #4]
+
+	rTCNTB2 = CUENTA_MAX;
+ c0016c8:	e5830024 	str	r0, [r3, #36]	; 0x24
+	rTCMPB2 = 0;
+ c0016cc:	e5832028 	str	r2, [r3, #40]	; 0x28
 
 	/* timer2 parado; solo se tocan sus bits para no afectar al resto de timers */
 	rTCON &= ~T2_BITS;
- c001448:	e5932008 	ldr	r2, [r3, #8]
- c00144c:	e3c22a0f 	bic	r2, r2, #61440	; 0xf000
- c001450:	e5832008 	str	r2, [r3, #8]
+ c0016d0:	e593c008 	ldr	ip, [r3, #8]
 }
- c001454:	e12fff1e 	bx	lr
- c001458:	0c0013d4 	.word	0x0c0013d4
- c00145c:	0c7fffff 	.word	0x0c7fffff
- c001460:	01d50000 	.word	0x01d50000
- c001464:	0000ffff 	.word	0x0000ffff
 
-0c001468 <timer2_empezar>:
+void timer2_inicializar(void)
+{
+	/* sys_init() ya deja INTMOD en IRQ, INTCON vectorizado y BIT_GLOBAL desenmascarado */
+	pISR_TIMER2 = (unsigned) timer2_ISR;
+ c0016d4:	e59f0018 	ldr	r0, [pc, #24]	; c0016f4 <timer2_inicializar+0x60>
+ c0016d8:	e59f1018 	ldr	r1, [pc, #24]	; c0016f8 <timer2_inicializar+0x64>
+
+	rTCNTB2 = CUENTA_MAX;
+	rTCMPB2 = 0;
+
+	/* timer2 parado; solo se tocan sus bits para no afectar al resto de timers */
+	rTCON &= ~T2_BITS;
+ c0016dc:	e3cc2a0f 	bic	r2, ip, #61440	; 0xf000
+}
+
+void timer2_inicializar(void)
+{
+	/* sys_init() ya deja INTMOD en IRQ, INTCON vectorizado y BIT_GLOBAL desenmascarado */
+	pISR_TIMER2 = (unsigned) timer2_ISR;
+ c0016e0:	e50100b3 	str	r0, [r1, #-179]	; 0xffffff4d
+
+	rTCNTB2 = CUENTA_MAX;
+	rTCMPB2 = 0;
+
+	/* timer2 parado; solo se tocan sus bits para no afectar al resto de timers */
+	rTCON &= ~T2_BITS;
+ c0016e4:	e5832008 	str	r2, [r3, #8]
+}
+ c0016e8:	e12fff1e 	bx	lr
+ c0016ec:	01d50000 	.word	0x01d50000
+ c0016f0:	0000ffff 	.word	0x0000ffff
+ c0016f4:	0c001668 	.word	0x0c001668
+ c0016f8:	0c7fffff 	.word	0x0c7fffff
+
+0c0016fc <timer2_empezar>:
 
 void timer2_empezar(void)
 {
 	timer2_num_int = 0;
- c001468:	e3a02000 	mov	r2, #0
- c00146c:	e59f3028 	ldr	r3, [pc, #40]	; c00149c <timer2_empezar+0x34>
- c001470:	e5832000 	str	r2, [r3]
+ c0016fc:	e59f302c 	ldr	r3, [pc, #44]	; c001730 <timer2_empezar+0x34>
+ c001700:	e3a01000 	mov	r1, #0
+ c001704:	e5831000 	str	r1, [r3]
 
 	/* manual update carga TCNTB2 en el contador; después se arranca con auto-reload
 	 * y a la vez se quita el manual update */
 	rTCON = (rTCON & ~T2_BITS) | T2_MANUAL_UPD;
- c001474:	e59f3024 	ldr	r3, [pc, #36]	; c0014a0 <timer2_empezar+0x38>
- c001478:	e5932008 	ldr	r2, [r3, #8]
- c00147c:	e3c22a0f 	bic	r2, r2, #61440	; 0xf000
- c001480:	e3822a02 	orr	r2, r2, #8192	; 0x2000
- c001484:	e5832008 	str	r2, [r3, #8]
+ c001708:	e59f3024 	ldr	r3, [pc, #36]	; c001734 <timer2_empezar+0x38>
+ c00170c:	e5930008 	ldr	r0, [r3, #8]
+ c001710:	e3c02a0f 	bic	r2, r0, #61440	; 0xf000
+ c001714:	e382ca02 	orr	ip, r2, #8192	; 0x2000
+ c001718:	e583c008 	str	ip, [r3, #8]
 	rTCON = (rTCON & ~T2_BITS) | T2_START | T2_AUTO_RELOAD;
- c001488:	e5932008 	ldr	r2, [r3, #8]
- c00148c:	e3c22a0f 	bic	r2, r2, #61440	; 0xf000
- c001490:	e3822a09 	orr	r2, r2, #36864	; 0x9000
- c001494:	e5832008 	str	r2, [r3, #8]
+ c00171c:	e5931008 	ldr	r1, [r3, #8]
+ c001720:	e3c10a0f 	bic	r0, r1, #61440	; 0xf000
+ c001724:	e3802a09 	orr	r2, r0, #36864	; 0x9000
+ c001728:	e5832008 	str	r2, [r3, #8]
 }
- c001498:	e12fff1e 	bx	lr
- c00149c:	0c00186c 	.word	0x0c00186c
- c0014a0:	01d50000 	.word	0x01d50000
+ c00172c:	e12fff1e 	bx	lr
+ c001730:	0c001b14 	.word	0x0c001b14
+ c001734:	01d50000 	.word	0x01d50000
 
-0c0014a4 <timer2_leer>:
+0c001738 <timer2_leer>:
+
+unsigned int timer2_leer(void)
+{
+ c001738:	e59f2028 	ldr	r2, [pc, #40]	; c001768 <timer2_leer+0x30>
+	unsigned int n, cuenta;
+
+	/* si la ISR salta entre las dos lecturas, n y cuenta no casan: se repite */
+	do {
+		n = timer2_num_int;
+		cuenta = rTCNTO2;
+ c00173c:	e59fc028 	ldr	ip, [pc, #40]	; c00176c <timer2_leer+0x34>
 {
 	unsigned int n, cuenta;
 
 	/* si la ISR salta entre las dos lecturas, n y cuenta no casan: se repite */
 	do {
 		n = timer2_num_int;
- c0014a4:	e59f2028 	ldr	r2, [pc, #40]	; c0014d4 <timer2_leer+0x30>
+ c001740:	e5923000 	ldr	r3, [r2]
 		cuenta = rTCNTO2;
- c0014a8:	e59fc028 	ldr	ip, [pc, #40]	; c0014d8 <timer2_leer+0x34>
-{
-	unsigned int n, cuenta;
-
-	/* si la ISR salta entre las dos lecturas, n y cuenta no casan: se repite */
-	do {
-		n = timer2_num_int;
- c0014ac:	e5923000 	ldr	r3, [r2]
-		cuenta = rTCNTO2;
- c0014b0:	e59c002c 	ldr	r0, [ip, #44]	; 0x2c
+ c001744:	e59c002c 	ldr	r0, [ip, #44]	; 0x2c
 	} while (n != timer2_num_int);
- c0014b4:	e5921000 	ldr	r1, [r2]
- c0014b8:	e1530001 	cmp	r3, r1
- c0014bc:	1afffffa 	bne	c0014ac <timer2_leer+0x8>
+ c001748:	e5921000 	ldr	r1, [r2]
+ c00174c:	e1530001 	cmp	r3, r1
+ c001750:	1afffffa 	bne	c001740 <timer2_leer+0x8>
 
 	/* cada periodo completo son 65536 / 32 = 2048 us; así no hay desbordamiento
 	 * hasta 2^32 us (~71 min) */
 	return n * ((CUENTA_MAX + 1) / TICKS_POR_US) + (CUENTA_MAX - cuenta) / TICKS_POR_US;
- c0014c0:	e2600cff 	rsb	r0, r0, #65280	; 0xff00
- c0014c4:	e28000ff 	add	r0, r0, #255	; 0xff
- c0014c8:	e1a03583 	lsl	r3, r3, #11
+ c001754:	e2602cff 	rsb	r2, r0, #65280	; 0xff00
+ c001758:	e28200ff 	add	r0, r2, #255	; 0xff
+ c00175c:	e1a03583 	lsl	r3, r3, #11
 }
- c0014cc:	e08302a0 	add	r0, r3, r0, lsr #5
- c0014d0:	e12fff1e 	bx	lr
- c0014d4:	0c00186c 	.word	0x0c00186c
- c0014d8:	01d50000 	.word	0x01d50000
+ c001760:	e08302a0 	add	r0, r3, r0, lsr #5
+ c001764:	e12fff1e 	bx	lr
+ c001768:	0c001b14 	.word	0x0c001b14
+ c00176c:	01d50000 	.word	0x01d50000
 
-0c0014dc <timer2_parar>:
+0c001770 <timer2_parar>:
 
 unsigned int timer2_parar(void)
 {
- c0014dc:	e1a0c00d 	mov	ip, sp
- c0014e0:	e92dd800 	push	{fp, ip, lr, pc}
- c0014e4:	e24cb004 	sub	fp, ip, #4
+ c001770:	e59f2038 	ldr	r2, [pc, #56]	; c0017b0 <timer2_parar+0x40>
+	unsigned int n, cuenta;
+
+	/* si la ISR salta entre las dos lecturas, n y cuenta no casan: se repite */
+	do {
+		n = timer2_num_int;
+		cuenta = rTCNTO2;
+ c001774:	e59fc038 	ldr	ip, [pc, #56]	; c0017b4 <timer2_parar+0x44>
+{
+	unsigned int n, cuenta;
+
+	/* si la ISR salta entre las dos lecturas, n y cuenta no casan: se repite */
+	do {
+		n = timer2_num_int;
+ c001778:	e5923000 	ldr	r3, [r2]
+		cuenta = rTCNTO2;
+ c00177c:	e59c002c 	ldr	r0, [ip, #44]	; 0x2c
+	} while (n != timer2_num_int);
+ c001780:	e5921000 	ldr	r1, [r2]
+ c001784:	e1530001 	cmp	r3, r1
+	unsigned int n, cuenta;
+
+	/* si la ISR salta entre las dos lecturas, n y cuenta no casan: se repite */
+	do {
+		n = timer2_num_int;
+		cuenta = rTCNTO2;
+ c001788:	e59f1024 	ldr	r1, [pc, #36]	; c0017b4 <timer2_parar+0x44>
+	} while (n != timer2_num_int);
+ c00178c:	1afffff9 	bne	c001778 <timer2_parar+0x8>
+
+unsigned int timer2_parar(void)
+{
 	unsigned int t = timer2_leer();
- c0014e8:	ebffffed 	bl	c0014a4 <timer2_leer>
 
 	rTCON &= ~T2_START;
- c0014ec:	e59f3014 	ldr	r3, [pc, #20]	; c001508 <timer2_parar+0x2c>
- c0014f0:	e5932008 	ldr	r2, [r3, #8]
- c0014f4:	e3c22a01 	bic	r2, r2, #4096	; 0x1000
- c0014f8:	e5832008 	str	r2, [r3, #8]
+ c001790:	e5912008 	ldr	r2, [r1, #8]
+		cuenta = rTCNTO2;
+	} while (n != timer2_num_int);
+
+	/* cada periodo completo son 65536 / 32 = 2048 us; así no hay desbordamiento
+	 * hasta 2^32 us (~71 min) */
+	return n * ((CUENTA_MAX + 1) / TICKS_POR_US) + (CUENTA_MAX - cuenta) / TICKS_POR_US;
+ c001794:	e260ccff 	rsb	ip, r0, #65280	; 0xff00
+
+unsigned int timer2_parar(void)
+{
+	unsigned int t = timer2_leer();
+
+	rTCON &= ~T2_START;
+ c001798:	e3c22a01 	bic	r2, r2, #4096	; 0x1000
+		cuenta = rTCNTO2;
+	} while (n != timer2_num_int);
+
+	/* cada periodo completo son 65536 / 32 = 2048 us; así no hay desbordamiento
+	 * hasta 2^32 us (~71 min) */
+	return n * ((CUENTA_MAX + 1) / TICKS_POR_US) + (CUENTA_MAX - cuenta) / TICKS_POR_US;
+ c00179c:	e28c00ff 	add	r0, ip, #255	; 0xff
+ c0017a0:	e1a03583 	lsl	r3, r3, #11
+
+unsigned int timer2_parar(void)
+{
+	unsigned int t = timer2_leer();
+
+	rTCON &= ~T2_START;
+ c0017a4:	e5812008 	str	r2, [r1, #8]
 	return t;
 }
- c0014fc:	e24bd00c 	sub	sp, fp, #12
- c001500:	e89d6800 	ldm	sp, {fp, sp, lr}
- c001504:	e12fff1e 	bx	lr
- c001508:	01d50000 	.word	0x01d50000
+ c0017a8:	e08302a0 	add	r0, r3, r0, lsr #5
+ c0017ac:	e12fff1e 	bx	lr
+ c0017b0:	0c001b14 	.word	0x0c001b14
+ c0017b4:	01d50000 	.word	0x01d50000
 
-0c00150c <__aeabi_idiv>:
- c00150c:	e3510000 	cmp	r1, #0
- c001510:	0a000043 	beq	c001624 <.divsi3_skip_div0_test+0x110>
+0c0017b8 <__aeabi_idiv>:
+ c0017b8:	e3510000 	cmp	r1, #0
+ c0017bc:	0a000043 	beq	c0018d0 <.divsi3_skip_div0_test+0x110>
 
-0c001514 <.divsi3_skip_div0_test>:
- c001514:	e020c001 	eor	ip, r0, r1
- c001518:	42611000 	rsbmi	r1, r1, #0
- c00151c:	e2512001 	subs	r2, r1, #1
- c001520:	0a000027 	beq	c0015c4 <.divsi3_skip_div0_test+0xb0>
- c001524:	e1b03000 	movs	r3, r0
- c001528:	42603000 	rsbmi	r3, r0, #0
- c00152c:	e1530001 	cmp	r3, r1
- c001530:	9a000026 	bls	c0015d0 <.divsi3_skip_div0_test+0xbc>
- c001534:	e1110002 	tst	r1, r2
- c001538:	0a000028 	beq	c0015e0 <.divsi3_skip_div0_test+0xcc>
- c00153c:	e311020e 	tst	r1, #-536870912	; 0xe0000000
- c001540:	01a01181 	lsleq	r1, r1, #3
- c001544:	03a02008 	moveq	r2, #8
- c001548:	13a02001 	movne	r2, #1
- c00154c:	e3510201 	cmp	r1, #268435456	; 0x10000000
- c001550:	31510003 	cmpcc	r1, r3
- c001554:	31a01201 	lslcc	r1, r1, #4
- c001558:	31a02202 	lslcc	r2, r2, #4
- c00155c:	3afffffa 	bcc	c00154c <.divsi3_skip_div0_test+0x38>
- c001560:	e3510102 	cmp	r1, #-2147483648	; 0x80000000
- c001564:	31510003 	cmpcc	r1, r3
- c001568:	31a01081 	lslcc	r1, r1, #1
- c00156c:	31a02082 	lslcc	r2, r2, #1
- c001570:	3afffffa 	bcc	c001560 <.divsi3_skip_div0_test+0x4c>
- c001574:	e3a00000 	mov	r0, #0
- c001578:	e1530001 	cmp	r3, r1
- c00157c:	20433001 	subcs	r3, r3, r1
- c001580:	21800002 	orrcs	r0, r0, r2
- c001584:	e15300a1 	cmp	r3, r1, lsr #1
- c001588:	204330a1 	subcs	r3, r3, r1, lsr #1
- c00158c:	218000a2 	orrcs	r0, r0, r2, lsr #1
- c001590:	e1530121 	cmp	r3, r1, lsr #2
- c001594:	20433121 	subcs	r3, r3, r1, lsr #2
- c001598:	21800122 	orrcs	r0, r0, r2, lsr #2
- c00159c:	e15301a1 	cmp	r3, r1, lsr #3
- c0015a0:	204331a1 	subcs	r3, r3, r1, lsr #3
- c0015a4:	218001a2 	orrcs	r0, r0, r2, lsr #3
- c0015a8:	e3530000 	cmp	r3, #0
- c0015ac:	11b02222 	lsrsne	r2, r2, #4
- c0015b0:	11a01221 	lsrne	r1, r1, #4
- c0015b4:	1affffef 	bne	c001578 <.divsi3_skip_div0_test+0x64>
- c0015b8:	e35c0000 	cmp	ip, #0
- c0015bc:	42600000 	rsbmi	r0, r0, #0
- c0015c0:	e12fff1e 	bx	lr
- c0015c4:	e13c0000 	teq	ip, r0
- c0015c8:	42600000 	rsbmi	r0, r0, #0
- c0015cc:	e12fff1e 	bx	lr
- c0015d0:	33a00000 	movcc	r0, #0
- c0015d4:	01a00fcc 	asreq	r0, ip, #31
- c0015d8:	03800001 	orreq	r0, r0, #1
- c0015dc:	e12fff1e 	bx	lr
- c0015e0:	e3510801 	cmp	r1, #65536	; 0x10000
- c0015e4:	21a01821 	lsrcs	r1, r1, #16
- c0015e8:	23a02010 	movcs	r2, #16
- c0015ec:	33a02000 	movcc	r2, #0
- c0015f0:	e3510c01 	cmp	r1, #256	; 0x100
- c0015f4:	21a01421 	lsrcs	r1, r1, #8
- c0015f8:	22822008 	addcs	r2, r2, #8
- c0015fc:	e3510010 	cmp	r1, #16
- c001600:	21a01221 	lsrcs	r1, r1, #4
- c001604:	22822004 	addcs	r2, r2, #4
- c001608:	e3510004 	cmp	r1, #4
- c00160c:	82822003 	addhi	r2, r2, #3
- c001610:	908220a1 	addls	r2, r2, r1, lsr #1
- c001614:	e35c0000 	cmp	ip, #0
- c001618:	e1a00233 	lsr	r0, r3, r2
- c00161c:	42600000 	rsbmi	r0, r0, #0
- c001620:	e12fff1e 	bx	lr
- c001624:	e3500000 	cmp	r0, #0
- c001628:	c3e00102 	mvngt	r0, #-2147483648	; 0x80000000
- c00162c:	b3a00102 	movlt	r0, #-2147483648	; 0x80000000
- c001630:	ea000007 	b	c001654 <__aeabi_idiv0>
+0c0017c0 <.divsi3_skip_div0_test>:
+ c0017c0:	e020c001 	eor	ip, r0, r1
+ c0017c4:	42611000 	rsbmi	r1, r1, #0
+ c0017c8:	e2512001 	subs	r2, r1, #1
+ c0017cc:	0a000027 	beq	c001870 <.divsi3_skip_div0_test+0xb0>
+ c0017d0:	e1b03000 	movs	r3, r0
+ c0017d4:	42603000 	rsbmi	r3, r0, #0
+ c0017d8:	e1530001 	cmp	r3, r1
+ c0017dc:	9a000026 	bls	c00187c <.divsi3_skip_div0_test+0xbc>
+ c0017e0:	e1110002 	tst	r1, r2
+ c0017e4:	0a000028 	beq	c00188c <.divsi3_skip_div0_test+0xcc>
+ c0017e8:	e311020e 	tst	r1, #-536870912	; 0xe0000000
+ c0017ec:	01a01181 	lsleq	r1, r1, #3
+ c0017f0:	03a02008 	moveq	r2, #8
+ c0017f4:	13a02001 	movne	r2, #1
+ c0017f8:	e3510201 	cmp	r1, #268435456	; 0x10000000
+ c0017fc:	31510003 	cmpcc	r1, r3
+ c001800:	31a01201 	lslcc	r1, r1, #4
+ c001804:	31a02202 	lslcc	r2, r2, #4
+ c001808:	3afffffa 	bcc	c0017f8 <.divsi3_skip_div0_test+0x38>
+ c00180c:	e3510102 	cmp	r1, #-2147483648	; 0x80000000
+ c001810:	31510003 	cmpcc	r1, r3
+ c001814:	31a01081 	lslcc	r1, r1, #1
+ c001818:	31a02082 	lslcc	r2, r2, #1
+ c00181c:	3afffffa 	bcc	c00180c <.divsi3_skip_div0_test+0x4c>
+ c001820:	e3a00000 	mov	r0, #0
+ c001824:	e1530001 	cmp	r3, r1
+ c001828:	20433001 	subcs	r3, r3, r1
+ c00182c:	21800002 	orrcs	r0, r0, r2
+ c001830:	e15300a1 	cmp	r3, r1, lsr #1
+ c001834:	204330a1 	subcs	r3, r3, r1, lsr #1
+ c001838:	218000a2 	orrcs	r0, r0, r2, lsr #1
+ c00183c:	e1530121 	cmp	r3, r1, lsr #2
+ c001840:	20433121 	subcs	r3, r3, r1, lsr #2
+ c001844:	21800122 	orrcs	r0, r0, r2, lsr #2
+ c001848:	e15301a1 	cmp	r3, r1, lsr #3
+ c00184c:	204331a1 	subcs	r3, r3, r1, lsr #3
+ c001850:	218001a2 	orrcs	r0, r0, r2, lsr #3
+ c001854:	e3530000 	cmp	r3, #0
+ c001858:	11b02222 	lsrsne	r2, r2, #4
+ c00185c:	11a01221 	lsrne	r1, r1, #4
+ c001860:	1affffef 	bne	c001824 <.divsi3_skip_div0_test+0x64>
+ c001864:	e35c0000 	cmp	ip, #0
+ c001868:	42600000 	rsbmi	r0, r0, #0
+ c00186c:	e12fff1e 	bx	lr
+ c001870:	e13c0000 	teq	ip, r0
+ c001874:	42600000 	rsbmi	r0, r0, #0
+ c001878:	e12fff1e 	bx	lr
+ c00187c:	33a00000 	movcc	r0, #0
+ c001880:	01a00fcc 	asreq	r0, ip, #31
+ c001884:	03800001 	orreq	r0, r0, #1
+ c001888:	e12fff1e 	bx	lr
+ c00188c:	e3510801 	cmp	r1, #65536	; 0x10000
+ c001890:	21a01821 	lsrcs	r1, r1, #16
+ c001894:	23a02010 	movcs	r2, #16
+ c001898:	33a02000 	movcc	r2, #0
+ c00189c:	e3510c01 	cmp	r1, #256	; 0x100
+ c0018a0:	21a01421 	lsrcs	r1, r1, #8
+ c0018a4:	22822008 	addcs	r2, r2, #8
+ c0018a8:	e3510010 	cmp	r1, #16
+ c0018ac:	21a01221 	lsrcs	r1, r1, #4
+ c0018b0:	22822004 	addcs	r2, r2, #4
+ c0018b4:	e3510004 	cmp	r1, #4
+ c0018b8:	82822003 	addhi	r2, r2, #3
+ c0018bc:	908220a1 	addls	r2, r2, r1, lsr #1
+ c0018c0:	e35c0000 	cmp	ip, #0
+ c0018c4:	e1a00233 	lsr	r0, r3, r2
+ c0018c8:	42600000 	rsbmi	r0, r0, #0
+ c0018cc:	e12fff1e 	bx	lr
+ c0018d0:	e3500000 	cmp	r0, #0
+ c0018d4:	c3e00102 	mvngt	r0, #-2147483648	; 0x80000000
+ c0018d8:	b3a00102 	movlt	r0, #-2147483648	; 0x80000000
+ c0018dc:	ea000007 	b	c001900 <__aeabi_idiv0>
 
-0c001634 <__aeabi_idivmod>:
- c001634:	e3510000 	cmp	r1, #0
- c001638:	0afffff9 	beq	c001624 <.divsi3_skip_div0_test+0x110>
- c00163c:	e92d4003 	push	{r0, r1, lr}
- c001640:	ebffffb3 	bl	c001514 <.divsi3_skip_div0_test>
- c001644:	e8bd4006 	pop	{r1, r2, lr}
- c001648:	e0030092 	mul	r3, r2, r0
- c00164c:	e0411003 	sub	r1, r1, r3
- c001650:	e12fff1e 	bx	lr
+0c0018e0 <__aeabi_idivmod>:
+ c0018e0:	e3510000 	cmp	r1, #0
+ c0018e4:	0afffff9 	beq	c0018d0 <.divsi3_skip_div0_test+0x110>
+ c0018e8:	e92d4003 	push	{r0, r1, lr}
+ c0018ec:	ebffffb3 	bl	c0017c0 <.divsi3_skip_div0_test>
+ c0018f0:	e8bd4006 	pop	{r1, r2, lr}
+ c0018f4:	e0030092 	mul	r3, r2, r0
+ c0018f8:	e0411003 	sub	r1, r1, r3
+ c0018fc:	e12fff1e 	bx	lr
 
-0c001654 <__aeabi_idiv0>:
- c001654:	e12fff1e 	bx	lr
+0c001900 <__aeabi_idiv0>:
+ c001900:	e12fff1e 	bx	lr
 
-0c001658 <memset>:
- c001658:	e3520003 	cmp	r2, #3
- c00165c:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
- c001660:	e20110ff 	and	r1, r1, #255	; 0xff
- c001664:	8a000008 	bhi	c00168c <memset+0x34>
- c001668:	e3520000 	cmp	r2, #0
- c00166c:	0a000004 	beq	c001684 <memset+0x2c>
- c001670:	e1a03000 	mov	r3, r0
- c001674:	e0822000 	add	r2, r2, r0
- c001678:	e4c31001 	strb	r1, [r3], #1
- c00167c:	e1530002 	cmp	r3, r2
- c001680:	1afffffc 	bne	c001678 <memset+0x20>
- c001684:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
- c001688:	e12fff1e 	bx	lr
- c00168c:	e0802002 	add	r2, r0, r2
- c001690:	e1a0c000 	mov	ip, r0
- c001694:	ea000000 	b	c00169c <memset+0x44>
- c001698:	e4cc1001 	strb	r1, [ip], #1
- c00169c:	e31c0003 	tst	ip, #3
- c0016a0:	1afffffc 	bne	c001698 <memset+0x40>
- c0016a4:	e0813401 	add	r3, r1, r1, lsl #8
- c0016a8:	e0833803 	add	r3, r3, r3, lsl #16
- c0016ac:	ea00000f 	b	c0016f0 <memset+0x98>
- c0016b0:	e50c3040 	str	r3, [ip, #-64]	; 0xffffffc0
- c0016b4:	e50c303c 	str	r3, [ip, #-60]	; 0xffffffc4
- c0016b8:	e50c3038 	str	r3, [ip, #-56]	; 0xffffffc8
- c0016bc:	e50c3034 	str	r3, [ip, #-52]	; 0xffffffcc
- c0016c0:	e50c3030 	str	r3, [ip, #-48]	; 0xffffffd0
- c0016c4:	e50c302c 	str	r3, [ip, #-44]	; 0xffffffd4
- c0016c8:	e50c3028 	str	r3, [ip, #-40]	; 0xffffffd8
- c0016cc:	e50c3024 	str	r3, [ip, #-36]	; 0xffffffdc
- c0016d0:	e50c3020 	str	r3, [ip, #-32]	; 0xffffffe0
- c0016d4:	e50c301c 	str	r3, [ip, #-28]	; 0xffffffe4
- c0016d8:	e50c3018 	str	r3, [ip, #-24]	; 0xffffffe8
- c0016dc:	e50c3014 	str	r3, [ip, #-20]	; 0xffffffec
- c0016e0:	e50c3010 	str	r3, [ip, #-16]
- c0016e4:	e50c300c 	str	r3, [ip, #-12]
- c0016e8:	e50c3008 	str	r3, [ip, #-8]
- c0016ec:	e50c3004 	str	r3, [ip, #-4]
- c0016f0:	e06c4002 	rsb	r4, ip, r2
- c0016f4:	e354003f 	cmp	r4, #63	; 0x3f
- c0016f8:	e1a0400c 	mov	r4, ip
- c0016fc:	e28cc040 	add	ip, ip, #64	; 0x40
- c001700:	caffffea 	bgt	c0016b0 <memset+0x58>
- c001704:	e1a0c004 	mov	ip, r4
- c001708:	ea000003 	b	c00171c <memset+0xc4>
- c00170c:	e50c3010 	str	r3, [ip, #-16]
- c001710:	e50c300c 	str	r3, [ip, #-12]
- c001714:	e50c3008 	str	r3, [ip, #-8]
- c001718:	e50c3004 	str	r3, [ip, #-4]
- c00171c:	e06c4002 	rsb	r4, ip, r2
- c001720:	e354000f 	cmp	r4, #15
- c001724:	e1a0400c 	mov	r4, ip
- c001728:	e28cc010 	add	ip, ip, #16
- c00172c:	cafffff6 	bgt	c00170c <memset+0xb4>
- c001730:	ea000000 	b	c001738 <memset+0xe0>
- c001734:	e4843004 	str	r3, [r4], #4
- c001738:	e064c002 	rsb	ip, r4, r2
- c00173c:	e35c0003 	cmp	ip, #3
- c001740:	cafffffb 	bgt	c001734 <memset+0xdc>
- c001744:	ea000000 	b	c00174c <memset+0xf4>
- c001748:	e4c41001 	strb	r1, [r4], #1
- c00174c:	e1540002 	cmp	r4, r2
- c001750:	3afffffc 	bcc	c001748 <memset+0xf0>
- c001754:	eaffffca 	b	c001684 <memset+0x2c>
+0c001904 <memset>:
+ c001904:	e3520003 	cmp	r2, #3
+ c001908:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
+ c00190c:	e20110ff 	and	r1, r1, #255	; 0xff
+ c001910:	8a000008 	bhi	c001938 <memset+0x34>
+ c001914:	e3520000 	cmp	r2, #0
+ c001918:	0a000004 	beq	c001930 <memset+0x2c>
+ c00191c:	e1a03000 	mov	r3, r0
+ c001920:	e0822000 	add	r2, r2, r0
+ c001924:	e4c31001 	strb	r1, [r3], #1
+ c001928:	e1530002 	cmp	r3, r2
+ c00192c:	1afffffc 	bne	c001924 <memset+0x20>
+ c001930:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
+ c001934:	e12fff1e 	bx	lr
+ c001938:	e0802002 	add	r2, r0, r2
+ c00193c:	e1a0c000 	mov	ip, r0
+ c001940:	ea000000 	b	c001948 <memset+0x44>
+ c001944:	e4cc1001 	strb	r1, [ip], #1
+ c001948:	e31c0003 	tst	ip, #3
+ c00194c:	1afffffc 	bne	c001944 <memset+0x40>
+ c001950:	e0813401 	add	r3, r1, r1, lsl #8
+ c001954:	e0833803 	add	r3, r3, r3, lsl #16
+ c001958:	ea00000f 	b	c00199c <memset+0x98>
+ c00195c:	e50c3040 	str	r3, [ip, #-64]	; 0xffffffc0
+ c001960:	e50c303c 	str	r3, [ip, #-60]	; 0xffffffc4
+ c001964:	e50c3038 	str	r3, [ip, #-56]	; 0xffffffc8
+ c001968:	e50c3034 	str	r3, [ip, #-52]	; 0xffffffcc
+ c00196c:	e50c3030 	str	r3, [ip, #-48]	; 0xffffffd0
+ c001970:	e50c302c 	str	r3, [ip, #-44]	; 0xffffffd4
+ c001974:	e50c3028 	str	r3, [ip, #-40]	; 0xffffffd8
+ c001978:	e50c3024 	str	r3, [ip, #-36]	; 0xffffffdc
+ c00197c:	e50c3020 	str	r3, [ip, #-32]	; 0xffffffe0
+ c001980:	e50c301c 	str	r3, [ip, #-28]	; 0xffffffe4
+ c001984:	e50c3018 	str	r3, [ip, #-24]	; 0xffffffe8
+ c001988:	e50c3014 	str	r3, [ip, #-20]	; 0xffffffec
+ c00198c:	e50c3010 	str	r3, [ip, #-16]
+ c001990:	e50c300c 	str	r3, [ip, #-12]
+ c001994:	e50c3008 	str	r3, [ip, #-8]
+ c001998:	e50c3004 	str	r3, [ip, #-4]
+ c00199c:	e06c4002 	rsb	r4, ip, r2
+ c0019a0:	e354003f 	cmp	r4, #63	; 0x3f
+ c0019a4:	e1a0400c 	mov	r4, ip
+ c0019a8:	e28cc040 	add	ip, ip, #64	; 0x40
+ c0019ac:	caffffea 	bgt	c00195c <memset+0x58>
+ c0019b0:	e1a0c004 	mov	ip, r4
+ c0019b4:	ea000003 	b	c0019c8 <memset+0xc4>
+ c0019b8:	e50c3010 	str	r3, [ip, #-16]
+ c0019bc:	e50c300c 	str	r3, [ip, #-12]
+ c0019c0:	e50c3008 	str	r3, [ip, #-8]
+ c0019c4:	e50c3004 	str	r3, [ip, #-4]
+ c0019c8:	e06c4002 	rsb	r4, ip, r2
+ c0019cc:	e354000f 	cmp	r4, #15
+ c0019d0:	e1a0400c 	mov	r4, ip
+ c0019d4:	e28cc010 	add	ip, ip, #16
+ c0019d8:	cafffff6 	bgt	c0019b8 <memset+0xb4>
+ c0019dc:	ea000000 	b	c0019e4 <memset+0xe0>
+ c0019e0:	e4843004 	str	r3, [r4], #4
+ c0019e4:	e064c002 	rsb	ip, r4, r2
+ c0019e8:	e35c0003 	cmp	ip, #3
+ c0019ec:	cafffffb 	bgt	c0019e0 <memset+0xdc>
+ c0019f0:	ea000000 	b	c0019f8 <memset+0xf4>
+ c0019f4:	e4c41001 	strb	r1, [r4], #1
+ c0019f8:	e1540002 	cmp	r4, r2
+ c0019fc:	3afffffc 	bcc	c0019f4 <memset+0xf0>
+ c001a00:	eaffffca 	b	c001930 <memset+0x2c>

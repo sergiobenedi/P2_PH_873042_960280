@@ -35,3 +35,4 @@
 # Salida de compilación de Eclipse (se regenera, contiene rutas absolutas)
 Debug/
 Release/
+Placa/

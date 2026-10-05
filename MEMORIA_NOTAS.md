@@ -216,6 +216,36 @@ strb  r3, [fp,#-30]        ; CA
    - Solución: breakpoint en la línea 469 (después de `actualizar_candidatas`), que tiene código en
      todos los niveles. F8 + Suspend para meter la jugada; al darle a F8 para justo después de la
      medición y se lee `tiempo_volteo_us`.
+7. **A `-O2` `tiempo_volteo_us` vale 0 en el breakpoint de la línea 469**, aunque el volteo se ha hecho
+   (2026-09-29, Paso 9).
+   - Causa: el **planificador de instrucciones** mezcla las instrucciones de las líneas 467, 468 y 469.
+     Código generado (`objdump -dl` del `.elf` de `-O2`):
+     ```
+     c001088: bl   timer2_parar          ; L467, el resultado queda en r0
+     c00108c: ldr  ip, [pc, #632]        ; L468
+     c001090: mov  r7, #1                ; L469  <- aquí para el breakpoint
+     c001094: ldrb r1, [ip, #65]         ; L468
+     c001098: str  r0, [ip, #68]         ; L467  <- aquí se guarda tiempo_volteo_us
+     ```
+     El breakpoint se coloca en la primera instrucción de la línea 469, que va **antes** del `str` que
+     guarda la variable. Al parar, la variable aún tiene su valor anterior (0). La medida es correcta;
+     solo se lee demasiado pronto.
+   - Solución: leer `r0` en la vista Registers al parar (es lo que devolvió `timer2_parar`), o dar un
+     par de F6 (Step Over) antes de leer la variable.
+   - Lección: con optimización, "línea de código" y "posición en el programa" dejan de coincidir; el
+     depurador enseña el estado de la memoria en la instrucción, no en la línea de C.
+8. **A `-O3` no se puede escribir `ready` desde Expressions y la memoria sigue "dada la vuelta"**
+   (2026-10-05, Paso 9).
+   - Síntoma: en Expressions, `ready` aparece como `volatile char *` con valor `<value optimized out>`
+     y no se puede editar. Lo que antes era la variable global ahora es el parámetro de `esperar_mov`,
+     que al integrarse (inlining) en `reversi8` deja de existir.
+   - Solución: escribir **`::ready`** (la global, con el operador de ámbito). Ahí sí se edita
+     (en la captura vale 1 tras ponerlo).
+   - El orden en memoria sigue invertido respecto al código, igual que en el problema 5
+     (`-fsection-anchors`): a partir de `0x0C001B08` están `ready` = 01, `fila` = 02 y `columna` = 03
+     (en el código van `fila`, `columna`, `ready`). `&fila` = 0x0C001B09 lo confirma.
+   - Conclusión: a partir de `-O1`, usar siempre las variables por nombre (`fila`, `columna`, `::ready`)
+     y nunca escribir bytes seguidos en el monitor de memoria.
 
 ### 2026-09-28 — Paso 4: color_ficha_thumb `[MET][OPT][PILA]`
 - Nuevo fichero `reversi8_thumb.asm` con `color_ficha_thumb` (`.thumb` + `.thumb_func`).
@@ -380,8 +410,8 @@ C-C por nivel de optimización (bytes de `.text` de `reversi8_2026.o`, ya con `v
 
 | Nivel | patron_volteo | color_ficha | .text del fichero | Instrucciones | Tiempo |
 |-------|---------------|-------------|-------------------|---------------|--------|
-| -O0 | 260 | 196 | 5208 | | |
-| -O1 | 212 | 56 | 1524 | | |
+| -O0 | 260 | 196 | 5208 | | 284 |
+| -O1 | 212 | 56 | 1524 | | 125 |
 | -O2 | 220 (`.clone`) | 56 | 2068 | | |
 | -O3 | — (integrada en `actualizar_tablero`, 596) | 56 | 1856 | | |
 | -Os | 164 (`.clone`) | 52 | 1368 | | |
