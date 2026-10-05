@@ -390,6 +390,9 @@ Tamaños por función (bytes, `-O0 -mapcs-frame`; C del `.elf` de Placa con `nm 
 | ARM | ARM   | 240 | 734 | 200 (200, 201, 200) |
 | ARM | Thumb | 198 (+12 veneer) | 728 | 194 (194, 194, 193) |
 
+Instrucciones por nivel contadas en el simulador (mismo método, C-C, jugada (2,3)): 1037, 539, 481, 378 y 582
+para `-O0`, `-O1`, `-O2`, `-O3` y `-Os`.
+
 Tiempos medidos en placa el 2026-09-29 con `tiempo_volteo_us` (`actualizar_tablero` completo de la jugada
 negra (2,3), `-O0`, 3 repeticiones; la variación entre repeticiones es de ±1 µs).
 
@@ -428,11 +431,11 @@ C-C por nivel de optimización (bytes de `.text` de `reversi8_2026.o`, ya con `v
 
 | Nivel | patron_volteo | color_ficha | .text del fichero | Instrucciones | Tiempo |
 |-------|---------------|-------------|-------------------|---------------|--------|
-| -O0 | 260 | 196 | 5208 | | 284 |
-| -O1 | 212 | 56 | 1524 | | 125 |
-| -O2 | 220 (`.clone`) | 56 | 2068 | | 101 |
-| -O3 | — (integrada en `actualizar_tablero`, 596) | 56 | 1856 | | 65 |
-| -Os | 164 (`.clone`) | 52 | 1368 | | 122 |
+| -O0 | 260 | 196 | 5208 | 1037 | 284 |
+| -O1 | 212 | 56 | 1524 | 539 | 125 |
+| -O2 | 220 (`.clone`) | 56 | 2068 | 481 | 101 |
+| -O3 | — (integrada en `actualizar_tablero`, 596) | 56 | 1856 | 378 | 65 |
+| -Os | 164 (`.clone`) | 52 | 1368 | 582 | 122 |
 
 Tiempos de `tiempo_volteo_us` en placa (2026-10-05, C-C, jugada negra (2,3), 3 repeticiones):
 `-O0` 284 µs · `-O1` 125 · `-O2` 101 (101, 102, 101) · `-O3` **65** · `-Os` 122. Frente a `-O0`:
@@ -482,6 +485,30 @@ Instrucciones ejecutadas por `actualizar_tablero` en la jugada 4 (simulador, `-O
 | ARM-C | 1138 (950) | |
 | ARM-ARM | 844 (734) | |
 | ARM-Thumb | 837 (728) | |
+
+**Jugada 4 (voltea 3) por nivel de optimización, C-C** (tiempos en placa el 2026-10-05; instrucciones en simulador):
+
+| Nivel | Instrucciones | Tiempo (µs) | ns/instr. | Jugada (2,3): instr. / µs / ns/instr. |
+|-------|---------------|-------------|-----------|----------------------------------------|
+| -O0 | 1245 | 340 | 273 | 1037 / 284 / 274 |
+| -O1 | 649 | 124 | 191 | 539 / 125 / 232 |
+| -O2 | 567 | 101 | 178 | 481 / 101 / 210 |
+| -O3 | 464 | 76 | 164 | 378 / 65 / 172 |
+| -Os | 695 | 142 | 204 | 582 / 122 / 210 |
+
+- **A comprobar:** la jugada 4 ejecuta un ~20 % más de instrucciones en todos los niveles. En `-O0`, `-O3` y
+  `-Os` el tiempo sube en la misma proporción (+20 %, +17 %, +16 %), pero en `-O1` (124 frente a 125) y `-O2` (101
+  frente a 101) **no sube nada**. Probablemente una de las dos medidas de (2,3) en esos niveles se tomó con una
+  compilación vieja (sin Clean). Pendiente de repetir (2,3) a `-O1` y `-O2` con Clean y comprobando el tamaño
+  del `.o`.
+- **[PROB]** Se perdió tiempo porque, al cambiar el nivel de optimización en Eclipse y hacer solo Build, no se
+  recompila: `make` solo mira las fechas de los `.c`. Había que hacer **Clean** (síntoma: el mismo tiempo en los
+  5 niveles; en un caso 340 µs en todos, el valor de `-O0`, y en otro 76 µs en todos). Se detectó viendo que
+  `Placa/reversi8_2026.o` (5208 bytes, `-O0`) era anterior al `subdir.mk` con el nuevo `-O`. Comprobación rápida:
+  `.text` de `reversi8_2026.o` = 5208, 1524, 2068, 1856 y 1368 bytes para `-O0`, `-O1`, `-O2`, `-O3` y `-Os`.
+- **[PROB]** El nivel de optimización se guarda en el `.cproject` y hay tres configuraciones (Debug, Release y
+  Placa). Si se cambia el de una y se compila otra, el resultado no cambia. Además, al compartir el `.cproject`
+  entre los dos, cada uno puede tener un nivel distinto.
 
 ---
 
