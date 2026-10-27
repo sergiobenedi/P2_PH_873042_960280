@@ -168,9 +168,9 @@ Estado: ✅ hecho · ⬜ pendiente. Detalle de cada sesión en [MEMORIA_NOTAS.md
    (modos, excepciones, mapa de memoria, RSI en C).
 2. ✅ Limpieza de la P1 (§3.1): fuera calibración y medidas, `#define` a ARM + Thumb, quitar demos. *(2026-10-26 y 27)*
 3. ✅ Arreglos de E/S del §3.2 (`static`, `volatile`, máscaras, `rI_ISPC =`). *(2026-10-27, `550cfe2`)*
-4. ⬜ En el emulador: poner un breakpoint en una RSI y en una función normal, abrir el desensamblado y
+4. ✅ En el emulador: poner un breakpoint en una RSI y en una función normal, abrir el desensamblado y
    apuntar las diferencias del prólogo/epílogo (registros que apila, `subs pc, lr, #4`, uso de la pila IRQ).
-   **Esto va explicado en la memoria (marco de pila).**
+   **Esto va explicado en la memoria (marco de pila).** *(2026-10-27, ver MEMORIA_NOTAS.md)*
 5. ⬜ `inicializar_perifericos()` y llamarla desde `Main` después de `sys_init()`.
 6. ⬜ `eventos.h` + `lista.c/.h` + `guardar_eventos`. Probarla en el emulador con llamadas a mano
    (comprobar que da la vuelta en el evento 151 y que no pisa nada).

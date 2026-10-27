@@ -19,6 +19,7 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 | Fecha | Quién | Horas | Pasos | Qué |
 |-------|-------|-------|-------|-----|
 | 2026-10-27 | Sergio | ? | 3 | Arreglos de E/S (§3.2 de PRACTICA2.md) y avisos de compilación |
+| 2026-10-27 | Sergio | ? | 4 | Configuraciones de depuración y marco de pila RSI vs función normal |
 
 ---
 
@@ -59,6 +60,62 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 **Pendiente para la próxima sesión:**
 - [ ] Paso 4: en el emulador, comparar el prólogo/epílogo de una RSI con una función normal (marco de pila `[PILA]`).
 - [ ] Paso 5: `inicializar_perifericos()` llamando a `timer_init` y `Eint4567_init` (aún no se llaman).
+
+### 2026-10-27 — Marco de pila: RSI frente a función normal (Paso 4)
+
+**Quién / dónde:** Sergio · casa (simulador: `arm-none-eabi-gdb`, `target sim`)
+
+**Hecho:**
+- Configuraciones de depuración de la P2 copiadas de la P1: `SIM_P2_873042_960280.launch` (config. Debug, `target sim`) y `HW_P2_873042_960280.launch` (config. Placa, JTAG vía openOCD en `localhost:3333`).
+- Desensamblado de `Eint4567_ISR` y `led1_on` en la vista Disassembly de Eclipse (capturas hechas).
+- Marco de pila real de `init_table` (función normal) y de `Eint4567_ISR` (entrada en IRQ forzada) leído con GDB en el simulador.
+
+**Ficheros tocados:** `SIM_P2_873042_960280.launch`, `HW_P2_873042_960280.launch` (nuevos).
+
+**Datos / medidas** `[PILA]`:
+- Compilación `-O0 -mapcs-frame`.
+- **Función normal `init_table`** (modo SVC, CPSR `0x13`). Prólogo `mov ip,sp` / `push {fp,ip,lr,pc}` / `sub fp,ip,#4` / `sub sp,sp,#16`. `sp` 0x3EA0 → 0x3E90 (16 B), `fp` = 0x3E9C:
+  ```
+  0x3E90: 0x00003FFC  fp anterior
+  0x3E94: 0x00003EA0  ip = sp de entrada
+  0x3E98: 0x0C001FDC  lr = vuelta a reversi8
+  0x3E9C: 0x0C000F70  pc = dir. del push + 8   <- fp
+  ```
+  Retorno: `sub sp,fp,#12` / `ldm sp,{fp,sp,lr}` / `bx lr`.
+- **RSI `Eint4567_ISR`** (forzada: CPSR = `0xD2`, `sp_irq` = `0x0C7FF400`, `lr` = instrucción interrumpida + 4; r2/r3/r11/r12 con valores marcados). Prólogo `push {ip}` / `mov ip,sp` / `push {r2,r3,fp,ip,lr,pc}` / `sub fp,ip,#4` / `sub sp,sp,#8`. Total **36 B** de pila IRQ:
+  ```
+  0x0C7FF3FC: 0xCCCCCCCC  r12 original      <- push {ip}
+  0x0C7FF3F8: 0x0C000C1C  pc                <- fp
+  0x0C7FF3F4: 0x0C000F68  lr_irq
+  0x0C7FF3F0: 0x0C7FF3FC  ip
+  0x0C7FF3EC: 0xBBBBBBBB  fp anterior
+  0x0C7FF3E8: 0x33333333  r3
+  0x0C7FF3E4: 0x22222222  r2
+  0x0C7FF3E0: 0x00000000  pnd (local)
+  0x0C7FF3DC:                               <- sp
+  ```
+  Epílogo `sub sp,fp,#20` / `ldm sp,{r2,r3,fp,sp,lr}` / `pop {ip}` / `subs pc,lr,#4`: r2, r3, r11, r12 y `sp` (0x0C7FF400) vuelven a sus valores; `pc` = `lr − 4`; CPSR ← SPSR_irq.
+
+**Decisiones de diseño** `[ES]`:
+- `.launch` guardados dentro del proyecto (ficheros compartidos) para tenerlos los dos y no depender del `.metadata` del workspace.
+
+**Problemas y solución** `[PROB]`:
+- Problema: el breakpoint en `main.c` no saltaba en el simulador → Causa: `emulador/init_b_2026.asm` pone `sp = 0x4000` y salta directo a `reversi8`; `Main`, `sys_init` y `timer2_inicializar` no se ejecutan en el simulador → Solución: usar como función normal una llamada desde `reversi8` (`init_table`).
+- Problema: la RSI no salta en el simulador (no hay periféricos) → Solución: forzar la entrada desde GDB (`set $cpsr = 0xd2`, `$sp`, `$lr`, `$pc = Eint4567_ISR`). En la placa se verá saltar de verdad.
+- Al forzar la entrada el hardware no guarda CPSR en SPSR_irq, así que `subs pc,lr,#4` dejó CPSR = 0 (basura): demuestra que el retorno restaura el CPSR desde el SPSR.
+
+**Para la memoria:**
+- `[PILA]` La RSI salva además r2, r3 y r12 (scratch según AAPCS): la interrupción llega en cualquier instrucción y nadie los ha guardado por ella. La función normal no los salva porque el llamador asume que se pierden.
+- `[PILA]` `sp` y `lr` son bancados: al pasar a modo IRQ se ven otros `sp`/`lr` (en el simulador valían 0).
+- `[PILA]` Retorno: `bx lr` frente a `subs pc,lr,#4` (−4 porque `lr_irq` = instrucción interrumpida + 4 por el pipeline; la `s` con destino `pc` copia SPSR → CPSR).
+- `[PILA]` El `pc` apilado vale la dirección del `push` + 8 (pipeline de 3 etapas).
+- `[PILA]` La RSI no salva el SPSR: no admite interrupciones anidadas.
+- `[PILA]` Hoy la RSI es hoja (36 B). Al llamar a `guardar_eventos`/`timer2_leer` (Paso 5) salvará r0–r3, r12 y lr y cada llamada añade marco: vigilar los 256 B de la pila IRQ.
+- `[COD]` Las "instrucciones" raras tras el `subs`/`bx` del desensamblado son el *literal pool* (direcciones de `EXTINTPND`, `I_ISPC`, `led_state`) leído como código.
+
+**Pendiente para la próxima sesión:**
+- [ ] Paso 5: `inicializar_perifericos()` y llamarla desde `Main`.
+- [ ] En el laboratorio: cambiar la ruta de GDB en `HW_P2` a `C:\Program Files\EclipseARM\...` y ver saltar el breakpoint de la RSI de verdad.
 
 ---
 
