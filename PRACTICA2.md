@@ -171,7 +171,7 @@ Estado: ✅ hecho · ⬜ pendiente. Detalle de cada sesión en [MEMORIA_NOTAS.md
 4. ✅ En el emulador: poner un breakpoint en una RSI y en una función normal, abrir el desensamblado y
    apuntar las diferencias del prólogo/epílogo (registros que apila, `subs pc, lr, #4`, uso de la pila IRQ).
    **Esto va explicado en la memoria (marco de pila).** *(2026-10-27, ver MEMORIA_NOTAS.md)*
-5. ⬜ `inicializar_perifericos()` y llamarla desde `Main` después de `sys_init()`.
+5. ✅ `inicializar_perifericos()` y llamarla desde `Main` después de `sys_init()`. *(2026-10-27, probado en placa)*
 6. ⬜ `eventos.h` + `lista.c/.h` + `guardar_eventos`. Probarla en el emulador con llamadas a mano
    (comprobar que da la vuelta en el evento 151 y que no pisa nada).
 7. ⬜ Escribir las máquinas de estados del §4 (código y diagramas para la memoria).

@@ -20,6 +20,7 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 |-------|-------|-------|-------|-----|
 | 2026-10-27 | Sergio | ? | 3 | Arreglos de E/S (§3.2 de PRACTICA2.md) y avisos de compilación |
 | 2026-10-27 | Sergio | ? | 4 | Configuraciones de depuración y marco de pila RSI vs función normal |
+| 2026-10-27 | Sergio | ? | 5 | `inicializar_perifericos()` y prueba en placa |
 
 ---
 
@@ -116,6 +117,32 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 **Pendiente para la próxima sesión:**
 - [ ] Paso 5: `inicializar_perifericos()` y llamarla desde `Main`.
 - [ ] En el laboratorio: cambiar la ruta de GDB en `HW_P2` a `C:\Program Files\EclipseARM\...` y ver saltar el breakpoint de la RSI de verdad.
+
+### 2026-10-27 — Inicialización centralizada de periféricos (Paso 5)
+
+**Quién / dónde:** Sergio · placa
+
+**Hecho:**
+- `inicializar_perifericos()` (static en `main.c`), llamada desde `Main` justo después de `sys_init()`.
+- Probado en placa: al arrancar los dos LEDs quedan apagados y el 8led muestra 0.
+
+**Ficheros tocados:** `main.c` (nueva función, `#include` de `timer.h`, `button.h`, `led.h`, `8led.h`).
+
+**Decisiones de diseño** `[ES]`:
+- En `main.c` y no en un `perifericos.c` propio: es una sola función corta.
+- Orden: `sys_init()` (INTMOD, INTCON, puertos, BIT_GLOBAL) → `timer2_inicializar()` (marca de tiempo de la pila de depuración, lo primero) → `leds_off()` → `D8Led_init()` → `timer_init()` (timer0) → `Eint4567_init()` (lo último: al desenmascarar EINT4567 ya pueden llegar IRQ y todo lo demás debe estar listo).
+- Cada `*_init` solo desenmascara su línea en `rINTMSK` y toca sus bits; la configuración global del controlador está solo en `sys_init()`.
+
+**Problemas y solución** `[PROB]`:
+- `main.c` no se puede probar en el simulador (no ejecuta `Main`) → probado directamente en placa.
+
+**Para la memoria:**
+- `[ES]` Una única función de inicialización; orden pensado para que no llegue ninguna IRQ antes de que su RSI y los recursos que usa estén preparados.
+
+**Pendiente para la próxima sesión:**
+- [ ] El timer0 queda en marcha con auto-reload (IRQ cada ~0,52 s con RSI vacía): en la máquina antirrebotes debe arrancarse solo al pulsar.
+- [ ] El guion pide el 8led apagado al inicio: cambiar `cero` por `blank` al montar la máquina de entrada (Paso 6 del guion).
+- [ ] Paso 6 (nuestro): `eventos.h` + `lista.c/.h` + `guardar_eventos`.
 
 ---
 
