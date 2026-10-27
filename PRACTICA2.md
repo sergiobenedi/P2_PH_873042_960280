@@ -100,6 +100,10 @@ Relojes: MCLK = 64 MHz. `f_timer = MCLK / (preescalado + 1) / divisor`. Timers 0
 
 ### 3.2 Fallos de E/S que el Paso 2 pide corregir (encontrados en el código actual)
 
+> **Hecho el 2026-10-27 (commit `550cfe2`):** todos los de la tabla. De paso, quitados los avisos
+> `array subscript has type 'char'` de `reversi8_2026.c` (índices `int` en `voltear` y `actualizar_candidatas`).
+> `timer_init` y `Eint4567_init` están arregladas pero **aún nadie las llama** (lo hará `inicializar_perifericos()`).
+
 | Dónde | Problema | Arreglo |
 |-------|----------|---------|
 | `timer.c` `timer_ISR`, `button.c` RSI e init | `rI_ISPC \|= ...`: `I_ISPC` es de solo escritura (ya lo corregimos en `timer2.c`) | `rI_ISPC = BIT_...` |
@@ -156,35 +160,37 @@ CONFIRMAR: led izquierdo parpadea 3 veces/s durante 3 s (timer1)
 
 ## 5. Paso a paso
 
+Estado: ✅ hecho · ⬜ pendiente. Detalle de cada sesión en [MEMORIA_NOTAS.md](MEMORIA_NOTAS.md).
+
 **Fuera del laboratorio (antes de la primera sesión con placa)**
 
-1. Leer `Entradasalida.pdf` (cap. 3 GPIO, 4 display, 5 temporizadores, 6 teclado) y `P2-EC.pdf`
+1. ✅ Leer `Entradasalida.pdf` (cap. 3 GPIO, 4 display, 5 temporizadores, 6 teclado) y `P2-EC.pdf`
    (modos, excepciones, mapa de memoria, RSI en C).
-2. Limpieza de la P1 (§3.1): fuera calibración y medidas, `#define` a ARM + Thumb, quitar demos.
-3. Arreglos de E/S del §3.2 (`static`, `volatile`, máscaras, `rI_ISPC =`).
-4. En el emulador: poner un breakpoint en una RSI y en una función normal, abrir el desensamblado y
+2. ✅ Limpieza de la P1 (§3.1): fuera calibración y medidas, `#define` a ARM + Thumb, quitar demos. *(2026-10-26 y 27)*
+3. ✅ Arreglos de E/S del §3.2 (`static`, `volatile`, máscaras, `rI_ISPC =`). *(2026-10-27, `550cfe2`)*
+4. ⬜ En el emulador: poner un breakpoint en una RSI y en una función normal, abrir el desensamblado y
    apuntar las diferencias del prólogo/epílogo (registros que apila, `subs pc, lr, #4`, uso de la pila IRQ).
    **Esto va explicado en la memoria (marco de pila).**
-5. `inicializar_perifericos()` y llamarla desde `Main` después de `sys_init()`.
-6. `eventos.h` + `lista.c/.h` + `guardar_eventos`. Probarla en el emulador con llamadas a mano
+5. ⬜ `inicializar_perifericos()` y llamarla desde `Main` después de `sys_init()`.
+6. ⬜ `eventos.h` + `lista.c/.h` + `guardar_eventos`. Probarla en el emulador con llamadas a mano
    (comprobar que da la vuelta en el evento 151 y que no pisa nada).
-7. Escribir las máquinas de estados del §4 (código y diagramas para la memoria).
+7. ⬜ Escribir las máquinas de estados del §4 (código y diagramas para la memoria).
 
 **En el laboratorio**
 
-8. Comprobar en placa qué EINT es el botón izquierdo y cuál el derecho.
-9. Test de rebotes: RSI que solo apila eventos; pulsar y soltar varias veces y leer la pila de depuración.
+8. ⬜ Comprobar en placa qué EINT es el botón izquierdo y cuál el derecho.
+9. ⬜ Test de rebotes: RSI que solo apila eventos; pulsar y soltar varias veces y leer la pila de depuración.
    Apuntar trp y trd medidos (por placa, cambian entre placas).
-10. Activar la máquina antirrebotes y comprobar en la pila que cada pulsación da un único evento al pulsar
+10. ⬜ Activar la máquina antirrebotes y comprobar en la pila que cada pulsación da un único evento al pulsar
     y uno al soltar.
-11. Probar la entrada F/C: incremento, vuelta 8 → 1, autoincremento 0,5 s + 300 ms, confirmación,
+11. ⬜ Probar la entrada F/C: incremento, vuelta 8 → 1, autoincremento 0,5 s + 300 ms, confirmación,
     parpadeo 3 s y cancelación.
-12. Jugar partidas completas contra la máquina.
-13. (Opcional) Teclado matricial: RSI EINT1, escaneo, mapear las 10 teclas.
+12. ⬜ Jugar partidas completas contra la máquina.
+13. ⬜ (Opcional) Teclado matricial: RSI EINT1, escaneo, mapear las 10 teclas.
 
 **Cierre**
 
-14. Memoria (§6) y ZIP de entrega.
+14. ⬜ Memoria (§6) y ZIP de entrega.
 
 ---
 
@@ -196,8 +202,8 @@ Diseño libre, pero obligatorio:
 2. **Gestión de la E/S**: diagramas de las máquinas de estados comentados, decisiones de diseño,
    pseudocódigo o fragmentos de código. Incluir también el **marco de pila de las RSI** (lo pide el Paso 2).
 3. **Problemas encontrados y soluciones.**
-4. **Anexo: código fuente comentado**, solo el nuestro, con cabecera en cada función.
-5. **Conclusiones.**
+4. ⬜ **Anexo: código fuente comentado**, solo el nuestro, con cabecera en cada función.
+5. ⬜ **Conclusiones.**
 
 Claro y conciso. Seguir `Notas_memoria_tecnica_2026_v1.pdf` (en la carpeta de prácticas).
 
