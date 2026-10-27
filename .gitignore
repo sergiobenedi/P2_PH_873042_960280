@@ -39,3 +39,6 @@ Placa/
 
 # Accesos directos de Windows
 *.lnk
+
+# Configuraciones de depuracion de Eclipse (rutas locales de cada maquina)
+*.launch
