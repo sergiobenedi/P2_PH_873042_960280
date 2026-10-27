@@ -18,9 +18,7 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 
 | Fecha | Quién | Horas | Pasos | Qué |
 |-------|-------|-------|-------|-----|
-| 2026-10-27 | Sergio | ? | 3 | Arreglos de E/S (§3.2 de PRACTICA2.md) y avisos de compilación |
-| 2026-10-27 | Sergio | ? | 4 | Configuraciones de depuración y marco de pila RSI vs función normal |
-| 2026-10-27 | Sergio | ? | 5 | `inicializar_perifericos()` y prueba en placa |
+| 2026-10-27 | Sergio | 2 (9:00–11:00) | 3, 4, 5 | Arreglos de E/S y avisos de compilación; configuraciones de depuración y marco de pila RSI vs función normal; `inicializar_perifericos()` probada en placa |
 
 ---
 
