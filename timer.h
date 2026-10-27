@@ -8,9 +8,6 @@
 #ifndef _TIMER_H_
 #define _TIMER_H_
 
-/*--- variables visibles del módulo timer.c/timer.h ---*/
-int switch_leds;
-
 /*--- declaración de funciones visibles del módulo timer.c/timer.h ---*/
 void timer_init(void);
 

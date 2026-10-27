@@ -134,7 +134,7 @@ static void esperar_mov(volatile char *ready)
 // color indica el color de la pieza que se acaba de colocar
 // FA y CA son la fila y columna a analizar
 
-static void voltear(char tablero[][DIM], char FA, char CA, char SF, char SC, int n, char color)
+static void voltear(char tablero[][DIM], int FA, int CA, char SF, char SC, int n, char color)
 {
     int i;
 
@@ -269,7 +269,7 @@ static void contar(char tablero[][DIM], int *b, int *n)
     }
 }
 
-static void actualizar_candidatas(char candidatas[][DIM], char f, char c)
+static void actualizar_candidatas(char candidatas[][DIM], int f, int c)
 {
     // donde ya se ha colocado no se puede volver a colocar
     // En las posiciones alrededor sí
@@ -354,7 +354,7 @@ void reversi8()
         // si la fila o columna son 8 asumimos que el jugador no puede mover
         if (((fila) != DIM) && ((columna) != DIM))
         {
-            tablero[fila][columna] = FICHA_NEGRA;
+            tablero[(int)fila][(int)columna] = FICHA_NEGRA;
             actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
             actualizar_candidatas(candidatas, fila, columna);
             move = 1;
@@ -369,7 +369,7 @@ void reversi8()
         }
         else
         {
-            tablero[f][c] = FICHA_BLANCA;
+            tablero[(int)f][(int)c] = FICHA_BLANCA;
             actualizar_tablero(tablero, f, c, FICHA_BLANCA);
             actualizar_candidatas(candidatas, f, c);
         }

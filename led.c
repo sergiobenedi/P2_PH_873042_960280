@@ -11,7 +11,7 @@
 #include "44blib.h"
 
 /*--- variables globales del módulo ---*/
-static int led_state = 0;		/* estado del LED */
+static volatile int led_state = 0;	/* estado del LED (volatile: lo tocará la RSI de parpadeo) */
 
 /*--- código de las funciones públicas ---*/
 void leds_on()
@@ -60,12 +60,12 @@ void Led_Display(int LedStatus)
 	led_state = LedStatus;
 
 	if ((LedStatus & 0x01) == 0x01)
-		rPDATB = rPDATB & 0x5ff; /* poner a 0 el bit 9 del puerto B */
+		rPDATB = rPDATB & ~(1 << 9);  /* poner a 0 el bit 9 del puerto B */
 	else
-		rPDATB = rPDATB | 0x200; /* poner a 1 el bit 9 del puerto B */
+		rPDATB = rPDATB | (1 << 9);  /* poner a 1 el bit 9 del puerto B */
 
 	if ((LedStatus & 0x02) == 0x02)
-		rPDATB = rPDATB & 0x3ff; /* poner a 0 el bit 10 del puerto B */
+		rPDATB = rPDATB & ~(1 << 10); /* poner a 0 el bit 10 del puerto B */
 	else
-		rPDATB = rPDATB | 0x400; /* poner a 1 el bit 10 del puerto B */
+		rPDATB = rPDATB | (1 << 10); /* poner a 1 el bit 10 del puerto B */
 }
