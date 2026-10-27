@@ -78,7 +78,8 @@ Relojes: MCLK = 64 MHz. `f_timer = MCLK / (preescalado + 1) / divisor`. Timers 0
 
 > **Hecho el 2026-10-26:** calibración y medidas del timer2, versiones C de `patron_volteo`/`color_ficha`,
 > `color_ficha_arm`, bloque `#if 0`, `PRACTICA.md` y `memoria.md`. El juego usa ya ARM + Thumb (compila y enlaza).
-> **Pendiente** (se rehace en los Pasos 2, 5 y 6): `esperar_mov`/`ready`, `int_count`, `switch_leds`, nombre del proyecto en Eclipse.
+> **Hecho el 2026-10-27 (Paso 3):** `int_count`, `switch_leds` y todos los fallos de la tabla §3.2.
+> **Pendiente** (se rehace en el Paso 6): `esperar_mov`/`ready`, nombre del proyecto en Eclipse.
 
 - `main.c`: `calibrar_timer2`, `CALIBRAR_TIMER2` y `tiempos_calibracion` (eran del Paso 7 de la P1).
 - `reversi8_2026.c`:
