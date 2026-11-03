@@ -1,13 +1,13 @@
-# Prueba de la pila de depuración en el simulador (Paso 6).
-# Uso, desde la carpeta del proyecto y tras compilar en Eclipse (configuración Debug):
+# Prueba de la pila de depuracion en el simulador (Paso 6).
+# Uso, desde la carpeta del proyecto y tras compilar en Eclipse (configuracion Debug):
 #   arm-none-eabi-gdb -batch -x pruebas/lista_sim.gdb Debug/P2_873042_960280.elf
-# El simulador arranca en reversi8 (no pasa por Main); se para en esperar_mov y desde ahí
+# El simulador arranca en reversi8 (no pasa por Main); se para en entrada_jugada_lista y desde ahi
 # se llama a mano a lista_inicializar y guardar_eventos.
 set pagination off
 set confirm off
 target sim
 load
-break esperar_mov
+break entrada_jugada_lista
 run
 delete
 # Ensuciar la zona antes, para ver que lista_inicializar la limpia
