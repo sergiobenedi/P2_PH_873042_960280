@@ -12,6 +12,7 @@
 #include "button.h"
 #include "led.h"
 #include "8led.h"
+#include "lista.h"
 #include "44blib.h"
 #include "44b.h"
 
@@ -21,7 +22,9 @@
  * Requiere sys_init() antes (INTMOD, INTCON, puertos y BIT_GLOBAL) */
 static void inicializar_perifericos(void)
 {
+	lista_inicializar();	// pila de depuración vacía
 	timer2_inicializar();	// timer2: marca de tiempo en us (primero: la usa la pila de depuración)
+	timer2_empezar();		// en marcha desde el arranque: instante 0 = arranque
 	leds_off();				// LEDs apagados
 	D8Led_init();			// display de 8 segmentos
 	timer_init();			// timer0: antirrebotes de los pulsadores

@@ -19,6 +19,7 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 | Fecha | Quién | Horas | Pasos | Qué |
 |-------|-------|-------|-------|-----|
 | 2026-10-27 | Sergio y Pablo | 2 (9:00–11:00) | 3, 4, 5 | Arreglos de E/S y avisos de compilación; configuraciones de depuración y marco de pila RSI vs función normal; `inicializar_perifericos()` probada en placa |
+| 2026-11-03 | Sergio y Pablo | ? | 6 | Pila de depuración (`eventos.h`, `lista.c/.h`) probada en el simulador |
 
 ---
 
@@ -141,6 +142,44 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 - [ ] El timer0 queda en marcha con auto-reload (IRQ cada ~0,52 s con RSI vacía): en la máquina antirrebotes debe arrancarse solo al pulsar.
 - [ ] El guion pide el 8led apagado al inicio: cambiar `cero` por `blank` al montar la máquina de entrada (Paso 6 del guion).
 - [ ] Paso 6 (nuestro): `eventos.h` + `lista.c/.h` + `guardar_eventos`.
+
+### 2026-11-03 — Pila de depuración (Paso 6)
+
+**Quién / dónde:** Sergio y Pablo · casa (simulador)
+
+**Hecho:**
+- `eventos.h`: un `enum` con un ID por evento (`EV_NINGUNO` = 0 para hueco vacío, `EV_BOTON_IZQ/DER`, `EV_BOTON_SOLTADO`, `EV_TIMER0`, `EV_FIN_TRD`, `EV_TIMER1`, `EV_JUGADA_CONFIRMADA/CANCELADA`, `EV_TECLADO`, `EV_PRUEBA`).
+- `lista.c/.h`: lista circular de 150 eventos en dirección fija, `lista_inicializar()` y `guardar_eventos(uint8_t ID_evento, uint32_t instante)`.
+- `main.c`: `inicializar_perifericos()` llama a `lista_inicializar()` y, tras `timer2_inicializar()`, a `timer2_empezar()` (sin esto el timer2 queda parado y todos los instantes valdrían 0).
+- Prueba en el simulador con `pruebas/lista_sim.gdb` (comando de terminal) y a mano desde la consola de GDB de Eclipse con la vista Memory en `0x0C7FE000`.
+
+**Ficheros tocados:** `eventos.h`, `lista.c`, `lista.h`, `pruebas/lista_sim.gdb` (nuevos), `main.c`, `CLAUDE.md`/`README.md` (estructura).
+
+**Datos / medidas** `[MED]`:
+- Zona de la pila: `0x0C7FE000`–`0x0C7FE4AF` (150 × 8 B = 1200 B = 0x4B0). Fin de `.bss` en `0x0C0027FC`; deja ~3 KB (0xC50) a la pila SVC, cuya cima está en `0x0C7FF100`.
+- Prueba (zona rellena antes con `0xDEADBEEF`):
+  - Tras `lista_inicializar()`: `0x0C7FE000`–`0x0C7FE4AF` a 0; `0x0C7FE4B0` sigue `0xDEADBEEF`.
+  - Tras 150 eventos (`id` = 10, `instante` = n·1000): `indice` = 0; entrada 0 = `{0xA, 1000}`, entrada 149 = `{0xA, 150000}`.
+  - Evento 151: `indice` = 1; entrada 0 = `{0xB, 151000}`, entrada 1 sigue `{0xA, 2000}`; `0x0C7FE4B0` sigue `0xDEADBEEF`.
+
+**Decisiones de diseño** `[ES]`:
+- Dirección fija con `#define PILA_DEP_BASE` en `lista.h` (no en el linker): siempre en el mismo sitio de la vista Memory.
+- Entrada de 8 B (`id` en una palabra completa + `instante`): alineada a palabra y fácil de leer en Memory como pares `id | instante`.
+- `indice` (siguiente hueco) `static volatile` dentro de `lista.c`: no se comparte con nadie, se accede por funciones. El último evento está en `indice − 1`.
+- El instante lo pasa quien llama (`timer2_leer()`), así `lista.c` no depende del timer.
+- Sin exclusión mutua en `guardar_eventos`: correcto mientras solo la llamen RSI (no se anidan). Si la llama `Main`, deshabilitar IRQ alrededor.
+
+**Problemas y solución** `[PROB]`:
+- Problema: el timer2 se quedaba parado tras `timer2_inicializar()` → Solución: `timer2_empezar()` en la inicialización (instante 0 = arranque).
+- Problema: la prueba con `call` en GDB no ejecutaba nada cuando la función estaba en la dirección de entrada del programa (GDB pone ahí el retorno de los `call`) → Solución: llamar desde el `.elf` del proyecto, parado en `esperar_mov`.
+- Problema: Eclipse no mostraba la consola de GDB → Solución: en la vista Debug seleccionar la línea `arm-none-eabi-gdb` (o elegirla en el ▼ de la vista Console).
+
+**Para la memoria:**
+- `[ES]` Estructura de la pila de depuración: dirección, tamaño, formato de entrada, índice circular y dónde está el último evento.
+- `[MED]` Tabla de la prueba de la vuelta (evento 151) con la zona marcada con `0xDEADBEEF`.
+
+**Pendiente para la próxima sesión:**
+- [ ] Paso 7: máquinas de estados del §4 de PRACTICA2.md (antirrebotes y entrada de jugada): código y diagramas.
 
 ---
 
