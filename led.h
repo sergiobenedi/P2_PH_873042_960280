@@ -2,14 +2,14 @@
 * Fichero:		led.h
 * Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:		funciones de control de los LED de la placa
-* Version:	1.0
+* Version:	2.0
 *********************************************************************************************/
 
 #ifndef _LED_H_
 #define _LED_H_
 
-/*--- declaración de funciones visibles del módulo led.c/led.h ---*/
-/* (*) la función se invoca en el código suministrado */
+/*--- declaracion de funciones visibles del modulo led.c/led.h ---*/
+/* (*) la funcion se invoca en el codigo suministrado */
 void leds_on();							// todos los leds encendidos
 void leds_off();						// todos los leds apagados (*)
 void led1_on();							// led 1 encendido (*)

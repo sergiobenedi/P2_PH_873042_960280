@@ -2,7 +2,7 @@
 * Fichero:		led.c
 * Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:		funciones de control de los LED de la placa
-* Version:	1.0
+* Version:	2.0
 *********************************************************************************************/
 
 /*--- ficheros de cabecera ---*/
@@ -10,10 +10,10 @@
 #include "44b.h"
 #include "44blib.h"
 
-/*--- variables globales del módulo ---*/
-static volatile int led_state = 0;	/* estado del LED (volatile: lo tocará la RSI de parpadeo) */
+/*--- variables globales del modulo ---*/
+static volatile int led_state = 0;	/* estado del LED (volatile: lo tocara la RSI de parpadeo) */
 
-/*--- código de las funciones públicas ---*/
+/*--- codigo de las funciones publicas ---*/
 void leds_on()
 {
 	Led_Display(0x3);

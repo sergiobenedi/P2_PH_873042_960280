@@ -1,8 +1,8 @@
 /*********************************************************************************************
 * Fichero:		lista.h
 * Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
-* Descrip:		pila de depuración: lista circular de los últimos 150 eventos
-* Version:	1.0
+* Descrip:		pila de depuracion: lista circular de los ultimos 150 eventos
+* Version:	2.0
 *********************************************************************************************/
 
 #ifndef _LISTA_H_
@@ -18,12 +18,12 @@
 
 /* Una entrada: 8 B alineados a palabra. Se ve en la vista Memory como 2 palabras: ID | instante */
 typedef struct {
-	uint32_t id;			// uint8_t guardado en una palabra para que sea fácil de leer en memoria
+	uint32_t id;			// uint8_t guardado en una palabra para que sea facil de leer en memoria
 	uint32_t instante;		// us, de timer2_leer()
 } evento_t;
 
-/*--- declaración de funciones visibles del módulo lista.c/lista.h ---*/
-void lista_inicializar(void);								// vacía la pila (todo a 0) y vuelve al principio
+/*--- declaracion de funciones visibles del modulo lista.c/lista.h ---*/
+void lista_inicializar(void);								// vacia la pila (todo a 0) y vuelve al principio
 void guardar_eventos(uint8_t ID_evento, uint32_t instante);	// apila un evento; al llegar a 150 da la vuelta
 
 #endif /* _LISTA_H_ */

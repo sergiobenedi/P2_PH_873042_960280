@@ -2,7 +2,7 @@
 * Fichero:	8led.h
 * Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:	Funciones de control del display 8-segmentos
-* Version:	1.0
+* Version:	2.0
 *********************************************************************************************/
 
 #ifndef _8LED_H_
@@ -35,7 +35,7 @@ enum {
     size_8led = 17 };
 
 
-/*--- declaración de funciones visibles del módulo 8led.c/8led.h ---*/
+/*--- declaracion de funciones visibles del modulo 8led.c/8led.h ---*/
 void D8Led_init(void);
 void D8Led_symbol(int value);
 

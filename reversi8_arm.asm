@@ -3,7 +3,7 @@
 * Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:		version en ensamblador ARM de patron_volteo()
 *				(misma estructura que el C original, cumpliendo ATPCS)
-* Version:	1.0
+* Version:	2.0
 *********************************************************************************************/
 
 .text
@@ -54,9 +54,9 @@
 * 			r1 = longitud (puntero)
 * 			r2 = FA
 * 			r3 = CA
-* 			[fp, #4]	SF		(5º parámetro, en pila del llamador)
-* 			[fp, #8]	SC		(6º parámetro)
-* 			[fp, #12]	color	(7º parámetro)
+* 			[fp, #4]	SF		(5o parametro, en pila del llamador)
+* 			[fp, #8]	SC		(6o parametro)
+* 			[fp, #12]	color	(7o parametro)
 * Salida:	r0 = MODELO_ENCONTRADO / NO_HAY_MODELO
 *
 * Uso de registros (r4-r10 porque sobreviven a la llamada a color_ficha):

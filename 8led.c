@@ -2,7 +2,7 @@
 * Fichero:	8led.c
 * Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:	Funciones de control del display 8-segmentos
-* Version:	1.0
+* Version:	2.0
 *********************************************************************************************/
 
 /*--- ficheros de cabecera ---*/
@@ -10,12 +10,12 @@
 #include "44b.h"
 #include "44blib.h"
 
-/*--- variables globales del módulo ---*/
+/*--- variables globales del modulo ---*/
 /* tabla de segmentos */
 static int
 Symbol[size_8led] = { cero, uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, A, B, C, D, E, F, blank};
 
-/*--- código de las funciones ---*/
+/*--- codigo de las funciones ---*/
 void D8Led_init(void)
 {
 	/* Estado inicial del display con todos los segmentos iluminados

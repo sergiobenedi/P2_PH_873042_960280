@@ -3,7 +3,7 @@
 * Autor:		Sergio Benedi 873042, Pablo Gimeno 960280
 * Descrip:		version en ensamblador Thumb de color_ficha() (misma estructura que el C
 *				de reversi8_2026.c y que color_ficha_arm, cumpliendo ATPCS)
-* Version:	1.0
+* Version:	2.0
 *********************************************************************************************/
 
 .text

@@ -32,7 +32,7 @@
 *.dSYM/
 *.su
 
-# Salida de compilación de Eclipse (se regenera, contiene rutas absolutas)
+# Salida de compilacion de Eclipse (se regenera, contiene rutas absolutas)
 Debug/
 Release/
 Placa/
