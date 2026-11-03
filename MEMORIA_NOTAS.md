@@ -18,7 +18,7 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 
 | Fecha | Quién | Horas | Pasos | Qué |
 |-------|-------|-------|-------|-----|
-| 2026-10-27 | Sergio | 2 (9:00–11:00) | 3, 4, 5 | Arreglos de E/S y avisos de compilación; configuraciones de depuración y marco de pila RSI vs función normal; `inicializar_perifericos()` probada en placa |
+| 2026-10-27 | Sergio y Pablo | 2 (9:00–11:00) | 3, 4, 5 | Arreglos de E/S y avisos de compilación; configuraciones de depuración y marco de pila RSI vs función normal; `inicializar_perifericos()` probada en placa |
 
 ---
 
@@ -28,7 +28,7 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 
 ### 2026-10-27 — Arreglos de E/S (Paso 3)
 
-**Quién / dónde:** Sergio · casa (sin placa, solo compilación en Eclipse)
+**Quién / dónde:** Sergio y Pablo · casa (sin placa, solo compilación en Eclipse)
 
 **Hecho:**
 - Corregidos los fallos de E/S de la tabla §3.2 de PRACTICA2.md.
@@ -62,7 +62,7 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 
 ### 2026-10-27 — Marco de pila: RSI frente a función normal (Paso 4)
 
-**Quién / dónde:** Sergio · casa (simulador: `arm-none-eabi-gdb`, `target sim`)
+**Quién / dónde:** Sergio y Pablo · casa (simulador: `arm-none-eabi-gdb`, `target sim`)
 
 **Hecho:**
 - Configuraciones de depuración de la P2 copiadas de la P1: `SIM_P2_873042_960280.launch` (config. Debug, `target sim`) y `HW_P2_873042_960280.launch` (config. Placa, JTAG vía openOCD en `localhost:3333`).
@@ -118,7 +118,7 @@ Plan de la práctica: [PRACTICA2.md](PRACTICA2.md).
 
 ### 2026-10-27 — Inicialización centralizada de periféricos (Paso 5)
 
-**Quién / dónde:** Sergio · placa
+**Quién / dónde:** Sergio y Pablo · placa
 
 **Hecho:**
 - `inicializar_perifericos()` (static en `main.c`), llamada desde `Main` justo después de `sys_init()`.
