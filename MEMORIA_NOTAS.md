@@ -21,6 +21,7 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 | 2026-10-27 | Sergio y Pablo | 2 (9:00–11:00) | 3, 4, 5 | Arreglos de E/S y avisos de compilacion; configuraciones de depuracion y marco de pila RSI vs funcion normal; `inicializar_perifericos()` probada en placa |
 | 2026-11-03 | Sergio y Pablo | ? | 6 | Pila de depuracion (`eventos.h`, `lista.c/.h`) probada en el simulador |
 | 2026-11-03 | Sergio y Pablo | 2 | 7-11 | Maquinas de estados disenadas y dibujadas; antirrebotes, temporizador de la entrada y `entrada.c` en codigo; rebotes medidos en placa (`TEST_REBOTES`); entrada de jugada probada en la placa (numeros, autoincremento, confirmacion y cancelacion) |
+| 2026-11-09 | Sergio | 2 (9:00–11:00) | 9-11 | Segunda placa: rebotes medidos otra vez, `trd` de 30 a 50 ms, antirrebotes comprobado, pila de depuracion con los ids 7 y 8, jugada comprobada en `tablero` y led izquierdo confirmado |
 
 ---
 
@@ -184,7 +185,7 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 
 ### 2026-11-03 — Maquinas de estados, antirrebotes y medida de rebotes (Pasos 7 y 9)
 
-**Quien / donde:** Sergio y Pablo · laboratorio (placa nº __)
+**Quien / donde:** Sergio y Pablo · laboratorio (placa nº 12)
 
 **Hecho:**
 - Disenadas y dibujadas las dos maquinas de estados y contrastadas con las diapositivas del guion (32: pasos de la gestion de rebotes; 11-13: entrada de la jugada).
@@ -232,7 +233,7 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 
 ### 2026-11-03 — Entrada de jugada probada en la placa (Pasos 8-11)
 
-**Quien / donde:** Sergio y Pablo · laboratorio (placa nº __)
+**Quien / donde:** Sergio y Pablo · laboratorio (placa nº 12)
 
 **Hecho:**
 - Probada en la placa la maquina de entrada completa, con `TEST_REBOTES = 0` y `TEMPORIZADOR_ENTRADA = 1` (timer1).
@@ -261,9 +262,55 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 - `[MED]` Captura de `tablero` tras confirmar una jugada.
 
 **Pendiente para la proxima sesion:**
-- [ ] Mirar la pila de depuracion tras una prueba completa: `EV_JUGADA_CONFIRMADA` (7) y `EV_JUGADA_CANCELADA` (8) a partir de `indice − 1`; guardar una captura para la memoria.
-- [ ] Confirmar que el led que parpadea es el izquierdo (`led1`); si es el otro, cambiar a `led2` en `entrada.c`.
+- [x] Mirar la pila de depuracion tras una prueba completa: `EV_JUGADA_CONFIRMADA` (7) y `EV_JUGADA_CANCELADA` (8) a partir de `indice − 1`; guardar una captura para la memoria. (Hecho el 2026-11-09.)
+- [x] Confirmar que el led que parpadea es el izquierdo (`led1`); si es el otro, cambiar a `led2` en `entrada.c`. (Es el izquierdo, 2026-11-09.)
 - [ ] Hacer commit de todo lo hecho en esta sesion.
+
+### 2026-11-09 — Segunda placa: rebotes, antirrebotes, ids 7 y 8 y tablero (Pasos 8-11)
+
+**Quien / donde:** Sergio (9:00–11:00, aun sin terminar) · laboratorio (placa nº 4, distinta de la nº 12 del 3-nov, mismo programa)
+
+**Hecho:**
+- Rebotes medidos con `TEST_REBOTES = 1`: 4 pulsaciones de ~1 s de SB2 (izq) y de SB3 (der) y un toque rapido de cada uno (102 eventos en la pila).
+- Subido `TRD_MS` de 30 a 50 ms (`TRP_MS` sigue en 60), `TEST_REBOTES = 0`, y repetida la misma prueba con el antirrebotes activo (132 eventos).
+- Pila de depuracion con una jugada confirmada (id 7) y otra cancelada (id 8).
+- Jugada fila 3 / columna 4 comprobada en `tablero` con Expressions.
+- Confirmado que el led que parpadea (`led1`) es el izquierdo.
+
+**Ficheros tocados:** `button.c` (`TRD_MS` 50 y comentario con las medidas), `button.h` (`TEST_REBOTES` a 0), `entrada.c` (comentario del led izquierdo), `PRACTICA2.md`.
+
+**Datos / medidas** `[MED]` (rafaga = del primer al ultimo evento; 4 pulsaciones por boton + 1 toque rapido):
+- Al pulsar, izq: 0 / 0 / 22,8 / 22,4 ms (toque rapido 13,0 ms). Der: 0,5 / 28,5 / 93,7 ms (toque rapido sin rebotes). El caso de 93,7 ms: el boton se vio a 1 entre los 84 y los 94 ms.
+- Al soltar, izq: 1,6 / 26,6 / 18,3 / 23,9 ms (toque rapido 4,3 ms). Der: 5,0 ms (23 eventos) / 38,2 / 20,7 ms.
+- Placa anterior (3-nov): 41,5 ms al pulsar y 12,4 ms al soltar. Peor caso entre las dos placas: ~41,5 ms al pulsar y 38,2 ms al soltar.
+- Toques rapidos reales de unos 100-110 ms con el programa de test.
+- Con el antirrebotes activo: 10 pulsaciones reales dieron 10 avisos de pulsado y 10 de soltado. Aviso de pulsado a los 60,0 ms, encuesta cada 50,1 ms, `trd` de 50,1 ms (marcas de `timer2`).
+- Autoincremento: primer evento del timer1 a los 560 ms (500 ms despues de confirmar la pulsacion); parpadeo: 18 eventos del timer1 cada 167,008 ms, id 7 a los 3,006 s y 60 µs despues del ultimo; id 8 apilado 34 µs despues de confirmar la pulsacion que cancela.
+- Tablero tras la jugada fila 3 / columna 4 (`tablero[2][3]`): `tablero[2] = {0,0,1,2,0,0,0,0}`, `tablero[3] = {0,0,0,1,2,0,0,0}`, `tablero[4] = {0,0,0,2,1,0,0,0}`; la maquina responde en `[2][2]`. Coincide con la simulacion a mano.
+- Ficheros: volcados y capturas en `pruebas/rebotes_placa4/`.
+
+**Decisiones de diseño** `[ES]`:
+- `trd` = 50 ms: cubre la rafaga de 38,2 ms al soltar de la placa 4; con 30 ms un rebote tras reactivar EINT podria dar una pulsacion falsa.
+- `trp` = 60 ms sin cambios: no se sube para no descartar toques cortos (36,7 ms vistos en la placa 12), y un `trp` de ~90 ms caeria en el hueco del caso de 93,7 ms. Valores elegidos para que valgan en las dos placas.
+
+**Problemas y solucion** `[PROB]`:
+- Problema: en 3 pulsaciones del izquierdo el primer pulso se leia a 1 a los 60 ms (descartado como espurio, sin aviso) y un segundo flanco 9-100 ms despues empezaba un ciclo bueno → Solucion: ninguna necesaria, la maquina lo resuelve sola (el espurio pasa por `trd` y reactiva EINT); el aviso de pulsado llega entre 100 y 200 ms tarde.
+- Problema: una marca de `timer2` salio unos 2 ms tarde (el timer0 aparece a 58,0 ms en vez de 60) → Solucion: pendiente; se parece al desfase de 2,048 ms al desbordar `timer2_leer()`; no afecta al comportamiento, solo al instante apilado.
+- Problema: con el test de rebotes, una rafaga al pulsar acabo en lectura a 1 (id 3) con el boton pulsado; parece que el ultimo flanco se pierde porque la RSI limpia el pendiente al terminar (hipotesis, sin comprobar) → Solucion: no afecta al antirrebotes, que lee el nivel pasado `trp`.
+
+**Para la memoria:**
+- `[MED]` Tabla de rafagas de las dos placas y razon de `trp = 60` / `trd = 50`.
+- `[MED]` Capturas de la pila con los ids 7 y 8 y de `tablero` tras una jugada.
+- `[ES]` El pulso espurio se resuelve sin perder la pulsacion: pasa por `trd` y el siguiente flanco abre otro ciclo.
+
+**Pendiente para la proxima sesion:**
+- [ ] Anotar el numero de placa de la sesion.
+- [ ] Mirar la desviacion de ~2 ms de `timer2_leer()` al desbordar.
+- [ ] Decidir si la suelta exige dos lecturas seguidas a 1 en la encuesta.
+- [ ] Decidir timer1 o timer2 y preguntar lo del «paso» al profesor.
+- [ ] Medir la pila IRQ en la placa (rellenar con `0xDEADBEEF`).
+- [ ] Jugar una partida completa contra la maquina.
+- [ ] Hacer commit de lo hecho hoy.
 
 ---
 

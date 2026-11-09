@@ -21,7 +21,7 @@
 #define SIMBOLO_F		15
 #define SIMBOLO_BLANK	16
 
-/* PROVISIONAL: sin verificar en la placa cual de los dos LEDs es el izquierdo (led1 = bit 9 de PDATB) */
+/* Led izquierdo de la placa = led1 (bit 9 de PDATB), verificado en la placa */
 #define LED_ON()		led1_on()
 #define LED_OFF()		led1_off()
 

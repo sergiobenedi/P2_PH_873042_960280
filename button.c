@@ -26,10 +26,11 @@
 #define PIN_IZQ		(1 << EINT_IZQ)
 #define PIN_DER		(1 << EINT_DER)
 
-/* Medidos con TEST_REBOTES (paso 9): peor caso visto 41,5 ms al pulsar y 12,4 ms al soltar.
- * Con margen. PROVISIONAL: pocas muestras, revisar si salen rafagas mas largas */
+/* Medidos con TEST_REBOTES (paso 9) en dos placas. Al pulsar: peor caso 41,5 ms (placa 12) y 38,2 ms
+ * (placa 4, salvo un caso suelto de 94 ms). Al soltar: 12,4 ms (placa 12) y 38,2 ms (placa 4).
+ * trd debe cubrir la rafaga al soltar; trp no se sube para no perder toques cortos */
 #define TRP_MS		60		// retardo de rebote de pulsacion
-#define TRD_MS		30		// retardo de rebote de depresion
+#define TRD_MS		50		// retardo de rebote de depresion
 #define ENCUESTA_MS	50		// periodo de muestreo del boton mientras esta pulsado
 
 /* declaracion de funcion que es rutina de servicio de interrupcion
