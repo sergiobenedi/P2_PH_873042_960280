@@ -19,10 +19,9 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 | Fecha | Quien | Horas | Pasos | Que |
 |-------|-------|-------|-------|-----|
 | 2026-10-27 | Sergio y Pablo | 2 (9:00–11:00) | 3, 4, 5 | Arreglos de E/S y avisos de compilacion; configuraciones de depuracion y marco de pila RSI vs funcion normal; `inicializar_perifericos()` probada en placa |
-| 2026-11-03 | Sergio y Pablo | ? | 6 | Pila de depuracion (`eventos.h`, `lista.c/.h`) probada en el simulador |
-| 2026-11-03 | Sergio y Pablo | 2 | 7-11 | Maquinas de estados disenadas y dibujadas; antirrebotes, temporizador de la entrada y `entrada.c` en codigo; rebotes medidos en placa (`TEST_REBOTES`); entrada de jugada probada en la placa (numeros, autoincremento, confirmacion y cancelacion) |
-| 2026-11-09 | Sergio | 2 (9:00–11:00) | 9-11 | Segunda placa: rebotes medidos otra vez, `trd` de 30 a 50 ms, antirrebotes comprobado, pila de depuracion con los ids 7 y 8, jugada comprobada en `tablero` y led izquierdo confirmado |
-
+| 2026-11-02 | Sergio y Pablo | 2 (9:00–11:00) | 6 | Pila de depuracion (`eventos.h`, `lista.c/.h`) probada en el simulador |
+| 2026-11-03 | Sergio y Pablo | 2 (9:00–11:00) | 7-11 | Maquinas de estados disenadas y dibujadas; antirrebotes, temporizador de la entrada y `entrada.c` en codigo; rebotes medidos en placa (`TEST_REBOTES`); entrada de jugada probada en la placa (numeros, autoincremento, confirmacion y cancelacion) |
+| 2026-11-09 | Sergio | 2 (9:00–11:00) | 9-12 | Segunda placa: rebotes medidos otra vez, `trd` de 30 a 50 ms, antirrebotes comprobado, pila de depuracion con los ids 7 y 8, jugada comprobada en `tablero` y led izquierdo confirmado; partida de 30 jugadas (31 blancas / 33 negras) y corregido el `char` sin signo en `voltear` |
 ---
 
 ## 2. Sesiones
@@ -145,7 +144,7 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 - [ ] El guion pide el 8led apagado al inicio: cambiar `cero` por `blank` al montar la maquina de entrada (Paso 6 del guion).
 - [ ] Paso 6 (nuestro): `eventos.h` + `lista.c/.h` + `guardar_eventos`.
 
-### 2026-11-03 — Pila de depuracion (Paso 6)
+### 2026-11-02 — Pila de depuracion (Paso 6)
 
 **Quien / donde:** Sergio y Pablo · casa (simulador)
 
@@ -266,7 +265,7 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 - [x] Confirmar que el led que parpadea es el izquierdo (`led1`); si es el otro, cambiar a `led2` en `entrada.c`. (Es el izquierdo, 2026-11-09.)
 - [ ] Hacer commit de todo lo hecho en esta sesion.
 
-### 2026-11-09 — Segunda placa: rebotes, antirrebotes, ids 7 y 8 y tablero (Pasos 8-11)
+### 2026-11-09 — Segunda placa: rebotes, antirrebotes, ids 7 y 8, tablero y partida de 30 jugadas (Pasos 8-12)
 
 **Quien / donde:** Sergio (9:00–11:00, aun sin terminar) · laboratorio (placa nº 4, distinta de la nº 12 del 3-nov, mismo programa)
 
@@ -276,8 +275,10 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 - Pila de depuracion con una jugada confirmada (id 7) y otra cancelada (id 8).
 - Jugada fila 3 / columna 4 comprobada en `tablero` con Expressions.
 - Confirmado que el led que parpadea (`led1`) es el izquierdo.
+- Partida de 30 jugadas legales contra la maquina (unas 300 pulsaciones), simulada antes en Python con la misma logica que `reversi8_2026.c`; `tablero` comprobado tras la 10, la 20 y la 30. Tras la 30 el tablero queda lleno y coincide casilla por casilla con la simulacion: 31 blancas (maquina) y 33 negras (humano), contado con `pruebas/contar.gdb`.
+- Pila de depuracion coherente tras la partida: da la vuelta, parpadeos (id 6) cada ~167 ms y una confirmacion (id 7) al final de cada tanda.
 
-**Ficheros tocados:** `button.c` (`TRD_MS` 50 y comentario con las medidas), `button.h` (`TEST_REBOTES` a 0), `entrada.c` (comentario del led izquierdo), `PRACTICA2.md`.
+**Ficheros tocados:** `button.c` (`TRD_MS` 50 y comentario con las medidas), `button.h` (`TEST_REBOTES` a 0), `entrada.c` (comentario del led izquierdo), `reversi8_2026.c` (`signed char`), `pruebas/contar.gdb` (nuevo), `PRACTICA2.md`.
 
 **Datos / medidas** `[MED]` (rafaga = del primer al ultimo evento; 4 pulsaciones por boton + 1 toque rapido):
 - Al pulsar, izq: 0 / 0 / 22,8 / 22,4 ms (toque rapido 13,0 ms). Der: 0,5 / 28,5 / 93,7 ms (toque rapido sin rebotes). El caso de 93,7 ms: el boton se vio a 1 entre los 84 y los 94 ms.
@@ -288,6 +289,7 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 - Autoincremento: primer evento del timer1 a los 560 ms (500 ms despues de confirmar la pulsacion); parpadeo: 18 eventos del timer1 cada 167,008 ms, id 7 a los 3,006 s y 60 µs despues del ultimo; id 8 apilado 34 µs despues de confirmar la pulsacion que cancela.
 - Tablero tras la jugada fila 3 / columna 4 (`tablero[2][3]`): `tablero[2] = {0,0,1,2,0,0,0,0}`, `tablero[3] = {0,0,0,1,2,0,0,0}`, `tablero[4] = {0,0,0,2,1,0,0,0}`; la maquina responde en `[2][2]`. Coincide con la simulacion a mano.
 - Ficheros: volcados y capturas en `pruebas/rebotes_placa4/`.
+- Partida: con el fallo de `voltear` (ver `[PROB]`), el tablero tras la jugada 20 difería en 18 casillas del esperado y la simulacion imitando el fallo daba 0 diferencias con el volcado de la placa. Con la correccion: 0 diferencias en las jugadas 10, 20 y 30.
 
 **Decisiones de diseño** `[ES]`:
 - `trd` = 50 ms: cubre la rafaga de 38,2 ms al soltar de la placa 4; con 30 ms un rebote tras reactivar EINT podria dar una pulsacion falsa.
@@ -297,8 +299,11 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 - Problema: en 3 pulsaciones del izquierdo el primer pulso se leia a 1 a los 60 ms (descartado como espurio, sin aviso) y un segundo flanco 9-100 ms despues empezaba un ciclo bueno → Solucion: ninguna necesaria, la maquina lo resuelve sola (el espurio pasa por `trd` y reactiva EINT); el aviso de pulsado llega entre 100 y 200 ms tarde.
 - Problema: una marca de `timer2` salio unos 2 ms tarde (el timer0 aparece a 58,0 ms en vez de 60) → Solucion: pendiente; se parece al desfase de 2,048 ms al desbordar `timer2_leer()`; no afecta al comportamiento, solo al instante apilado.
 - Problema: con el test de rebotes, una rafaga al pulsar acabo en lectura a 1 (id 3) con el boton pulsado; parece que el ultimo flanco se pierde porque la RSI limpia el pendiente al terminar (hipotesis, sin comprobar) → Solucion: no afecta al antirrebotes, que lee el nivel pasado `trp`.
+- Problema: en ARM `char` es sin signo, asi que `vSF`/`vSC` con -1 valian 255 y `voltear` hacia `FA = FA + 255`: no volteaba en las direcciones con componente negativa (N, NE, O, NO, SO) y escribia fuera de `tablero` → Solucion: `vSF`, `vSC` y los parametros/locales `SF`, `SC` de `voltear` y `actualizar_tablero` pasan a `signed char`. El ensamblador ya truncaba a 8 bits y su comparacion sin signo (`cmp` + `bhs`) cubre bien `f >= 0` y `f < DIM`, asi que no se toca. No se habia visto antes porque las primeras jugadas no volteaban hacia arriba/izquierda.
 
 **Para la memoria:**
+- `[PROB]` `char` sin signo en ARM y los desplazamientos -1 de `voltear`; como se detecto (comparando el volcado de `tablero` con la simulacion).
+- `[MED]` Tablero final de la partida de 30 jugadas y su recuento (31/33).
 - `[MED]` Tabla de rafagas de las dos placas y razon de `trp = 60` / `trd = 50`.
 - `[MED]` Capturas de la pila con los ids 7 y 8 y de `tablero` tras una jugada.
 - `[ES]` El pulso espurio se resuelve sin perder la pulsacion: pasa por `trd` y el siguiente flanco abre otro ciclo.
@@ -309,7 +314,8 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 - [ ] Decidir si la suelta exige dos lecturas seguidas a 1 en la encuesta.
 - [ ] Decidir timer1 o timer2 y preguntar lo del «paso» al profesor.
 - [ ] Medir la pila IRQ en la placa (rellenar con `0xDEADBEEF`).
-- [ ] Jugar una partida completa contra la maquina.
+- [x] Jugar una partida completa contra la maquina. (30 jugadas, 2026-11-09.)
+- [ ] Preguntar al profesor por el "paso" y cuando se llama a `contar()` (con el tablero lleno el programa espera una jugada 31).
 - [ ] Hacer commit de lo hecho hoy.
 
 ---

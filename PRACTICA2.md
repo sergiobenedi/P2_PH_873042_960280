@@ -195,7 +195,7 @@ Estado: ✅ hecho · ⬜ pendiente. Detalle de cada sesion en [MEMORIA_NOTAS.md]
    **Esto va explicado en la memoria (marco de pila).** *(2026-10-27, ver MEMORIA_NOTAS.md)*
 5. ✅ `inicializar_perifericos()` y llamarla desde `Main` despues de `sys_init()`. *(2026-10-27, probado en placa)*
 6. ✅ `eventos.h` + `lista.c/.h` + `guardar_eventos`. Probarla en el emulador con llamadas a mano
-   (comprobar que da la vuelta en el evento 151 y que no pisa nada). *(2026-11-03, `pruebas/lista_sim.gdb`)*
+   (comprobar que da la vuelta en el evento 151 y que no pisa nada). *(2026-11-02, `pruebas/lista_sim.gdb`)*
 7. ✅ Escribir las maquinas de estados del §4 (codigo y diagramas para la memoria). *(2026-11-03, `button.c`, `timer.c`, `entrada.c`; diagramas en §4, falta dibujarlos para la memoria)*
 
 **En el laboratorio**
@@ -207,7 +207,7 @@ Estado: ✅ hecho · ⬜ pendiente. Detalle de cada sesion en [MEMORIA_NOTAS.md]
     y uno al soltar. *(2026-11-03; repetido en la placa 4 el 2026-11-09 con trp 60 / trd 50: 10 pulsaciones reales = 10 avisos de pulsado y 10 de soltado, y un toque espurio descartado sin aviso)*
 11. ✅ Probar la entrada F/C: incremento, vuelta 8 → 1, autoincremento 0,5 s + 300 ms, confirmacion,
     parpadeo 3 s y cancelacion. *(2026-11-03)*
-12. ⬜ Jugar partidas completas contra la maquina (solo se ha jugado una jugada).
+12. ✅ Jugar una partida completa contra la maquina. *(2026-11-09: 30 jugadas hasta llenar el tablero, 31 blancas / 33 negras, comprobado con `pruebas/contar.gdb`. Corregido `char` sin signo en `voltear`. Sin "paso" no hay final de partida: pendiente del profesor)*
 
 **Pendiente de lo ya hecho** (detalle en MEMORIA_NOTAS.md)
 

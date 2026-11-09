@@ -49,8 +49,9 @@ static const char __attribute__ ((aligned (8))) tabla_valor[DIM][DIM] =
 
 
 // Tabla de direcciones. Contiene los desplazamientos de las 8 direcciones posibles
-const char vSF[DIM] = {-1,-1, 0, 1, 1, 1, 0,-1};
-const char vSC[DIM] = { 0, 1, 1, 1, 0,-1,-1,-1};
+// signed char: en ARM "char" es sin signo y -1 valdria 255 (voltear escribiria fuera del tablero)
+const signed char vSF[DIM] = {-1,-1, 0, 1, 1, 1, 0,-1};
+const signed char vSC[DIM] = { 0, 1, 1, 1, 0,-1,-1,-1};
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Variables globales que no deberian serlo
@@ -117,7 +118,7 @@ static void init_table(char tablero[][DIM], char candidatas[][DIM])
 // color indica el color de la pieza que se acaba de colocar
 // FA y CA son la fila y columna a analizar
 
-static void voltear(char tablero[][DIM], int FA, int CA, char SF, char SC, int n, char color)
+static void voltear(char tablero[][DIM], int FA, int CA, signed char SF, signed char SC, int n, char color)
 {
     int i;
 
@@ -138,7 +139,7 @@ static void voltear(char tablero[][DIM], int FA, int CA, char SF, char SC, int n
 
 static int actualizar_tablero(char tablero[][DIM], char f, char c, char color)
 {
-    char SF, SC; // cantidades a sumar para movernos en la direccion que toque
+    signed char SF, SC; // cantidades a sumar para movernos en la direccion que toque
     int i, flip, modelo;
 
     for (i = 0; i < DIM; i++) // 0 es Norte, 1 NE, 2 E ...
