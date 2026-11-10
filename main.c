@@ -40,8 +40,8 @@ void Main(void)
 
 	reversi8();
 
-	// Fin de partida: se ignoran los botones para que la entrada no pise el display
-	rINTMSK |= BIT_EINT4567;
+	// Fin de partida: se ignoran los botones y el teclado para que la entrada no pise el display
+	rINTMSK |= BIT_EINT4567 | BIT_EINT1;
 	D8Led_symbol(14);			// E de "end" (indice 14 de la tabla Symbol de 8led.c)
 	while (1) {}
 }

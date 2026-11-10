@@ -13,6 +13,7 @@
 /*--- funciones que llaman las RSI (siempre desde una IRQ, nunca desde Main) ---*/
 void entrada_boton_pulsado(int boton);	// pulsacion confirmada (BOTON_IZQ / BOTON_DER)
 void entrada_boton_soltado(int boton);	// el boton se ha soltado
+void entrada_tecla(int tecla);			// tecla del teclado matricial confirmada (1-8, TECLA_OK, TECLA_NO)
 void entrada_temporizador(void);		// ha vencido el temporizador de la entrada (ver timer.h)
 
 /*--- funciones que llama el programa principal ---*/

@@ -66,7 +66,7 @@ Relojes: MCLK = 64 MHz. `f_timer = MCLK / (preescalado + 1) / divisor`. Timers 0
 | `timer.c/.h` (ampliado) | `timer0_programar` (un disparo) y temporizador de la entrada (`temporizador_entrada_*`: autoincremento 300 ms y parpadeo) |
 | `entrada.c/.h` | Maquina de estados de introduccion de jugada (INICIO → F → numero → C → numero → parpadeo → jugada) |
 | `inicializar_perifericos()` en `main.c` | Llama a todos los `*_init` en un unico sitio |
-| `teclado.c/.h` | Solo si hacemos el opcional |
+| `teclado.c/.h` | Opcional (hecho): escaneo de las 4 filas y tabla de las 10 teclas habilitadas. La RSI EINT1 esta en `button.c` y comparte la maquina antirrebotes |
 
 `uint8_t`/`uint32_t`: comprobar si el toolchain trae `<stdint.h>`; si no, `typedef` en `eventos.h`.
 
@@ -225,7 +225,7 @@ Estado: ✅ hecho · ⬜ pendiente. Detalle de cada sesion en [MEMORIA_NOTAS.md]
 - Decidir timer1 o timer2 para la entrada (`TEMPORIZADOR_ENTRADA`).
 - Preguntar al profesor por el "paso" (hoy no se puede pasar turno).
 - Medir el uso real de la pila IRQ en placa (rellenar con `0xDEADBEEF`; estimado ~130 B de 256 B).
-13. ⬜ (Opcional) Teclado matricial: RSI EINT1, escaneo, mapear las 10 teclas.
+13. 🟨 (Opcional) Teclado matricial: RSI EINT1 (flanco de bajada) en `button.c` con la misma maquina antirrebotes (todas las entradas enmascaradas mientras dura, el timer0 no se comparte); escaneo en `teclado.c`; `entrada_tecla` en `entrada.c` (1-8 eligen el valor con una pulsacion, OK = boton derecho, NO = volver a pedir la fila; en CONFIRMAR solo NO cancela). Compila; **[verificar en placa]** la orientacion de la tabla de teclas.
 
 **Cierre**
 

@@ -49,9 +49,10 @@ Toolchain: Eclipse + ARM Sourcery GCC + openOCD (JTAG).
 - [reversi8_thumb.asm](reversi8_thumb.asm) — `color_ficha_thumb` (Thumb).
 - [led.c](led.c) / [.h](led.h) — control de los 2 LEDs de la placa.
 - [8led.c](8led.c) / [.h](8led.h) — control del display de 8 segmentos (tabla de simbolos por bitmap).
-- [button.c](button.c) / [.h](button.h) — pulsadores por interrupcion externa (EINT6-7) y maquina antirrebotes (ESPERANDO, RETARDO_TRP, ENCUESTA, RETARDO_TRD). `TEST_REBOTES` en el `.h`: modo de test que solo apila eventos.
+- [button.c](button.c) / [.h](button.h) — pulsadores por interrupcion externa (EINT6-7) y maquina antirrebotes (ESPERANDO, RETARDO_TRP, ENCUESTA, RETARDO_TRD). `TEST_REBOTES` en el `.h`: modo de test que solo apila eventos. El teclado matricial (EINT1) pasa por la misma maquina (`BOTON_TECLADO`).
+- [teclado.c](teclado.c) / [.h](teclado.h) — opcional: teclado matricial 4x4 en el banco 3. `teclado_leer` escanea las 4 filas y devuelve 1-8, `TECLA_OK`, `TECLA_NO` o `TECLA_NINGUNA` (solo 10 teclas habilitadas, figura 2 del guion). `TECLADO` en el `.h`: 1 = habilitado.
 - [timer.c](timer.c) / [.h](timer.h) — timer0 de un solo disparo (`timer0_programar`, retardos del antirrebotes) y temporizador de la entrada de jugada (`temporizador_entrada_*`). `TEMPORIZADOR_ENTRADA` en el `.h`: 1 = timer1, 2 = interrupcion del timer2.
-- [entrada.c](entrada.c) / [.h](entrada.h) — maquina de estados de la entrada de jugada (INICIO, FILA, COLUMNA, CONFIRMAR) con el 8led y el led izquierdo. Las RSI llaman a `entrada_boton_pulsado/soltado` y `entrada_temporizador`; `reversi8()` espera con `entrada_jugada_lista`.
+- [entrada.c](entrada.c) / [.h](entrada.h) — maquina de estados de la entrada de jugada (INICIO, FILA, COLUMNA, CONFIRMAR) con el 8led y el led izquierdo. Las RSI llaman a `entrada_boton_pulsado/soltado`, `entrada_tecla` y `entrada_temporizador`; `reversi8()` espera con `entrada_jugada_lista`.
 - [timer2.c](timer2.c) / [.h](timer2.h) — libreria de medicion de tiempos con timer2 (de la P1): `timer2_inicializar/empezar/leer/parar`, resolucion 1/32 µs. Da la marca de tiempo de la pila de depuracion.
 - [eventos.h](eventos.h) — IDs de los eventos de la pila de depuracion.
 - [lista.c](lista.c) / [.h](lista.h) — pila de depuracion: lista circular de 150 eventos (id + instante, 8 B) en `0x0C7FE000`; `lista_inicializar`, `guardar_eventos`.

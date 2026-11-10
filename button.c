@@ -8,6 +8,7 @@
 /*--- ficheros de cabecera ---*/
 #include "button.h"
 #include "entrada.h"
+#include "teclado.h"
 #include "timer.h"
 #include "timer2.h"
 #include "lista.h"
@@ -35,9 +36,22 @@
 #define TRD_MS		100		// retardo de rebote de depresion
 #define ENCUESTA_MS	50		// periodo de muestreo del boton mientras esta pulsado
 
+/* El teclado (opcional) usa la misma maquina antirrebotes que los pulsadores. Solo se atiende una
+ * entrada a la vez: mientras dura la maquina se enmascaran todas, asi el timer0 nunca se comparte.
+ * En el modo de test de rebotes el teclado no se habilita */
+#define USAR_TECLADO	(TECLADO && !TEST_REBOTES)
+#if USAR_TECLADO
+#define LINEAS_ENTRADA	(BIT_EINT4567 | BIT_EINT1)
+#else
+#define LINEAS_ENTRADA	BIT_EINT4567
+#endif
+
 /* declaracion de funcion que es rutina de servicio de interrupcion
  * https://gcc.gnu.org/onlinedocs/gcc/ARM-Function-Attributes.html */
 void Eint4567_ISR(void) __attribute__((interrupt("IRQ")));
+#if USAR_TECLADO
+static void Eint1_ISR(void) __attribute__((interrupt("IRQ")));
+#endif
 
 #if TEST_REBOTES
 /*--- modo de test: solo apila un evento por flanco, sin enmascarar ni esperar ---*/
@@ -74,13 +88,27 @@ static void apilar(uint8_t id)
 	guardar_eventos(id, timer2_leer());
 }
 
-/* El pulsador esta a 0 en PDATG mientras esta pulsado (pull-up) */
+/* Distinto de 0 mientras la entrada activa esta pulsada. Pulsadores: estan a 0 en PDATG (pull-up).
+ * Teclado: devuelve la tecla escaneada (las no habilitadas cuentan como no pulsadas) */
 static int boton_pulsado(void)
 {
+#if USAR_TECLADO
+	if (boton_activo == BOTON_TECLADO)
+		return teclado_leer();
+#endif
 	return !(rPDATG & ((boton_activo == BOTON_IZQ) ? PIN_IZQ : PIN_DER));
 }
 
-/* T1: ESPERANDO -> RETARDO_TRP */
+/* T1 (comun a pulsadores y teclado): ESPERANDO -> RETARDO_TRP */
+static void empezar_retardo_trp(int boton, uint8_t evento)
+{
+	boton_activo = boton;
+	rINTMSK |= LINEAS_ENTRADA;		// los rebotes (y las demas entradas) ya no interrumpen
+	apilar(evento);
+	estado = RETARDO_TRP;
+	timer0_programar(TRP_MS);
+}
+
 void Eint4567_ISR(void)
 {
 	/* Identificar la interrupcion mirando cada bit (pueden llegar los dos a la vez) */
@@ -89,11 +117,10 @@ void Eint4567_ISR(void)
 	/* Solo hay IRQ en ESPERANDO: en los demas estados la linea esta enmascarada */
 	if (pnd && estado == ESPERANDO)
 	{
-		boton_activo = (pnd & PND_IZQ) ? BOTON_IZQ : BOTON_DER;	// con los dos a la vez se atiende el izquierdo
-		rINTMSK |= BIT_EINT4567;								// los rebotes ya no interrumpen
-		apilar((boton_activo == BOTON_IZQ) ? EV_BOTON_IZQ : EV_BOTON_DER);
-		estado = RETARDO_TRP;
-		timer0_programar(TRP_MS);
+		if (pnd & PND_IZQ)			// con los dos a la vez se atiende el izquierdo
+			empezar_retardo_trp(BOTON_IZQ, EV_BOTON_IZQ);
+		else
+			empezar_retardo_trp(BOTON_DER, EV_BOTON_DER);
 	}
 
 	/* Finalizar ISR: borrar solo lo atendido */
@@ -101,18 +128,36 @@ void Eint4567_ISR(void)
 	rI_ISPC    = BIT_EINT4567;		// I_ISPC es de solo escritura: se asigna (no |=)
 }
 
+#if USAR_TECLADO
+/* Una tecla del teclado matricial pone a 0 su columna -> flanco de bajada en EINT1. No se escanea
+ * aqui: la tecla se lee al acabar trp, ya sin rebotes */
+static void Eint1_ISR(void)
+{
+	if (estado == ESPERANDO)
+		empezar_retardo_trp(BOTON_TECLADO, EV_TECLADO);
+
+	rI_ISPC = BIT_EINT1;
+}
+#endif
+
 /* T2a, T2b, T3, T4 y T5: la llama la RSI del timer0 cada vez que vence un retardo */
 void boton_timer0(void)
 {
+	int valor;
+
 	switch (estado)
 	{
 	case RETARDO_TRP:
 		apilar(EV_TIMER0);
-		if (boton_pulsado())			// T2a: pulsacion confirmada
+		valor = boton_pulsado();
+		if (valor)						// T2a: pulsacion confirmada
 		{
 			estado = ENCUESTA;
 			timer0_programar(ENCUESTA_MS);
-			entrada_boton_pulsado(boton_activo);
+			if (boton_activo == BOTON_TECLADO)
+				entrada_tecla(valor);
+			else
+				entrada_boton_pulsado(boton_activo);
 		}
 		else							// T2b: pulso espurio, sin aviso
 		{
@@ -136,12 +181,12 @@ void boton_timer0(void)
 		}
 		break;
 
-	case RETARDO_TRD:					// T5: reactivar los pulsadores
+	case RETARDO_TRD:					// T5: reactivar los pulsadores (y el teclado)
 		apilar(EV_FIN_TRD);
 		estado = ESPERANDO;
-		rEXTINTPND = PND_IZQ | PND_DER;		// primero borrar los rebotes de la suelta...
-		rI_ISPC    = BIT_EINT4567;
-		rINTMSK   &= ~(BIT_EINT4567);		// ...y solo despues desenmascarar
+		rEXTINTPND = PND_IZQ | PND_DER;		// primero borrar los rebotes de la suelta (y los EINT1
+		rI_ISPC    = LINEAS_ENTRADA;		// que provoca el propio escaneo del teclado)...
+		rINTMSK   &= ~(LINEAS_ENTRADA);		// ...y solo despues desenmascarar
 		break;
 
 	default:							// ESPERANDO: aviso del timer0 que no esperabamos
@@ -170,4 +215,14 @@ void Eint4567_init(void)
 	rEXTINTPND = PND_IZQ | PND_DER;
 	rI_ISPC    = BIT_EINT4567;
 	rINTMSK   &= ~(BIT_EINT4567);		// habilitamos la linea eint4567 en el vector de mascaras
+
+#if USAR_TECLADO
+	/* Teclado matricial: pin 1 del puerto G = EINT1, por flanco de bajada. El banco 3 (nGCS3)
+	 * ya lo configura el arranque. Port_Init ya deja PCONG en modo EINT, se fuerza por si acaso */
+	rPCONG  |= 0xC;										// pin 1 (bits 3:2) = 11 -> EINT1
+	rEXTINT  = (rEXTINT & ~0x70) | 0x20;				// EINT1 (bits 6:4) por flanco de bajada (010)
+	pISR_EINT1 = (int) Eint1_ISR;
+	rI_ISPC  = BIT_EINT1;
+	rINTMSK &= ~(BIT_EINT1);
+#endif
 }

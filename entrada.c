@@ -13,6 +13,7 @@
 #include "eventos.h"
 #include "8led.h"
 #include "led.h"
+#include "teclado.h"
 
 /*--- constantes ---*/
 /* Indices de los simbolos en la tabla Symbol de 8led.c: D8Led_symbol recibe el indice, no el bitmap.
@@ -100,6 +101,16 @@ static void confirmar(void)
 	}
 }
 
+/* E4a: se cancela la jugada mientras parpadea el led */
+static void cancelar(void)
+{
+	temporizador_entrada_parar();
+	led_encendido = 0;
+	LED_OFF();
+	apilar(EV_JUGADA_CANCELADA);
+	volver_a_fila();
+}
+
 void entrada_inicializar(void)
 {
 	estado = INICIO;
@@ -130,11 +141,44 @@ void entrada_boton_pulsado(int boton)
 		break;
 
 	case CONFIRMAR:					// E4a: cualquier boton cancela la jugada
-		temporizador_entrada_parar();
-		led_encendido = 0;
-		LED_OFF();
-		apilar(EV_JUGADA_CANCELADA);
+		cancelar();
+		break;
+
+	default:
+		break;
+	}
+}
+
+/* Teclado matricial (opcional): el numero se elige con una sola pulsacion. OK hace lo mismo que el
+ * boton derecho, NO vuelve a pedir la fila. En CONFIRMAR solo NO cancela: asi un OK de mas no
+ * deshace la jugada que se acaba de confirmar */
+void entrada_tecla(int tecla)
+{
+	switch (estado)
+	{
+	case INICIO:					// E1: cualquier tecla empieza la partida
 		volver_a_fila();
+		break;
+
+	case FILA:
+	case COLUMNA:
+		if (tecla == TECLA_OK)
+		{
+			if (n != 0)
+				confirmar();
+		}
+		else if (tecla == TECLA_NO)
+			volver_a_fila();
+		else						// 1-8
+		{
+			n = tecla;
+			D8Led_symbol(n);
+		}
+		break;
+
+	case CONFIRMAR:
+		if (tecla == TECLA_NO)
+			cancelar();
 		break;
 
 	default:
