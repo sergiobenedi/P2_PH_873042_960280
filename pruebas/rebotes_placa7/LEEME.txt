@@ -1,0 +1,8 @@
+Placa 7 (2026-11-10). Volcados de GDB (x/300xw 0x0C7FE000) con TEST_REBOTES=1. Cada evento = 2 palabras: id e instante en us.
+Ids: 1 izq, 2 der, 3 soltado. Las tres pilas dieron la vuelta: el evento mas antiguo esta en el indice anotado.
+
+volcado_pila_hex.txt  10 pulsaciones de 1 s y 5 toques rapidos por boton (indice=33; solo quedan los toques rapidos)
+izq_5x1s.txt          5 pulsaciones de 1 s del izquierdo (indice=137)
+der_5x1s.txt          5 pulsaciones de 1 s del derecho (indice=12)
+
+Analisis: python pruebas/rafagas.py pruebas/rebotes_placa7/izq_5x1s.txt 137

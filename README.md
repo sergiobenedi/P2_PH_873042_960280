@@ -44,7 +44,7 @@ Toolchain: Eclipse + ARM Sourcery GCC + openOCD (JTAG).
 ## Estructura
 
 - [main.c](main.c) — punto de entrada (`Main`): `sys_init()`, `inicializar_perifericos()` y `reversi8()`.
-- [reversi8_2026.c](reversi8_2026.c) / [.h](reversi8_2026.h) — logica del juego (de la P1).
+- [reversi8_2026.c](reversi8_2026.c) / [.h](reversi8_2026.h) — logica del juego (de la P1). La partida acaba cuando `vacias` (casillas en blanco) llega a 0; `Main` muestra entonces una E en el 8led.
 - [reversi8_arm.asm](reversi8_arm.asm) — `patron_volteo_arm` (ARM), llama a `color_ficha_thumb`.
 - [reversi8_thumb.asm](reversi8_thumb.asm) — `color_ficha_thumb` (Thumb).
 - [led.c](led.c) / [.h](led.h) — control de los 2 LEDs de la placa.
@@ -55,7 +55,7 @@ Toolchain: Eclipse + ARM Sourcery GCC + openOCD (JTAG).
 - [timer2.c](timer2.c) / [.h](timer2.h) — libreria de medicion de tiempos con timer2 (de la P1): `timer2_inicializar/empezar/leer/parar`, resolucion 1/32 µs. Da la marca de tiempo de la pila de depuracion.
 - [eventos.h](eventos.h) — IDs de los eventos de la pila de depuracion.
 - [lista.c](lista.c) / [.h](lista.h) — pila de depuracion: lista circular de 150 eventos (id + instante, 8 B) en `0x0C7FE000`; `lista_inicializar`, `guardar_eventos`.
-- [pruebas/](pruebas/) — scripts de GDB para probar en el simulador (`lista_sim.gdb`). Eclipse no los compila.
+- [pruebas/](pruebas/) — scripts de GDB (`lista_sim.gdb`, `contar.gdb`), `rafagas.py` (agrupa en rafagas un volcado de la pila de depuracion para medir rebotes) y volcados/capturas por placa (`rebotes_placa4/`, `rebotes_placa7/`). Eclipse no los compila.
 - [common/](common/) — soporte de placa suministrado (`44b.h`, `44blib.*`, `44binit.asm`,
   script de arranque, linker script). **No modificar salvo indicacion explicita.**
 - [emulador/](emulador/) — arranque para el modo emulador (`init_b_2026.asm`, linker script propio).

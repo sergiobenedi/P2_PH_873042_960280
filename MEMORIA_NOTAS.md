@@ -22,6 +22,7 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 | 2026-11-02 | Sergio y Pablo | 2 (9:00–11:00) | 6 | Pila de depuracion (`eventos.h`, `lista.c/.h`) probada en el simulador |
 | 2026-11-03 | Sergio y Pablo | 2 (9:00–11:00) | 7-11 | Maquinas de estados disenadas y dibujadas; antirrebotes, temporizador de la entrada y `entrada.c` en codigo; rebotes medidos en placa (`TEST_REBOTES`); entrada de jugada probada en la placa (numeros, autoincremento, confirmacion y cancelacion) |
 | 2026-11-09 | Sergio | 2 (9:00–11:00) | 9-12 | Segunda placa: rebotes medidos otra vez, `trd` de 30 a 50 ms, antirrebotes comprobado, pila de depuracion con los ids 7 y 8, jugada comprobada en `tablero` y led izquierdo confirmado; partida de 30 jugadas (31 blancas / 33 negras) y corregido el `char` sin signo en `voltear` |
+| 2026-11-10 | Sergio y Pablo | 1,5 (9:00–10:30) | 9, 12 | Final de partida con tablero lleno (contador `vacias`, E en el 8led) probado en placa; placa 7 recalibrada: rebotes medidos, trp y trd a 100 ms |
 ---
 
 ## 2. Sesiones
@@ -316,6 +317,51 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 - [ ] Medir la pila IRQ en la placa (rellenar con `0xDEADBEEF`).
 - [x] Jugar una partida completa contra la maquina. (30 jugadas, 2026-11-09.)
 - [ ] Preguntar al profesor por el "paso" y cuando se llama a `contar()` (con el tablero lleno el programa espera una jugada 31).
+- [ ] Hacer commit de lo hecho hoy.
+
+### 2026-11-10 — Final de partida con tablero lleno y calibracion de la placa 7 (Pasos 9 y 12)
+
+**Quien / donde:** Sergio y Pablo (9:00–10:30) · laboratorio (placa nº 7)
+
+**Hecho:**
+- El profesor pide que el juego detecte el tablero lleno. Contador `vacias` en `reversi8()`: empieza en 60 (64 casillas - 4 fichas iniciales), baja con cada ficha puesta en casilla libre y el bucle acaba al llegar a 0.
+- Al acabar la partida, `Main` enmascara `BIT_EINT4567` (para que la entrada no pise el display) y muestra una **E** en el 8led.
+- Probado en la placa 7: partida hasta quedar 2 casillas libres (`tablero[7][3]` y `[7][6]`, comprobado con `p 'reversi8_2026.c'::tablero`); tras jugar fila 8 / columna 4 el tablero se llena y sale la E.
+- Placa 7 recalibrada: los botones iban mal con trp 60 / trd 50. Rebotes medidos con `TEST_REBOTES = 1`: una prueba mixta (10 pulsaciones de 1 s y 5 toques rapidos por boton) y despues 5 pulsaciones de 1 s por boton, cada boton por separado.
+- `pruebas/rafagas.py`: agrupa en rafagas un volcado de la pila (`x/300xw 0x0C7FE000` pegado tal cual) y da la mas larga. Comprobado con el volcado de la placa 4 (da los mismos 38,2 ms).
+
+**Ficheros tocados:** `reversi8_2026.c` (`vacias`), `main.c` (E al acabar y `while (1)`), `button.c` (`TRP_MS`/`TRD_MS` a 100 y comentario con las medidas), `pruebas/rafagas.py` (nuevo), `pruebas/rebotes_placa7/` (volcados), `PRACTICA2.md`, `CLAUDE.md`, `README.md`.
+
+**Datos / medidas** `[MED]` (placa 7; rafaga = del primer al ultimo evento separados menos de 30 ms):
+- La pila da la vuelta incluso con 5 pulsaciones (>150 eventos): esta placa rebota muchisimo, con rafagas de hasta 39 y 61 eventos.
+- Prueba mixta (`volcado_pila_hex.txt`, `indice` = 33): solo quedan los toques rapidos. Rafagas de hasta 64,3 ms al pulsar y 59,3 ms al soltar. Toques rapidos de 53, 67, 80 y 116 ms entre pulsar y soltar.
+- 5 × 1 s izquierdo (`izq_5x1s.txt`, `indice` = 137): rafagas de hasta 67,7 ms (quedan los ultimos ~5 s).
+- 5 × 1 s derecho (`der_5x1s.txt`, `indice` = 12): la mayoria entre 10 y 55 ms; un caso de 119,6 ms (entre 3,8 y 4,1 s el boton estuvo ~300 ms rebotando).
+- Comparacion: placa 12 ~41,5 ms, placa 4 38,2 ms (y un caso suelto de 94 ms), placa 7 hasta 67,7 ms (y uno de 119,6 ms).
+
+**Decisiones de diseño** `[ES]`:
+- Contador de casillas vacias en lugar de recorrer el tablero cada turno: se actualiza en O(1) al poner ficha. Solo se resta si la casilla estaba libre, porque la jugada del humano no se valida y podria caer en una ocupada.
+- Si el humano pone la ultima ficha se sale con `break` antes de `elegir_mov`: si no, la maquina no encuentra jugada, `move` vale 1 y el programa se quedaria esperando otra jugada con el tablero lleno.
+- E (de *end*) porque F y C ya los usa la entrada. Se enmascaran los botones al acabar para que una pulsacion no cambie el display.
+- trp = trd = 100 ms: cubre todas las rafagas de la placa 7 salvo el caso de 119,6 ms. Coste: se descartan los toques de menos de 100 ms (de los 4 toques rapidos medidos, solo el de 116 ms pasaria). Para elegir fila/columna se pulsa sin prisa y existe el autoincremento, asi que se acepta. Si al jugar se pierden pulsaciones, bajar trp a 70 ms y dejar trd en 100.
+
+**Problemas y solucion** `[PROB]`:
+- Problema: los botones de la placa 7 daban pulsaciones dobles o perdidas → Solucion: medir los rebotes y subir trp/trd de 60/50 a 100 ms.
+- Problema: tras cargar, el programa no llegaba al breakpoint de `Main`; al suspender, el PC estaba en `timer2_parar` (que no se llama nunca), el desensamblado no cuadraba con el fuente y el marco anterior era `0xea000052` (una instruccion `b`, no una direccion) → Solucion: igual que el 3-nov, la placa ejecutaba basura; apagar y encender la placa y volver a cargar.
+- Problema: en la primera version del contador, una jugada humana sobre una casilla ocupada tambien restaba → Solucion: restar solo si `tablero[fila][columna] == CASILLA_VACIA`.
+
+**Para la memoria:**
+- `[ES]` Deteccion del final: contador `vacias`, salida con `break` si el humano llena el tablero y E en el 8led con los botones enmascarados.
+- `[MED]` Tabla de rafagas de las tres placas y por que trp/trd pasan a 100 ms (y lo que cuesta en toques rapidos).
+- `[PROB]` Placa ejecutando basura antes de `Main`: como se reconoce (PC en una funcion que no se llama, marco `0xea000052`).
+- `[CONC]` Los rebotes cambian mucho de una placa a otra: los tiempos del antirrebotes hay que medirlos en cada placa.
+
+**Pendiente para la proxima sesion:**
+- [ ] Jugar con trp = 100 ms y ver si se pierden pulsaciones; si es asi, probar trp = 70 ms.
+- [ ] Decidir si la suelta exige dos lecturas seguidas a 1 en la encuesta (la placa 7 rebota a mitad de pulsacion).
+- [ ] Preguntar al profesor si hace falta el «paso» ahora que la partida acaba con el tablero lleno.
+- [ ] Opcional: mostrar el ganador al acabar (`contar()` ya calcula blancas y negras).
+- [ ] Medir la pila IRQ en la placa (rellenar con `0xDEADBEEF`).
 - [ ] Hacer commit de lo hecho hoy.
 
 ---

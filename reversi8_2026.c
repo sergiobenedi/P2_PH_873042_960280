@@ -340,11 +340,12 @@ void reversi8()
         // asi que move vale siempre 1 y fin no llega a ser 1
         if (((fila) != DIM) && ((columna) != DIM))
         {
+            if (tablero[(int)fila][(int)columna] == CASILLA_VACIA)
+                vacias--;   // no se valida la jugada: solo cuenta si la casilla estaba libre
             tablero[(int)fila][(int)columna] = FICHA_NEGRA;
             actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
             actualizar_candidatas(candidatas, fila, columna);
             move = 1;
-            vacias--;
             if (vacias == 0)
                 break;  // tablero lleno: la maquina ya no puede mover
         }

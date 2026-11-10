@@ -28,9 +28,11 @@
 
 /* Medidos con TEST_REBOTES (paso 9) en dos placas. Al pulsar: peor caso 41,5 ms (placa 12) y 38,2 ms
  * (placa 4, salvo un caso suelto de 94 ms). Al soltar: 12,4 ms (placa 12) y 38,2 ms (placa 4).
- * trd debe cubrir la rafaga al soltar; trp no se sube para no perder toques cortos */
-#define TRP_MS		60		// retardo de rebote de pulsacion
-#define TRD_MS		50		// retardo de rebote de depresion
+ * trd debe cubrir la rafaga al soltar; trp no se sube para no perder toques cortos.
+ * Placa 7 (2026-11-10, 5 pulsaciones de 1 s por boton): rafagas de hasta 67,7 ms (izq) y un caso
+ * de 119,6 ms (der); se suben trp y trd a 100 ms. Toques de menos de 100 ms se descartan */
+#define TRP_MS		100		// retardo de rebote de pulsacion
+#define TRD_MS		100		// retardo de rebote de depresion
 #define ENCUESTA_MS	50		// periodo de muestreo del boton mientras esta pulsado
 
 /* declaracion de funcion que es rutina de servicio de interrupcion

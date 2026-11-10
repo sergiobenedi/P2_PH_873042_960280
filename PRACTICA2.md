@@ -36,7 +36,7 @@ Regla dura del guion: **las RSI deben ser ligeras, nunca espera activa dentro de
 | Pulsadores | Pines 6 y 7 del puerto G → **EINT6 / EINT7** (linea `BIT_EINT4567`). Pulsado = **0** en `rPDATG` (pull-up activado con `rPUPG`). En `rEXTINTPND`: bit 2 (valor 4) = EINT6, bit 3 (valor 8) = EINT7. **Verificado en placa (2026-11-03):** izquierdo = EINT6 (`rPDATG` bit 6), derecho = EINT7 (bit 7) |
 | LEDs | Bits 9 y 10 de `rPDATB`, activos a nivel bajo (`led.c`) |
 | 8led | Escritura en `LED8ADDR` con la tabla de `8led.h` (ya tiene `F` = indice 15 y `C` = indice 12, y `blank`) |
-| Timer0 | Maquina antirrebotes, de un solo disparo (`timer0_programar(ms)`): trp = 60 ms, encuesta 50 ms, trd = 30 ms (medidos en placa, ver §4.1) **[decision nuestra]** |
+| Timer0 | Maquina antirrebotes, de un solo disparo (`timer0_programar(ms)`): trp = 100 ms, encuesta 50 ms, trd = 100 ms (medidos en placa, ver §4.1; subidos por la placa 7) **[decision nuestra]** |
 | Timer1 | Autoincremento cada 300 ms tras 0,5 s pulsado (**obligatorio timer1** segun el guion). Se reutiliza para el parpadeo de confirmacion (167 ms), que nunca coincide en el tiempo **[decision nuestra]**. `TEMPORIZADOR_ENTRADA` en `timer.h` permite cambiarlo por la interrupcion del timer2 (1 = timer1, 2 = timer2): **pendiente decidir** |
 | Timer2 | Ya hecho en P1 (`timer2.c`): marca de tiempo en µs para `guardar_eventos` |
 | Teclado (opc.) | EINT1, banco 3 (`0x0600_0000`). Escaneo leyendo las direcciones `0x0600_00FD/FB/F7/EF` (cero en una fila cada vez) y mirando D0-D3. Teclas habilitadas: figura 2 del guion |
@@ -133,6 +133,11 @@ Relojes: MCLK = 64 MHz. `f_timer = MCLK / (preescalado + 1) / divisor`. Timers 0
 > pulsaciones reales de 36,7 ms (placa 12) que se descartarian como espurias, y un trp de ~90 ms caeria en el
 > hueco del caso de 94 ms. Las ráfagas de pulsar y soltar cambian de una placa a otra: se dejan valores que valen
 > para las dos. **Provisional**: pocas muestras.
+> **Placa 7 (2026-11-10)**, 5 pulsaciones de 1 s por boton (la pila da la vuelta: >150 eventos). Rafagas de hasta
+> 67,7 ms (izq) y 59,3 ms al soltar; un caso suelto de 119,6 ms (der, ~300 ms rebotando). Con 60/50 ms los botones
+> fallaban: **trp = trd = 100 ms**. Coste: los toques de menos de 100 ms se descartan (de 4 toques rapidos medidos,
+> solo uno pasaba de 100 ms). Si se pierden pulsaciones al jugar, bajar trp a 70 ms. Volcados en
+> `pruebas/rebotes_placa7/`, analizados con `pruebas/rafagas.py`.
 
 ```
 ESPERANDO --(EINT6/7)--> desactivar EINT4567 (rINTMSK), guardar boton, programar timer0 = trp --> RETARDO_TRP
@@ -174,6 +179,9 @@ CONFIRMAR: led izquierdo parpadea 3 veces/s durante 3 s (timer1: 18 conmutacione
 - En la P1, fila o columna = 8 significaba "paso". Con 1-8 en el 8led no hay forma de pasar.
   **[pregunta al profesor]** si hace falta representarlo (p. ej. un noveno valor).
   Por ahora, sin paso: la entrada solo da 0-7 y `fin` no llega a valer 1.
+- **Final de partida (2026-11-10, lo pidio el profesor):** contador `vacias` en `reversi8()` (empieza en 60,
+  baja con cada ficha puesta en casilla libre); el bucle acaba con `vacias == 0`. Si el humano pone la ultima
+  ficha se sale antes de `elegir_mov`. Al volver a `Main` se enmascara `BIT_EINT4567` y el 8led muestra **E**.
 - `reversi8()` pasa de `esperar_mov(&ready)` a esperar a que el modulo de entrada le de una jugada
   (funcion del modulo, no variable compartida). Esta espera esta en el programa principal, no en una RSI,
   asi que puede ser un bucle.
@@ -207,12 +215,12 @@ Estado: ✅ hecho · ⬜ pendiente. Detalle de cada sesion en [MEMORIA_NOTAS.md]
     y uno al soltar. *(2026-11-03; repetido en la placa 4 el 2026-11-09 con trp 60 / trd 50: 10 pulsaciones reales = 10 avisos de pulsado y 10 de soltado, y un toque espurio descartado sin aviso)*
 11. ✅ Probar la entrada F/C: incremento, vuelta 8 → 1, autoincremento 0,5 s + 300 ms, confirmacion,
     parpadeo 3 s y cancelacion. *(2026-11-03)*
-12. ✅ Jugar una partida completa contra la maquina. *(2026-11-09: 30 jugadas hasta llenar el tablero, 31 blancas / 33 negras, comprobado con `pruebas/contar.gdb`. Corregido `char` sin signo en `voltear`. Sin "paso" no hay final de partida: pendiente del profesor)*
+12. ✅ Jugar una partida completa contra la maquina. *(2026-11-09: 30 jugadas hasta llenar el tablero, 31 blancas / 33 negras, comprobado con `pruebas/contar.gdb`. Corregido `char` sin signo en `voltear`. Sin "paso" no hay final de partida: pendiente del profesor. 2026-11-10: final con tablero lleno y E en el 8led, probado en la placa 7)*
 
 **Pendiente de lo ya hecho** (detalle en MEMORIA_NOTAS.md)
 
 - (Hecho 2026-11-09, placa 4) Pila de depuracion con los ids 7 y 8: ver `pruebas/rebotes_placa4/` (capturas y volcados para la memoria).
-- Mas muestras de rebotes (~10 por boton) para confirmar trp/trd.
+- (Hecho 2026-11-10, placa 7) Mas muestras de rebotes: trp/trd a 100 ms. Falta jugar con ellos para ver si se pierden toques.
 - Valorar exigir dos lecturas seguidas de "soltado" en ENCUESTA (glitch de contacto a mitad de pulsacion).
 - Decidir timer1 o timer2 para la entrada (`TEMPORIZADOR_ENTRADA`).
 - Preguntar al profesor por el "paso" (hoy no se puede pasar turno).
