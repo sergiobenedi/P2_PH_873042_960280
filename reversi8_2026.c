@@ -326,10 +326,11 @@ void reversi8()
                   // y luego la maquina tampoco puede
     char f, c;    // fila y columna elegidas por la maquina para su movimiento
     int fila, columna;  // jugada del humano (0-7), de la maquina de estados de entrada
+    int vacias = DIM*DIM - 4; // casillas en blanco: el tablero empieza con 4 fichas
 
     init_table(tablero, candidatas);
 
-    while (fin == 0)
+    while (fin == 0 && vacias > 0)
     {
         move = 0;
         // Espera la jugada: bucle en el programa principal, la RSI solo avanza la maquina de entrada
@@ -343,6 +344,9 @@ void reversi8()
             actualizar_tablero(tablero, fila, columna, FICHA_NEGRA);
             actualizar_candidatas(candidatas, fila, columna);
             move = 1;
+            vacias--;
+            if (vacias == 0)
+                break;  // tablero lleno: la maquina ya no puede mover
         }
 
         // escribe el movimiento en las variables globales fila columna
@@ -357,6 +361,7 @@ void reversi8()
             tablero[(int)f][(int)c] = FICHA_BLANCA;
             actualizar_tablero(tablero, f, c, FICHA_BLANCA);
             actualizar_candidatas(candidatas, f, c);
+            vacias--;
         }
     }
     contar(tablero, &blancas, &negras);
