@@ -144,7 +144,7 @@ put(sh(s, "Resultado 3 cifra"), "3")
 put(sh(s, "Resultado 3 etique"), "placas medidas")
 put(sh(s, "Resultado 3 texto"), "Ráfagas de rebote de 41,5 a 67,7 ms: trp y trd acaban en 100 ms")
 put(sh(s, "Logro 1"), "Toda la E/S por interrupciones, con una única inicialización de periféricos")
-put(sh(s, "Logro 2"), "Pila de depuración de 150 eventos con marca de tiempo en µs")
+put(sh(s, "Logro 2"), "Opcional hecho y probado en placa: teclado matricial con la misma máquina antirrebotes")
 put(sh(s, "Logro 3"), "Destapado y corregido un fallo que venía de la P1: char sin signo en voltear")
 notas(s, "PABLO (0:40). 30 jugadas en placa, 10 de 10 pulsaciones limpias, rebotes medidos en 3 placas.")
 
@@ -158,7 +158,7 @@ put(sh(s, "Entorno texto"), "Entorno de trabajo", "Placa Embest S3CEV40 (S3C44B0
 put(sh(s, "Tarea 1 texto"), "Gestión de la E/S", "Arreglos de E/S e inicialización centralizada de los periféricos")
 put(sh(s, "Tarea 2 texto"), "Pila de depuración", "150 eventos con la marca de tiempo del timer2, en dirección fija")
 put(sh(s, "Tarea 3 texto"), "Antirrebotes", "Máquina de estados con el timer0: trp, encuesta cada 50 ms y trd")
-put(sh(s, "Tarea 4 texto"), "Entrada de la jugada", "Fila, columna, autoincremento con el timer1 y confirmación de 3 s")
+put(sh(s, "Tarea 4 texto"), "Entrada de la jugada", "Botones y 8led con autoincremento (timer1) y, como opcional, el teclado matricial")
 notas(s, "SERGIO (0:50). Punto de partida, entorno y las cuatro tareas.")
 
 # 4. Gestión de la E/S (plantilla: optimizaciones, P1 s5)
@@ -361,7 +361,7 @@ put(sh(s, "Mensaje final"), "Con hardware real los tiempos dependen de la placa:
 notas(s, "PABLO (0:40). Fuertes, débiles, mejoras y mensaje final. Preguntas.")
 
 # 15. Respaldo (P1 s17)
-put(sh(S[17], "Respaldo subtítulo"), "Código, rebotes por placa, teclado y otros problemas para las preguntas")
+put(sh(S[17], "Respaldo subtítulo"), "Código, rebotes por placa y otros problemas para las preguntas")
 
 # 16. Código (P1 s18)
 s = S[18]
@@ -471,8 +471,144 @@ put(sh(S[24], "Otros problemas"),
     "• OK y NO estaban en la tercera fila del teclado: movidos a la última, como en el guion")
 notas(S[24], "Respaldo: solo si preguntan.")
 
+
+# ---------- diapositivas nuevas del opcional: teclado y traza real de la pila ----------
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.util import Pt
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+SRCP = Presentation(SRC)          # P1 sin tocar, para copiar formas con su formato
+SO = {i + 1: x for i, x in enumerate(SRCP.slides)}
+
+
+def nueva(base):
+    """Diapositiva nueva con el diseno, el titulo y el pie de la diapositiva `base` (ya convertida)."""
+    sl = prs.slides.add_slide(S[base].slide_layout)
+    for x in list(sl.shapes):
+        borrar(x)
+    for x in S[base].shapes:
+        if x.is_placeholder or x.name.startswith("Google Shape;315"):
+            sl.shapes._spTree.append(deepcopy(x._element))
+    return sl
+
+
+def copiar(sl, origen, nombre, x=None, y=None, w=None, h=None):
+    el = deepcopy(sh(origen, nombre)._element)
+    sl.shapes._spTree.append(el)
+    nueva_forma = sl.shapes[-1]
+    mover(nueva_forma, x, y, w, h)
+    return nueva_forma
+
+
+def tabla_a_medida(shape, ncols, filas, anchos_in, plantilla_filas=(1, 2), destacar=None, fila_destacada=None,
+                   alto_fila=None):
+    """Recorta/amplia una tabla copiada a ncols columnas y len(filas) filas."""
+    tbl = shape.table._tbl
+    grid = tbl.tblGrid
+    for gc in grid.findall(qn("a:gridCol"))[ncols:]:
+        grid.remove(gc)
+    trs = tbl.findall(qn("a:tr"))
+    for tr in trs:
+        for tc in tr.findall(qn("a:tc"))[ncols:]:
+            tr.remove(tc)
+    trs = tbl.findall(qn("a:tr"))
+    plantillas = [deepcopy(trs[i]) for i in plantilla_filas]
+    destacada = deepcopy(trs[fila_destacada]) if fila_destacada is not None else None
+    for tr in trs[1:]:
+        tbl.remove(tr)
+    for i in range(1, len(filas)):
+        tpl = destacada if (destacar is not None and i == destacar) else plantillas[(i - 1) % len(plantillas)]
+        tbl.append(deepcopy(tpl))
+    tabla(shape, filas)
+    anchos(shape, anchos_in, izquierda=tuple(range(ncols)))
+    if alto_fila:
+        for tr in tbl.findall(qn("a:tr")):
+            tr.set("h", str(Inches(alto_fila)))
+            for tc in tr.findall(qn("a:tc")):
+                tcPr = tc.find(qn("a:tcPr"))
+                if tcPr is not None:
+                    tcPr.set("marT", "36000"); tcPr.set("marB", "36000")
+
+
+def ids_unicos(sl):
+    for n, el in enumerate(sl.shapes._spTree.iter(qn("p:cNvPr")), start=2):
+        el.set("id", str(n))
+
+
+# A. Opcional: teclado matricial
+A = nueva(8)
+title(A, "Opcional: teclado matricial")
+teclas = [["1", "2", "3", "4"], ["5", "6", "7", "8"], ["", "", "", ""], ["OK", "", "", "NO"]]
+for f in range(4):
+    for c in range(4):
+        t = teclas[f][c]
+        caja = A.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.6 + c * 0.88), Inches(1.5 + f * 0.88),
+                                  Inches(0.78), Inches(0.78))
+        caja.name = f"Tecla {f},{c}"
+        caja.adjustments[0] = 0.18
+        caja.line.fill.background()
+        caja.shadow.inherit = False
+        caja.fill.solid()
+        caja.fill.fore_color.rgb = NAVY if t.isdigit() else (ORANGE if t else RGBColor(0xE9, 0xEE, 0xF6))
+        tf = caja.text_frame
+        tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+        p = tf.paragraphs[0]
+        p.alignment = PP_ALIGN.CENTER
+        r = p.add_run()
+        r.text = t
+        r.font.name, r.font.size, r.font.bold = "Calibri", Pt(20), True
+        r.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
+pie_t = copiar(A, SO[8], "Tablero pie", x=0.5, y=5.05, w=3.75, h=1.1)
+put(pie_t, "10 teclas habilitadas (figura 2 del guion). Fila de arriba = 0xFD y columna izquierda = dato 0x7 (tabla 6.1 de Entradasalida.pdf)")
+tt = copiar(A, SO[20], "Tabla CPSR", x=4.45, y=1.45)
+tabla_a_medida(tt, 3, [["Tecla", "En FILA / COLUMNA", "En CONFIRMAR"],
+                       ["1 – 8", "Elige el valor", "Se ignora"],
+                       ["OK", "Confirma (botón derecho)", "Se ignora"],
+                       ["NO", "Vuelve a pedir la fila", "Cancela la jugada"]],
+               [0.9, 2.3, 1.85], plantilla_filas=(1,))
+copiar(A, SO[13], "Veneer tarjeta", x=4.45, y=3.55, w=5.05, h=1.6)
+mt = copiar(A, SO[13], "Veneer texto", x=4.6, y=3.6, w=4.8, h=1.5)
+put(mt, "Misma máquina antirrebotes",
+    "La RSI de EINT1 solo entra en la máquina (id 9). La tecla se escanea al acabar trp, ya sin rebotes; las no habilitadas cuentan como «no pulsada» y se descartan solas (T2b).")
+st = copiar(A, SO[12], "Dato tiempo", x=4.45, y=5.3, w=5.05, h=1.0)
+put(st, "Probado en placa", "jugada completa solo con el teclado; NO cancela; OK al parpadear y las teclas sin función se ignoran")
+ids_unicos(A)
+notas(A, "PABLO (0:50). El opcional: 10 teclas, misma máquina antirrebotes, y probado en placa con una jugada completa.")
+
+# B. Lo que guarda la pila: traza real de la prueba del teclado (NO durante el parpadeo)
+B = nueva(8)
+title(B, "Lo que guarda la pila: NO durante el parpadeo")
+copiar(B, SO[10], "ISR caja", x=0.5, y=1.4, w=3.55, h=3.96)
+raw = copiar(B, SO[10], "ISR código", x=0.6, y=1.3, w=3.4, h=4.0)
+volcado = ["c7fe428: 00000009 0afbb5a4", "c7fe430: 00000006 0afd344c", "c7fe438: 00000004 0afd3c6c",
+           "c7fe440: 00000008 0afd3cf5", "c7fe448: 00000004 0afe0094", "c7fe450: 00000004 0afec45e",
+           "c7fe458: 00000004 0aff8027", "c7fe460: 00000004 0b004bf1", "c7fe468: 00000003 0b010fbc",
+           "c7fe470: 00000005 0b02967f"]
+put(raw, *(["Memoria en la placa (id | instante en µs)"] + [(1, l) for l in volcado]))
+traza = copiar(B, SO[21], "Tabla combinaciones", x=4.25, y=1.4)
+tabla_a_medida(traza, 3, [
+    ["Δt (ms)", "Evento", "Qué ha pasado"],
+    ["0", "9 · Teclado", "T1: tecla NO, entradas enmascaradas"],
+    ["98,0", "6 · Timer1", "El led sigue parpadeando"],
+    ["100,0", "4 · Timer0", "Fin de trp: la tecla sigue pulsada"],
+    ["100,2", "8 · Cancelada", "entrada_tecla(NO) en CONFIRMAR"],
+    ["150,3", "4 · Timer0", "Encuesta: sigue pulsada"],
+    ["200,4", "4 · Timer0", "Encuesta"],
+    ["248,5", "4 · Timer0", "Encuesta"],
+    ["300,6", "4 · Timer0", "Encuesta"],
+    ["350,7", "3 · Soltado", "T4: la tecla vuelve a 1"],
+    ["450,8", "5 · Fin de trd", "T5: entradas reactivadas"],
+], [0.8, 1.4, 3.05], plantilla_filas=(1, 2), destacar=4, fila_destacada=6, alto_fila=0.36)
+for p_ in raw.text_frame.paragraphs:
+    p_.line_spacing = Pt(25.9)
+    p_.space_before = p_.space_after = Pt(0)
+raw.text_frame.margin_top = Inches(0.06)
+nota_b = copiar(B, SO[21], "Tabla nota", x=0.5, y=5.6, w=9.0, h=0.75)
+put(nota_b, "Cada evento son 8 B: el id en una palabra y el instante de timer2_leer() en µs (0x0afbb5a4 = 184 268 196 µs). Se ven trp = 100 ms y la encuesta cada 50 ms medidos por la propia placa.")
+ids_unicos(B)
+notas(B, "SERGIO (0:50). Traza real leída de la placa al pulsar NO durante el parpadeo: cada transición de la máquina deja su evento con el instante.")
+
 # ---------- orden final y diapositivas que sobran ----------
-orden = [1, 2, 3, 5, 9, 13, 12, 14, 11, 8, 6, 10, 15, 16, 17, 18, 21, 20, 24]
+orden = [1, 2, 3, 5, 9, 13, 12, 14, 11, 25, 26, 8, 6, 10, 15, 16, 17, 18, 21, 24]
 lst = prs.slides._sldIdLst
 ids = list(lst)
 for el in ids:
