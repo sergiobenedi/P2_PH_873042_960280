@@ -17,7 +17,7 @@
 #include "44b.h"
 #include "def.h"
 
-/* PROVISIONAL: SB2 va a EINT6 y SB3 a EINT7, pero esta SIN VERIFICAR en la placa cual es el izquierdo */
+/* SB2 = EINT6 = boton izquierdo, SB3 = EINT7 = boton derecho (verificado en placa el 2026-11-03) */
 #define EINT_IZQ	6
 #define EINT_DER	7
 

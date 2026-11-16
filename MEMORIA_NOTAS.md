@@ -23,6 +23,7 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 | 2026-11-03 | Sergio y Pablo | 2 (9:00–11:00) | 7-11 | Maquinas de estados disenadas y dibujadas; antirrebotes, temporizador de la entrada y `entrada.c` en codigo; rebotes medidos en placa (`TEST_REBOTES`); entrada de jugada probada en la placa (numeros, autoincremento, confirmacion y cancelacion) |
 | 2026-11-09 | Sergio | 2 (9:00–11:00) | 9-12 | Segunda placa: rebotes medidos otra vez, `trd` de 30 a 50 ms, antirrebotes comprobado, pila de depuracion con los ids 7 y 8, jugada comprobada en `tablero` y led izquierdo confirmado; partida de 30 jugadas (31 blancas / 33 negras) y corregido el `char` sin signo en `voltear` |
 | 2026-11-10 | Sergio y Pablo | 1,5 (9:00–10:30) | 9, 12 | Final de partida con tablero lleno (contador `vacias`, E en el 8led) probado en placa; placa 7 recalibrada: rebotes medidos, trp y trd a 100 ms |
+| 2026-11-16 | Pablo | — | Opc. | Teclado matricial probado en placa: OK y NO movidos a la ultima fila de la tabla de teclas; jugada completa, cancelacion y teclas sin funcion comprobadas con la pila de depuracion |
 ---
 
 ## 2. Sesiones
@@ -363,6 +364,41 @@ Plan de la practica: [PRACTICA2.md](PRACTICA2.md).
 - [ ] Opcional: mostrar el ganador al acabar (`contar()` ya calcula blancas y negras).
 - [ ] Medir la pila IRQ en la placa (rellenar con `0xDEADBEEF`).
 - [ ] Hacer commit de lo hecho hoy.
+
+### 2026-11-16 — Teclado matricial probado en placa (apartado opcional)
+
+**Quien / donde:** Pablo · casa con la placa (JTAG por OpenOCD)
+
+**Hecho:**
+- Corregida la tabla de teclas de `teclado.c`: OK y NO estaban en la tercera fila y la figura 2 del guion los pone en la cuarta (ultima). Con la tabla 6.1 de `Entradasalida.pdf`: `0xFD` = fila de arriba (SB1, SB5, SB9, SB13) y `0xEF` = fila de abajo; dato `0x7` = columna de la izquierda.
+- Programa cargado en la placa y probado solo con el teclado: jugada completa, OK durante el parpadeo, cancelacion con NO y teclas sin funcion.
+- `.cproject`: `.claude` excluido de la compilacion en Debug, Release y Placa (las copias de trabajo de `.claude/worktrees/` hacian fallar el enlazado con `multiple definition`).
+- Quitado el comentario «PROVISIONAL / SIN VERIFICAR» de `button.c` (izq = EINT6 se verifico el 3-nov).
+
+**Ficheros tocados:** `teclado.c` (tabla de teclas y comentario), `button.c` (comentario), `.cproject` (exclusion de `.claude`).
+
+**Datos / medidas** `[MED]` (instantes de `timer2` leidos de la pila de depuracion; ids: 9 = teclado, 4 = timer0, 3 = soltado, 5 = fin de trd, 6 = timer1, 7 / 8 = jugada confirmada / cancelada):
+- Jugada fila 3 / columna 4 introducida solo con el teclado: ultimo OK a 132,56 s y `EV_JUGADA_CONFIRMADA` (id 7) a 135,67 s (3 s de parpadeo). `tablero[2][3]` = 2 (negra) y la maquina responde en `[2][2]`.
+- OK durante el parpadeo (182,93 s): pulsacion valida (encuesta y soltado) y el timer1 sigue parpadeando: se ignora, como esta programado.
+- NO durante el parpadeo: tecla a 184,27 s, aviso al acabar trp (184,37 s) y `EV_JUGADA_CANCELADA` (id 8) a 184,368 s.
+- Teclas sin funcion (190-194 s, 11 pulsaciones): cada una hace T1 → fin de trp → T2b (no hay tecla habilitada, sin aviso) → trd. No llegan a la entrada.
+- Cada tecla valida sigue el ciclo del antirrebotes: trp 100 ms, encuesta cada 50 ms, soltado y trd 100 ms. Sin dobles pulsaciones.
+
+**Decisiones de diseño** `[ES]`:
+- Sin cambios en la maquina: el teclado comparte el antirrebotes con los pulsadores y las teclas no habilitadas cuentan como «no pulsado», asi que se descartan solas por T2b.
+
+**Problemas y solucion** `[PROB]`:
+- Problema: OK y NO en la fila equivocada de la tabla → Solucion: moverlos a la ultima fila (figura 2 del guion y tabla 6.1 de `Entradasalida.pdf`).
+- Problema: la configuracion Placa no enlazaba (`multiple definition of reversi8`, `timer_init`...) porque Eclipse compilaba tambien `.claude/worktrees/` → Solucion: excluir `.claude` de las fuentes en `.cproject`.
+
+**Para la memoria:**
+- `[RES]` / `[CONC]` El apartado opcional esta probado en placa.
+- `[MED]` Tabla de la prueba del teclado con los instantes de la pila.
+- `[PROB]` OK y NO en la fila equivocada de la tabla de teclas.
+
+**Pendiente para la proxima sesion:**
+- [ ] Preguntar al profesor por el «paso».
+- [ ] Medir la pila IRQ en la placa (rellenar con `0xDEADBEEF`).
 
 ---
 

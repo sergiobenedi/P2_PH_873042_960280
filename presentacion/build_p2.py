@@ -354,7 +354,7 @@ s = S[16]
 put(sh(s, "Puntos fuertes lis"), "• Partida completa en placa, igual que la simulación",
     "• Toda la E/S por interrupciones, sin variables compartidas", "• La pila de depuración permite medir, no suponer")
 put(sh(s, "Puntos débiles lis"), "• trp = 100 ms descarta toques cortos", "• Pila IRQ sin medir (~130 B estimados)",
-    "• Teclado sin probar en placa")
+    "• Sin «paso»: no se puede pasar turno")
 put(sh(s, "Mejoras lista"), "• Dos lecturas a 1 antes de dar el botón por soltado", "• Medir la pila IRQ con 0xDEADBEEF",
     "• Mostrar el ganador al acabar")
 put(sh(s, "Mensaje final"), "Con hardware real los tiempos dependen de la placa: hay que medirlos. La pila de depuración nos dejó medir en vez de suponer, y encontró un fallo que venía de la P1.")
@@ -445,7 +445,7 @@ notas(s, "Respaldo: solo si preguntan.")
 
 # 18. Teclado (P1 s20)
 s = S[20]
-title(s, "Opcional: teclado matricial")
+title(s, "Opcional: teclado matricial, probado en placa")
 tabla(sh(s, "Tabla CPSR"), [
     ["Tecla", "En FILA / COLUMNA", "En CONFIRMAR", "Evento"],
     ["1 – 8", "Elige el valor con una pulsación", "Se ignora", "id 9"],
@@ -456,7 +456,7 @@ anchos(sh(s, "Tabla CPSR"), [1.2, 3.5, 2.4, 1.9], izquierda=(0, 1, 2, 3))
 put(sh(s, "Veneer texto"), "Misma máquina antirrebotes",
     "Banco 3 (0x0600_0000): al leer 0x060000FD/FB/F7/EF se pone a 0 una fila y se leen las columnas en D3-D0. Cualquier tecla da un flanco en EINT1.",
     "La RSI de EINT1 solo entra en la máquina; la tecla se escanea al acabar trp, ya sin rebotes. Mientras tanto, todas las entradas enmascaradas.",
-    "Compila y enlaza; falta comprobar en placa la orientación de la tabla de teclas.")
+    "Probado en placa (16-nov): jugada completa solo con el teclado; NO cancela, y OK durante el parpadeo y las teclas sin función se ignoran.")
 notas(s, "Respaldo: solo si preguntan.")
 
 # 19. Otros problemas (P1 s24)
@@ -467,7 +467,8 @@ put(sh(S[24], "Otros problemas"),
     "• Main no se ejecuta en el simulador: la inicialización se prueba en placa",
     "• La RSI no salta en el simulador: entrada forzada desde GDB (CPSR, sp, lr, pc)",
     "• El contador de vacías restaba con jugadas sobre casillas ocupadas",
-    "• undefined reference a entrada_*: faltaba entrada.c en el proyecto")
+    "• undefined reference a entrada_*: faltaba entrada.c en el proyecto",
+    "• OK y NO estaban en la tercera fila del teclado: movidos a la última, como en el guion")
 notas(S[24], "Respaldo: solo si preguntan.")
 
 # ---------- orden final y diapositivas que sobran ----------

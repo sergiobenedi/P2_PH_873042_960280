@@ -6,7 +6,7 @@ Toda la E/S funciona por interrupciones. Se han corregido los fallos de E/S del 
 
 Se han diseñado e implementado dos máquinas de estados. La primera elimina los rebotes de los pulsadores con el timer0: espera trp, hace encuesta cada 50 ms y espera trd. La segunda gestiona la introducción de la jugada: fila, columna, autoincremento con el timer1 y confirmación o cancelación durante 3 s. Los rebotes se han medido con la pila de depuración en tres placas distintas y varían mucho de una a otra: la ráfaga más larga pasa de 41,5 ms en la placa 12 a 67,7 ms en la placa 7, con casos sueltos de hasta 119,6 ms. Por eso trp y trd han acabado en 100 ms.
 
-Resultados principales: se ha jugado en la placa una partida completa de 30 jugadas que llena el tablero (31 fichas blancas y 33 negras), y el tablero coincide casilla a casilla con una simulación hecha aparte. Esa prueba destapó un fallo heredado de la P1: en ARM el char es sin signo y voltear no volteaba hacia arriba ni hacia la izquierda. El juego detecta el final de la partida con un contador de casillas vacías y muestra una E en el display. Como apartado opcional se ha añadido el teclado matricial, que comparte la máquina antirrebotes; compila, pero falta comprobarlo en la placa.
+Resultados principales: se ha jugado en la placa una partida completa de 30 jugadas que llena el tablero (31 fichas blancas y 33 negras), y el tablero coincide casilla a casilla con una simulación hecha aparte. Esa prueba destapó un fallo heredado de la P1: en ARM el char es sin signo y voltear no volteaba hacia arriba ni hacia la izquierda. El juego detecta el final de la partida con un contador de casillas vacías y muestra una E en el display. Como apartado opcional se ha añadido el teclado matricial, que comparte la máquina antirrebotes. Se ha probado en la placa: una jugada completa introducida solo con el teclado, la cancelación con NO y las teclas sin función, que se ignoran.
 
 # 2. Introducción
 
@@ -29,7 +29,7 @@ Entorno de trabajo:
 - Eclipse con ARM Sourcery GCC 2011.03 (arm-none-eabi-gcc), con -O0 -mapcs-frame.
 - openOCD 0.7.0 y JTAG para depurar en la placa.
 - Simulador ARM7TDMI del propio entorno (target sim), usado para la pila de depuración y el marco de pila. No tiene periféricos: todo lo que usa botones, timers o display se ha probado en la placa.
-- Placas usadas: n.º 12 (3-nov), n.º 4 (9-nov) y n.º 7 (10-nov).
+- Placas usadas: n.º 12 (3-nov), n.º 4 (9-nov) y n.º 7 (10-nov). El teclado matricial se probó el 16-nov.
 
 # 3. Objetivos
 
@@ -85,13 +85,13 @@ Líneas de código (wc -l, líneas totales y, entre paréntesis, no vacías):
 | timer.c / .h | 152 (126) |
 | timer2.c / .h | 142 (115) |
 | lista.c / .h, eventos.h | 96 (80) |
-| teclado.c / .h | 75 (64) |
+| teclado.c / .h | 76 (65) |
 | reversi8_2026.c | 369 (315) |
-| Total | 1408 (1198) |
+| Total | 1409 (1199) |
 
 Tabla 4. Líneas de código del proyecto. No se cuentan los ficheros suministrados sin modificar ni el ensamblador de la P1.
 
-De ellas, 446 líneas (entrada de la jugada, pila de depuración y teclado) se han escrito desde cero, y button.c y timer.c se han reescrito casi enteros sobre la base del proyecto de ejemplo.
+De ellas, 447 líneas (entrada de la jugada, pila de depuración y teclado) se han escrito desde cero, y button.c y timer.c se han reescrito casi enteros sobre la base del proyecto de ejemplo.
 
 ## 4.3. Decisiones de diseño
 
@@ -163,7 +163,8 @@ Tabla 5. Identificadores de evento (eventos.h).
 
 - El teclado está en el banco 3 (0x0600_0000). Al leer 0x060000FD, FB, F7 o EF se pone a 0 una fila y se obtienen las 4 columnas en D3-D0. Cualquier tecla da un flanco de bajada en EINT1.
 - La RSI de EINT1 no escanea: solo entra en la máquina antirrebotes (id 9). La tecla se lee con teclado_leer() al acabar trp, ya sin rebotes.
-- Teclas habilitadas (figura 2 del guion): 1-8 eligen el valor con una pulsación, OK hace lo mismo que el botón derecho y NO vuelve a pedir la fila. En CONFIRMAR solo NO cancela, para que un OK de más no deshaga la jugada recién confirmada.
+- Teclas habilitadas (figura 2 del guion): 1-8 en las dos filas de arriba, y OK y NO en las esquinas de la fila de abajo. 1-8 eligen el valor con una pulsación, OK hace lo mismo que el botón derecho y NO vuelve a pedir la fila. En CONFIRMAR solo NO cancela, para que un OK de más no deshaga la jugada recién confirmada.
+- Las teclas no habilitadas cuentan como «no pulsada»: al acabar trp la máquina hace T2b y no avisa a la entrada, así que se descartan sin código adicional.
 
 ## 4.4. Marco de pila
 
@@ -286,7 +287,7 @@ Figura 8. Árbol de ficheros del proyecto.
 | timer.c / .h | Reescrito. Timer0 de un solo disparo y temporizador de la entrada con el timer1. |
 | timer2.c / .h | De la P1. Marca de tiempo en µs y, como alternativa, aviso periódico para la entrada. |
 | lista.c / .h, eventos.h | Desarrollado. Pila de depuración circular de 150 eventos e identificadores de evento. |
-| teclado.c / .h | Desarrollado. Escaneo del teclado matricial y tabla de teclas habilitadas (opcional). |
+| teclado.c / .h | Desarrollado. Escaneo del teclado matricial y tabla de teclas habilitadas (opcional, probado en placa). |
 | reversi8_2026.c / .h | De la P1, adaptado: la jugada llega de la entrada, signed char en los desplazamientos y final con el tablero lleno. |
 | reversi8_arm.asm, reversi8_thumb.asm | De la P1, sin cambios: patron_volteo_arm y color_ficha_thumb. |
 | led.c, 8led.c (y .h) | Suministrados, corregidos (máscaras por bit y volatile). |
@@ -370,7 +371,19 @@ El final de la partida se probó en la placa 7 el 10-nov. Se jugó hasta quedar 
 
 ## 5.5. Apartado opcional: teclado matricial
 
-El teclado usa la misma máquina antirrebotes y la entrada de la jugada (entrada_tecla). Compila y enlaza, pero no se ha probado en la placa: falta comprobar que la fila 0 de la tabla de teclas es la de arriba y la columna 0 la de la izquierda.
+El teclado se probó en la placa el 16-nov, sin tocar los pulsadores, y se leyó después la pila de depuración. En la tabla, los instantes son los del timer2 desde el arranque.
+
+| Prueba | Lo que registra la pila | Resultado |
+|---|---|---|
+| Jugada fila 3, columna 4 solo con el teclado | Último OK a 132,56 s y jugada confirmada (id 7) a 135,67 s, tras los 3 s de parpadeo | Negra en tablero[2][3] y respuesta blanca en [2][2] |
+| OK durante el parpadeo | Pulsación válida a 182,93 s (encuesta y soltado); el timer1 sigue parpadeando | Se ignora |
+| NO durante el parpadeo | Tecla a 184,27 s, aviso al acabar trp y jugada cancelada (id 8) a 184,37 s | Cancela |
+| Teclas sin función | 11 pulsaciones: T1, fin de trp y T2b (sin aviso), trd | Se ignoran |
+| Antirrebotes | Cada tecla: trp de 100 ms, encuesta cada 50 ms, soltado y trd de 100 ms | Sin dobles pulsaciones |
+
+Tabla 11. Prueba del teclado matricial en la placa (16-11-2026).
+
+Que la jugada quede en tablero[2][3] confirma también la orientación de la tabla de teclas: la fila 0 es la de arriba y la columna 0 la de la izquierda, como indica la tabla 6.1 de Entradasalida.pdf.
 
 ## 5.6. Problemas encontrados y soluciones
 
@@ -385,6 +398,7 @@ El teclado usa la misma máquina antirrebotes y la entrada de la jugada (entrada
 9. Pulsaciones dobles o perdidas en la placa 7 con los tiempos calibrados en otra placa. Solución: medir de nuevo y subir trp y trd a 100 ms.
 10. El contador de casillas vacías restaba también con una jugada sobre una casilla ocupada. Solución: restar solo si tablero[fila][columna] == CASILLA_VACIA.
 11. Fallo de enlace (undefined reference) a las funciones de la entrada. Faltaba entrada.c en el proyecto; con TEST_REBOTES = 1 esas llamadas no se compilan y sí enlazaba, lo que despistó al principio.
+12. OK y NO en la fila equivocada del teclado. La tabla de teclas los ponía en la tercera fila y la figura 2 del guion los pone en la cuarta. Solución: moverlos a la última fila, comprobando con la tabla 6.1 de Entradasalida.pdf que 0xFD es la fila de arriba y 0xEF la de abajo.
 
 # 6. Conclusiones
 
@@ -395,6 +409,7 @@ Puntos fuertes
 - La pila de depuración ha sido la herramienta clave: con ella se midieron los rebotes, se comprobaron los tiempos de los timers (60,0 ms, 50,1 ms y 167,008 ms) y se verificó la máquina de estados evento a evento.
 - El código de test (TEST_REBOTES) y rafagas.py permiten recalibrar una placa nueva en pocos minutos.
 - La partida completa sacó a la luz un fallo de la P1 (char sin signo) que las pruebas de una sola jugada no detectaban.
+- El apartado opcional (teclado matricial) está probado en la placa y reutiliza la misma máquina antirrebotes sin cambios.
 
 Puntos débiles
 
@@ -402,7 +417,7 @@ Puntos débiles
 - No se ha medido el uso real de la pila IRQ, que solo tiene 256 B; los unos 130 B son una estimación hecha sobre el ensamblador.
 - Una marca de timer2 salió unos 2 ms tarde, parecido al periodo de desbordamiento de 2,048 ms. No afecta al funcionamiento, pero no se ha corregido.
 - La jugada del humano no se valida (igual que en la P1) y no hay forma de pasar turno: con 1-8 en el display no se puede representar el valor 8 que usaba la P1 para «paso».
-- El teclado matricial no está probado en la placa, y la causa de que la placa ejecute código basura antes de Main sigue sin conocerse.
+- La causa de que la placa ejecute código basura antes de Main sigue sin conocerse.
 
 Mejoras posibles
 

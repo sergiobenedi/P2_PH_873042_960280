@@ -21,14 +21,15 @@ static const unsigned char dato_columna[4] = { 0x7, 0xB, 0xD, 0xE };
 /* Tecla de cada posicion [fila][columna]. Solo 10 habilitadas (figura 2 del guion):
  *   1 2 3 4
  *   5 6 7 8
- *   OK . . NO
  *   . . . .
- * [verificar en placa] que la fila 0 es la de arriba y la columna 0 la de la izquierda */
+ *   OK . . NO      (OK y NO en la ultima fila, como en la figura 2 del guion)
+ * Fila 0 = arriba (0xFD, SB1) y columna 0 = izquierda (dato 0x7), segun la tabla 6.1 de
+ * Entradasalida.pdf. Probado en placa el 2026-11-16 */
 static const unsigned char tecla[4][4] = {
 	{ 1,          2,             3,             4             },
 	{ 5,          6,             7,             8             },
-	{ TECLA_OK,   TECLA_NINGUNA, TECLA_NINGUNA, TECLA_NO      },
-	{ TECLA_NINGUNA, TECLA_NINGUNA, TECLA_NINGUNA, TECLA_NINGUNA }
+	{ TECLA_NINGUNA, TECLA_NINGUNA, TECLA_NINGUNA, TECLA_NINGUNA },
+	{ TECLA_OK,   TECLA_NINGUNA, TECLA_NINGUNA, TECLA_NO      }
 };
 
 /*--- codigo de las funciones ---*/
