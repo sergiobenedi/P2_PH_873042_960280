@@ -612,7 +612,7 @@ notas(B, "SERGIO (0:50). Traza real leída de la placa al pulsar NO durante el p
 C = S[16]
 title(C, "Cumplimiento del guion")
 for x in list(C.shapes):
-    if not (x.is_placeholder or x.name.startswith("Google Shape;315") or x.name == "Mensaje final"):
+    if not (x.is_placeholder or x.name.startswith("Google Shape;315")):
         borrar(x)
 cg = copiar(C, SO[21], "Tabla combinaciones", x=0.5, y=1.4)
 tabla_a_medida(cg, 3, [
@@ -625,14 +625,13 @@ tabla_a_medida(cg, 3, [
     ["✓", "Entrada de la jugada", "Autoincremento a los 500 ms y parpadeo de 3,006 s (id 7)"],
     ["✓", "Partida completa", "30 jugadas iguales a la simulación; tablero lleno y E en el display"],
     ["✓", "Opcional: teclado matricial", "Jugada completa solo con el teclado; NO cancela (id 8)"],
-], [0.45, 2.75, 5.8], plantilla_filas=(1, 2), destacar=8, fila_destacada=6, alto_fila=0.38)
+], [0.45, 2.75, 5.8], plantilla_filas=(1, 2), destacar=8, fila_destacada=6, alto_fila=0.5)
 for r in range(1, 9):
     run = cg.table.cell(r, 0).text_frame.paragraphs[0].runs[0]
     run.font.color.rgb = ORANGE
     run.font.bold = True
-mover(sh(C, "Mensaje final"), y=5.2)
 ids_unicos(C)
-notas(C, "PABLO (0:40). Repaso del guion: cada paso hecho y cómo lo comprobamos, opcional incluido. Mensaje final. Preguntas.")
+notas(C, "PABLO (0:40). Repaso del guion: cada paso hecho y cómo lo comprobamos, opcional incluido. Preguntas.")
 
 # ---------- orden final y diapositivas que sobran ----------
 orden = [1, 2, 3, 5, 9, 13, 12, 14, 11, 25, 26, 8, 6, 10, 15, 16, 17, 18, 21, 24]
