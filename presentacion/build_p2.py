@@ -204,7 +204,7 @@ for n in ("Bus título", "ARM etiqueta", "ARM acceso 1", "ARM acceso 1 texto", "
           "Thumb etiqueta", "Thumb acceso 1", "Thumb acceso 1 texto", "Bus nota"):
     borrar(sh(s, n))
 s.shapes.add_picture(f"{DIR}/diag_antirrebotes.png", Inches(0.5), Inches(1.32), width=Inches(5.3))
-put(sh(s, "Datos texto"), "Medido en la placa 4", "aviso de pulsado", "60,0 ms", "encuesta y trd", "50,1 ms")
+put(sh(s, "Datos texto"), "Por qué el timer0", (1, "timer1: autoincremento (guion)"), (1, "timer2: marca de tiempo, siempre en marcha"), (2, "timer0"), (3, "libre: un solo disparo y 8 µs de resolución"))
 put(sh(s, "Veneer texto"), "El orden de T5 importa",
     "Primero EXTINTPND, luego I_ISPC y solo después se desenmascara: si no, un rebote de la suelta da una IRQ falsa.")
 hip = sh(s, "Hipótesis texto")

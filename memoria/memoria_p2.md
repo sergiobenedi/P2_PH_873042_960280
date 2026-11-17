@@ -139,6 +139,7 @@ Tabla 5. Identificadores de evento (eventos.h).
 
 ### Antirrebotes (Paso 5)
 
+- Por qué el timer0: cada temporizador tiene un único papel y ninguno se comparte. El timer1 lo pide el guion para el autoincremento (y lo reutilizamos para el parpadeo). El timer2 está siempre en marcha porque da la marca de tiempo en µs de la pila de depuración: no se puede parar ni reprogramar en un solo disparo sin estropear los instantes, y contar sus periodos daría saltos de 2,048 ms. Queda el timer0, el del proyecto de ejemplo, que se programa de un solo disparo con una resolución de 8 µs.
 - El timer0 trabaja en un solo disparo y se reprograma en cada estado con timer0_programar(ms), que solo toca sus bits de TCON. Los timers 0 y 1 usan preescalado 255 y divisor 1/2: 64 MHz / 256 / 2 = 125 kHz, es decir, 125 cuentas por ms.
 - Al acabar trp se lee el pin: así se distingue una pulsación real de un pulso espurio. El espurio pasa por trd y reactiva las entradas, de modo que no se pierde la pulsación siguiente.
 - Al final (T5) se borra primero EXTINTPND, después I_ISPC, y solo entonces se desenmascara. Los rebotes de la suelta dejan bits pendientes aunque la línea esté enmascarada, y si se desenmascarase antes saltaría una IRQ falsa.
