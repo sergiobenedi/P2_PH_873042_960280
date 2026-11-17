@@ -636,6 +636,21 @@ notas(C, "PABLO (0:40). Repaso del guion: cada paso hecho y cómo lo comprobamos
 
 # ---------- orden final y diapositivas que sobran ----------
 orden = [1, 2, 3, 5, 9, 13, 12, 14, 11, 25, 26, 8, 6, 10, 15, 16, 17, 18, 21, 24]
+
+# Reparto del guion de la exposicion: empieza Pablo y se alternan (mismo orden y tiempos que el guion)
+import re as _re
+_por_numero = {**S, 25: A, 26: B}
+_reparto = [("PABLO", "0:25"), ("SERGIO", "0:40"), ("PABLO", "0:45"), ("SERGIO", "1:00"), ("PABLO", "0:55"),
+            ("SERGIO", "1:15"), ("PABLO", "1:00"), ("SERGIO", "1:00"), ("PABLO", "0:50"), ("SERGIO", "0:50"),
+            ("PABLO", "1:00"), ("SERGIO", "0:50"), ("PABLO", "1:10"), ("SERGIO", "1:00"), ("PABLO", "1:00"),
+            ("SERGIO", "0:40")]
+for _n, (_quien, _t) in zip(orden[:16], _reparto):
+    _sl = _por_numero[_n]
+    _txt = _sl.notes_slide.notes_text_frame.text
+    _txt = _re.sub(r"^(SERGIO|PABLO) \(\d+:\d\d\)\.\s*", "", _txt)
+    if _n == 1:
+        _txt = "Nos presentamos. Práctica 2: el Reversi de la P1 se juega ya desde la placa, con los pulsadores y el display."
+    notas(_sl, f"{_quien} ({_t}). {_txt}")
 lst = prs.slides._sldIdLst
 ids = list(lst)
 for el in ids:
