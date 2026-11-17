@@ -427,8 +427,6 @@ Mejoras posibles
 - Calibrar trp y trd por separado (por ejemplo, trp = 70 ms y trd = 100 ms).
 - Mostrar el ganador al acabar (contar() ya calcula blancas y negras) y validar la jugada del humano.
 
-Mensaje final. Con hardware real no basta con que el código sea correcto: los tiempos dependen de la placa concreta y hay que medirlos. Una herramienta de traza tan simple como la pila de depuración, con marca de tiempo, permite medir en lugar de suponer, y además encontró un fallo que llevaba en el código desde la primera práctica.
-
 Firma y autoría. Esta memoria y el código que la acompaña han sido realizados por Sergio Benedi de Arce (NIP 873042) y Pablo Gimeno Hernández (NIP 960280).
 
 # 7. Referencias
